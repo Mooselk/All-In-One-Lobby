@@ -37,12 +37,12 @@ public class JoinEvent implements Listener {
 				p.getInventory().setItem(section.getInt("slot"), giveCompass(section.getString("item-name"), section.getStringList("lore")));
 			}
 		}
-		if (c.getConfigurationSection("hideplayers.options").getBoolean("enabled")) {
-			if (!p.getInventory().contains(Material.REDSTONE_TORCH_ON, 1)
-					|| !p.getInventory().contains(Material.REDSTONE_TORCH_OFF, 1)) {
-				
-			}
-		}
+//		if (c.getConfigurationSection("hideplayers.options").getBoolean("enabled")) {
+//			if (!p.getInventory().contains(Material.REDSTONE_TORCH_ON, 1)
+//					|| !p.getInventory().contains(Material.REDSTONE_TORCH_OFF, 1)) {
+//				
+//			}
+//		}
 	}
 
 	private ItemStack giveCompass(String displayName, List<String> lore) {
@@ -54,14 +54,14 @@ public class JoinEvent implements Listener {
 		return item;
 	}
 
-	private ItemStack giveHideTool(String displayName, ArrayList<String> lore) {
-		ItemStack item = new ItemStack(Material.REDSTONE_TORCH_ON);
-		ItemMeta im = item.getItemMeta();
-		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
-		im.setLore(colorLore(lore));
-		item.setItemMeta(im);
-		return item;
-	}
+//	private ItemStack giveHideTool(String displayName, ArrayList<String> lore) {
+//		ItemStack item = new ItemStack(Material.REDSTONE_TORCH_ON);
+//		ItemMeta im = item.getItemMeta();
+//		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
+//		im.setLore(colorLore(lore));
+//		item.setItemMeta(im);
+//		return item;
+//	}
 	
 	private List<String> colorLore(List<String> lore) {
 		List<String> nlore = new ArrayList<String>();
