@@ -13,7 +13,7 @@ import me.kate.lobby.events.JoinEvent;
 import me.kate.lobby.events.MobSpawnEvent;
 import me.kate.lobby.events.TouchVoidEvent;
 import me.kate.lobby.items.compass.events.CompassClickEvent;
-import me.kate.lobby.items.compass.events.GuiClickEvent;
+import me.kate.lobby.items.compass.events.CompassGuiEvents;
 import me.kate.lobby.items.compass.ping.PingServersBackground;
 
 public class Main extends JavaPlugin {
@@ -45,7 +45,7 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TouchVoidEvent(), this);
 		getServer().getPluginManager().registerEvents(new BlockRelatedEvent(), this);
 		getServer().getPluginManager().registerEvents(new MobSpawnEvent(), this);
-		getServer().getPluginManager().registerEvents(new GuiClickEvent(), this);
+		getServer().getPluginManager().registerEvents(new CompassGuiEvents(), this);
 		getServer().getPluginManager().registerEvents(new CompassClickEvent(), this);
 	}
 	
