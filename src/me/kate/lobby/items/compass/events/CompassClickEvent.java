@@ -18,7 +18,7 @@ public class CompassClickEvent implements Listener {
 		Player p = e.getPlayer();
 		if (p.getItemInHand().getType().equals(Material.COMPASS)) {
 			final Compass compass = new Compass(p);
-			compass.openMenu();
+			compass.open();
 		}
 	}
 	
