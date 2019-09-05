@@ -39,10 +39,10 @@ public class Selector {
 
 	public void open() {
 		inv.clear();
-		update();
+		this.update();
 		p.openInventory(inv);
 		refreshTimer = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
-			update();
+			this.update();
 			p.sendMessage("Running task");
 		}, 1 * 20, 1 * 20);
 	}
@@ -83,7 +83,6 @@ public class Selector {
 							String olineplayers = (String) placeholders.get("online");
 							String maxplayers = (String) placeholders.get("max");
 							long serverping = (long) placeholders.get("ping");
-							// int online = (int) placeholders.get("online");
 							int online = Integer.valueOf(olineplayers);
 							int max = Integer.valueOf(maxplayers);
 							int ping = (int) serverping;

@@ -20,7 +20,7 @@ public class Main extends JavaPlugin {
 	
 	private static Main plugin;
 	
-	public static Map<String, Map<String, Object>> SERVER_PLACEHOLDERS = new HashMap<>();
+	public static final Map<String, Map<String, Object>> SERVER_PLACEHOLDERS = new HashMap<>();
 	
 	public static Main getInstance() {
 		return plugin;
