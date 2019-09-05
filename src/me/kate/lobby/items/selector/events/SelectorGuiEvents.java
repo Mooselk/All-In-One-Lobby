@@ -1,4 +1,4 @@
-package me.kate.lobby.items.compass.events;
+package me.kate.lobby.items.selector.events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,13 +8,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
-
 import me.kate.lobby.Main;
-import me.kate.lobby.items.compass.Compass;
+import me.kate.lobby.items.selector.Selector;
 import net.md_5.bungee.api.ChatColor;
 
-public class CompassGuiEvents implements Listener {
+public class SelectorGuiEvents implements Listener {
 
 	private FileConfiguration c = Main.getInstance().getConfig();
 
@@ -35,8 +33,7 @@ public class CompassGuiEvents implements Listener {
 						&& (!sec.getString("command").equalsIgnoreCase("menuclose"))) {
 					Bukkit.dispatchCommand(p, sec.getString("command"));
 				} else {
-					Compass.close();
-					//p.closeInventory();
+					Selector.close(p);
 				}
 			}
 			e.setCancelled(true);
@@ -46,14 +43,7 @@ public class CompassGuiEvents implements Listener {
 	@EventHandler
 	public void closeInventory(InventoryCloseEvent e) {
 		final Player p = (Player) e.getPlayer();
-		Compass.onClose();
+		Selector.onClose(p);
 		p.sendMessage("Closed inventory");
-	}
-	
-	@EventHandler
-	public void onOpen(InventoryOpenEvent e) {
-		Player p = (Player) e.getPlayer();
-		e.getInventory().getTitle();
-		p.sendMessage("Opened inventory");
 	}
 }

@@ -1,4 +1,4 @@
-package me.kate.lobby.items.compass.events;
+package me.kate.lobby.items.selector.events;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -9,15 +9,15 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.kate.lobby.items.compass.Compass;
+import me.kate.lobby.items.selector.Selector;
 
-public class CompassClickEvent implements Listener {
+public class SelectorClickEvent implements Listener {
 	
 	@EventHandler
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		Player p = e.getPlayer();
 		if (p.getItemInHand().getType().equals(Material.COMPASS)) {
-			final Compass compass = new Compass(p);
+			final Selector compass = new Selector(p);
 			compass.open();
 		}
 	}

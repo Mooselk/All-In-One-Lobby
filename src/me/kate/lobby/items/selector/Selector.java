@@ -1,4 +1,4 @@
-package me.kate.lobby.items.compass;
+package me.kate.lobby.items.selector;
 
 import java.util.List;
 import java.util.Map;
@@ -18,25 +18,25 @@ import me.kate.lobby.Main;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
-public class Compass {
+public class Selector {
 
-	public static Player p;
+	private Player p;
 	private static BukkitTask refreshTimer;
-	private static FileConfiguration c = Main.getInstance().getConfig();
-	private static Inventory inv = Bukkit.createInventory(null, c.getInt("compass.options.rows") * 9,
+	private FileConfiguration c = Main.getInstance().getConfig();
+	private Inventory inv = Bukkit.createInventory(null, c.getInt("compass.options.rows") * 9,
 			ChatColor.translateAlternateColorCodes('&', c.getString("compass.options.name")));
 
-	private static IUtils u = new Utils();
-	
-	public Compass(Player player) {
+	private IUtils u = new Utils();
+
+	public Selector(Player player) {
 		p = player;
-		update();
+		this.update();
 	}
 
-	public void openMenu() {
-		p.openInventory(inv);
-	}
-	
+//	public void openMenu() {
+//		p.openInventory(inv);
+//	}
+
 	public void open() {
 		inv.clear();
 		update();
@@ -44,26 +44,25 @@ public class Compass {
 		refreshTimer = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
 			update();
 			p.sendMessage("Running task");
-		}, 1*20, 1*20);
+		}, 1 * 20, 1 * 20);
 	}
-	
-	public static void close() {
+
+	public static void close(Player p) {
 		if (refreshTimer != null) {
 			refreshTimer.cancel();
 			p.sendMessage("Ending task");
 		}
 		p.closeInventory();
 	}
-	
-	public static void onClose() {
+
+	public static void onClose(Player p) {
 		if (refreshTimer != null) {
 			refreshTimer.cancel();
 			p.sendMessage("Ending task");
 		}
 	}
 
-
-	public static void update() {
+	public void update() {
 		for (final String key : c.getConfigurationSection("compass").getKeys(false)) {
 			final ItemStack i = new ItemStack(Material.AIR);
 			if (!key.equals("options")) {
@@ -84,7 +83,7 @@ public class Compass {
 							String olineplayers = (String) placeholders.get("online");
 							String maxplayers = (String) placeholders.get("max");
 							long serverping = (long) placeholders.get("ping");
-							//int online = (int) placeholders.get("online");
+							// int online = (int) placeholders.get("online");
 							int online = Integer.valueOf(olineplayers);
 							int max = Integer.valueOf(maxplayers);
 							int ping = (int) serverping;
@@ -102,8 +101,8 @@ public class Compass {
 							inv.setItem(slot,
 									u.itemStackBuilder(section.getString("offline.material"), i,
 											u.replace(section.getString("offline.name"), section, 0, 0, 0),
-											u.replaceLore(lore, 0, 0, 0, false), section.getBoolean("offline.enchanted"),
-											section.getInt("offline.byte")));
+											u.replaceLore(lore, 0, 0, 0, false),
+											section.getBoolean("offline.enchanted"), section.getInt("offline.byte")));
 						}
 					} else {
 						int slot = Integer.valueOf(key);

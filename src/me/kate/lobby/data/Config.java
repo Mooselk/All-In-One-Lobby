@@ -1,4 +1,4 @@
-package me.kate.lobby.config;
+package me.kate.lobby.data;
 
 import java.io.File;
 import java.io.IOException;

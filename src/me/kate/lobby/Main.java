@@ -7,14 +7,14 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.commands.ReloadConfigCommand;
 import me.kate.lobby.commands.SetSpawnCommand;
-import me.kate.lobby.config.Config;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.events.BlockRelatedEvent;
 import me.kate.lobby.events.JoinEvent;
 import me.kate.lobby.events.MobSpawnEvent;
 import me.kate.lobby.events.TouchVoidEvent;
-import me.kate.lobby.items.compass.events.CompassClickEvent;
-import me.kate.lobby.items.compass.events.CompassGuiEvents;
-import me.kate.lobby.items.compass.ping.PingServersBackground;
+import me.kate.lobby.items.selector.events.SelectorClickEvent;
+import me.kate.lobby.items.selector.events.SelectorGuiEvents;
+import me.kate.lobby.items.selector.ping.PingServersBackground;
 
 public class Main extends JavaPlugin {
 	
@@ -45,8 +45,8 @@ public class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new TouchVoidEvent(), this);
 		getServer().getPluginManager().registerEvents(new BlockRelatedEvent(), this);
 		getServer().getPluginManager().registerEvents(new MobSpawnEvent(), this);
-		getServer().getPluginManager().registerEvents(new CompassGuiEvents(), this);
-		getServer().getPluginManager().registerEvents(new CompassClickEvent(), this);
+		getServer().getPluginManager().registerEvents(new SelectorGuiEvents(), this);
+		getServer().getPluginManager().registerEvents(new SelectorClickEvent(), this);
 	}
 	
 	private void registerCommands() {
