@@ -3,13 +3,16 @@ package me.kate.lobby.managers;
 import java.util.UUID;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.files.HidePlayersFile;
+import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 
 public class CooldownManager {
 
-	public static final int DEFAULT_COOLDOWN = 3;
-
+	private static IHidePlayerSettings hf = new HidePlayersFile();
+	
+	public static final int DEFAULT_COOLDOWN = hf.getCooldownLength();
+	
 	public void setCooldown(UUID player, int time) {
-
 		if (time < 1) {
 			Main.COOLDOWNS.remove(player);
 		} else {
