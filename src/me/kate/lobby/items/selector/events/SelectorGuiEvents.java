@@ -8,13 +8,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import me.kate.lobby.Main;
+
+import me.kate.lobby.data.files.SelectorFile;
+import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.items.selector.Selector;
 import net.md_5.bungee.api.ChatColor;
 
 public class SelectorGuiEvents implements Listener {
 
-	private FileConfiguration c = Main.getInstance().getConfig();
+	private ISelectorSettings sf = new SelectorFile();
+	private FileConfiguration c = sf.getSelectorFile();
 
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
@@ -39,7 +42,7 @@ public class SelectorGuiEvents implements Listener {
 			e.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void closeInventory(InventoryCloseEvent e) {
 		final Player p = (Player) e.getPlayer();
