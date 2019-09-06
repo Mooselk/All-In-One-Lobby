@@ -9,6 +9,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import net.md_5.bungee.api.ChatColor;
 
 public class BlockRelatedEvent implements Listener {
+	
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
 		final Player p = (Player) e.getPlayer();
