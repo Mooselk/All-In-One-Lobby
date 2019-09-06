@@ -130,7 +130,7 @@ compass:
         - " "
         
     offline:
-      name: "&e&lPractice &7- &4Offline"
+      name: "&d&lSkyBlock &7- &4Offline"
       material: "WOOL"
       byte: 14
       enchanted: false
