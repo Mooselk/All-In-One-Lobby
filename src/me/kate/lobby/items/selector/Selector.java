@@ -27,8 +27,8 @@ public class Selector {
 	
 	private ISelectorSettings sf = new SelectorFile();
 	private FileConfiguration c = sf.getSelectorFile();
-	private Inventory inv = Bukkit.createInventory(null, c.getInt("compass.options.rows") * 9,
-			ChatColor.translateAlternateColorCodes('&', c.getString("compass.options.name")));
+	private Inventory inv = Bukkit.createInventory(null, c.getInt("selector.options.rows") * 9,
+			ChatColor.translateAlternateColorCodes('&', c.getString("selector.options.name")));
 
 	private IUtils u = new Utils();
 
@@ -63,10 +63,10 @@ public class Selector {
 	}
 
 	public void update() {
-		for (final String key : c.getConfigurationSection("compass").getKeys(false)) {
+		for (final String key : c.getConfigurationSection("selector").getKeys(false)) {
 			final ItemStack i = new ItemStack(Material.AIR);
 			if (!key.equals("options")) {
-				final ConfigurationSection section = c.getConfigurationSection("compass." + key);
+				final ConfigurationSection section = c.getConfigurationSection("selector." + key);
 				if (!section.getBoolean("decoration")) {
 					List<String> lore = null;
 					if (section.getBoolean("server.ping-server")) {

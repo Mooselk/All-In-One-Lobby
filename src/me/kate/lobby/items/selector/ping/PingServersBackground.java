@@ -21,9 +21,9 @@ public class PingServersBackground extends Thread {
 	public void run() {
 		while (true) {
 			try {
-				for (final String key : config.getConfigurationSection("compass").getKeys(false)) {
+				for (final String key : config.getConfigurationSection("selector").getKeys(false)) {
 
-					final ConfigurationSection sec = config.getConfigurationSection("compass." + key);
+					final ConfigurationSection sec = config.getConfigurationSection("selector." + key);
 
 					if (!sec.getBoolean("decoration") && !key.equals("options")) {
 						try {
@@ -32,7 +32,7 @@ public class PingServersBackground extends Thread {
 							e.printStackTrace();
 						}
 
-						final ConfigurationSection section = config.getConfigurationSection("compass." + key);
+						final ConfigurationSection section = config.getConfigurationSection("selector." + key);
 
 						if (!section.getBoolean("server.ping-server", false)) {
 							continue;

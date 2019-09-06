@@ -23,7 +23,7 @@ public class SelectorGuiEvents implements Listener {
 	public void onClick(InventoryClickEvent e) {
 		final Player p = (Player) e.getWhoClicked();
 		int slot = e.getSlot();
-		ConfigurationSection sec = c.getConfigurationSection("compass." + slot);
+		ConfigurationSection sec = c.getConfigurationSection("selector." + slot);
 		if (sec == null) {
 			return;
 		}
