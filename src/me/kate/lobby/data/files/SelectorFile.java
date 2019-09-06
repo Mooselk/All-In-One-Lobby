@@ -28,9 +28,9 @@ public class SelectorFile implements ISelectorSettings {
 			selector.getParentFile().mkdirs();
 			try {
 				selector.createNewFile();
-				Bukkit.getLogger().info("Creating playersettings...");
+				Bukkit.getLogger().info("[Lobby] Creating selector.yml...");
 			} catch (IOException e) {
-				Bukkit.getLogger().severe("Failed to create selector.yml!");
+				Bukkit.getLogger().severe("[Lobby] Failed to create selector.yml!");
 				e.printStackTrace();
 			}
 		}
@@ -62,7 +62,7 @@ public class SelectorFile implements ISelectorSettings {
 		try {
 			selectorConf.save(selector);
 		} catch (IOException e) {
-			Bukkit.getLogger().severe("Failed to save selector.yml!");
+			Bukkit.getLogger().severe("[Lobby] Failed to save selector.yml!");
 			e.printStackTrace();
 		}
 	}
