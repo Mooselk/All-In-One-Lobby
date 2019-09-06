@@ -1,6 +1,8 @@
 package me.kate.lobby.items.hideplayers.events;
 
 import org.bukkit.Material;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +16,7 @@ import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.items.hideplayers.HidePlayers;
 import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 import me.kate.lobby.managers.CooldownManager;
+import me.kate.lobby.utils.ItemBuilder;
 import net.md_5.bungee.api.ChatColor;
 
 public class HidePlayersInteractEvent implements Listener {
@@ -21,23 +24,37 @@ public class HidePlayersInteractEvent implements Listener {
 	private Hideable h = new HidePlayers();
 	private IHidePlayerSettings hideSettings = new HidePlayersFile();
 	private final CooldownManager cooldownManager = new CooldownManager();
+
+	private IHidePlayerSettings hf = new HidePlayersFile();
+	private FileConfiguration hc = hf.getHideSettings();
+
+	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
+	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
+
 	private static final long MESSAGE_THRESHOLD = 1000 * 1;
 	private static final long MESSAGE_ENABLE_THRESHOLD = 1000 * 1;
 	private long lastMessage;
 	private long lastEnableMessage;
 
+	private ItemStack hide;
+	private ItemStack unhide;
+
 	@EventHandler
 	public void onInteract(PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
-		if (p.getItemInHand().getType().equals(Material.REDSTONE_TORCH_ON)) {
+
+		hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")))
+				.name(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name"))).make();
+		unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
+				.name(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name"))).make();
+
+		if (p.getItemInHand().getType().equals(Material.getMaterial(hideSection.getString("material")))) {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			long now = System.currentTimeMillis();
 			if (timeLeft == 0) {
 				this.startCooldown(p);
 				h.hide(p);
-				ItemStack item = p.getItemInHand();
-				item.setType(Material.LEVER);
-				p.getInventory().setItem(2, item);
+				p.getInventory().setItem(2, unhide);
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&', hideSettings.getHideMessage()));
@@ -45,20 +62,18 @@ public class HidePlayersInteractEvent implements Listener {
 			} else {
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
+					p.sendMessage(
+							ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
 				}
 			}
 			e.setCancelled(true);
 		}
-		if (p.getItemInHand().getType().equals(Material.LEVER)) {
+		if (p.getItemInHand().getType().equals(Material.getMaterial(unhideSection.getString("material")))) {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			if (timeLeft == 0) {
 				this.startCooldown(p);
 				h.unhide(p);
-				ItemStack item = p.getItemInHand();
-				item.setType(Material.REDSTONE_TORCH_ON);
-				p.getInventory().setItem(2, item);
-				p.getInventory().setItem(2, item);
+				p.getInventory().setItem(2, hide);
 				long nowEnable = System.currentTimeMillis();
 				if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
 					lastEnableMessage = nowEnable;
@@ -68,7 +83,8 @@ public class HidePlayersInteractEvent implements Listener {
 				long now = System.currentTimeMillis();
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
+					p.sendMessage(
+							ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
 				}
 			}
 			e.setCancelled(true);

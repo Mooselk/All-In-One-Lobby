@@ -17,13 +17,22 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.files.HidePlayersFile;
 import me.kate.lobby.data.files.SelectorFile;
+import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.utils.ItemBuilder;
 
 public class JoinEvent implements Listener {
 
 	private ISelectorSettings sf = new SelectorFile();
-	private FileConfiguration c = sf.getSelectorFile();
+	private IHidePlayerSettings hf = new HidePlayersFile();
+	private FileConfiguration cs = sf.getSelectorFile();
+	private FileConfiguration hc = hf.getHideSettings();
+	private FileConfiguration c = Main.getInstance().getConfig();
+
+	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
+//	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
@@ -31,44 +40,41 @@ public class JoinEvent implements Listener {
 		p.teleport(spawn());
 	}
 
+	private ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")))
+			.name(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name")))
+			.lores(hideSection.getStringList("lore"))
+			.make();
+//	private ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
+//			.name(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name")))
+//			.lores(colorLore(unhideSection.getStringList("lore")))
+//			.make();
+
 	@EventHandler
 	public void giveItemsOnJoin(PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
-		if (!p.getInventory().contains(Material.LEVER)) {
-			p.getInventory().setItem(2, new ItemStack(Material.LEVER));
+
+		if (!p.getInventory().contains(hide)) {
+			p.getInventory().setItem(2, hide);
 		}
-		if (c.getConfigurationSection("compass.options").getBoolean("enabled")) {
-			ConfigurationSection section = c.getConfigurationSection("compass.options");
-			if (!p.getInventory().contains(Material.COMPASS, 1)) {
+
+		if (cs.getConfigurationSection("selector.options").getBoolean("enabled")) {
+			ConfigurationSection section = cs.getConfigurationSection("selector.options");
+			if (!p.getInventory().contains(Material.getMaterial(section.getString("material")), 1)) {
 				p.getInventory().setItem(section.getInt("slot"),
-						giveCompass(section.getString("item-name"), section.getStringList("lore")));
+						giveSelector(section.getString("item-name"), section.getStringList("lore")));
 			}
 		}
-//		if (c.getConfigurationSection("hideplayers.options").getBoolean("enabled")) {
-//			if (!p.getInventory().contains(Material.REDSTONE_TORCH_ON, 1)
-//					|| !p.getInventory().contains(Material.REDSTONE_TORCH_OFF, 1)) {
-//				
-//			}
-//		}
 	}
 
-	private ItemStack giveCompass(String displayName, List<String> lore) {
-		ItemStack item = new ItemStack(Material.COMPASS);
+	private ItemStack giveSelector(String displayName, List<String> lore) {
+		ItemStack item = new ItemStack(
+				Material.getMaterial(cs.getConfigurationSection("selector.options").getString("material")));
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
 		im.setLore(colorLore(lore));
 		item.setItemMeta(im);
 		return item;
 	}
-
-//	private ItemStack giveHideTool(String displayName, ArrayList<String> lore) {
-//		ItemStack item = new ItemStack(Material.REDSTONE_TORCH_ON);
-//		ItemMeta im = item.getItemMeta();
-//		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
-//		im.setLore(colorLore(lore));
-//		item.setItemMeta(im);
-//		return item;
-//	}
 
 	private List<String> colorLore(List<String> lore) {
 		List<String> nlore = new ArrayList<String>();
