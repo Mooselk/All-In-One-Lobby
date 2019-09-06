@@ -15,14 +15,18 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.files.SelectorFile;
+import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
 public class Selector {
 
 	private Player p;
-	private static BukkitTask refreshTimer;
-	private FileConfiguration c = Main.getInstance().getConfig();
+	private static BukkitTask refreshTimer; // breaks when multiple players join, tie the player and task to a hashmap
+	
+	private ISelectorSettings sf = new SelectorFile();
+	private FileConfiguration c = sf.getSelectorFile();
 	private Inventory inv = Bukkit.createInventory(null, c.getInt("compass.options.rows") * 9,
 			ChatColor.translateAlternateColorCodes('&', c.getString("compass.options.name")));
 
@@ -32,10 +36,6 @@ public class Selector {
 		p = player;
 		this.update();
 	}
-
-//	public void openMenu() {
-//		p.openInventory(inv);
-//	}
 
 	public void open() {
 		inv.clear();

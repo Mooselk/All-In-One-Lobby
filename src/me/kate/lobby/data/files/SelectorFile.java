@@ -9,52 +9,86 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 
-public class SelectorFile {
+public class SelectorFile implements ISelectorSettings {
+	
 	private File selector;
 	private FileConfiguration selectorConf;
-
+	private boolean failed;
+	
+	
 	public SelectorFile() {
-
 	}
-
+	
+	@Override
 	public void create() {
-		selector = new File(Main.getInstance().getDataFolder() + "/data/", "playersettings.yml");
+		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
 		if (!selector.exists()) {
 			selector.getParentFile().mkdirs();
 			try {
 				selector.createNewFile();
 				Bukkit.getLogger().info("Creating playersettings...");
 			} catch (IOException e) {
-				Bukkit.getLogger().severe("Failed to create playersettings.yml!");
+				Bukkit.getLogger().severe("Failed to create selector.yml!");
 				e.printStackTrace();
 			}
 		}
 		selectorConf = new YamlConfiguration();
 		try {
 			selectorConf.load(selector);
-			Bukkit.getLogger().info("[NorthernStars] Loading playerdata file...");
+			Bukkit.getLogger().info("[Lobby] Loading selector file...");
 		} catch (IOException | InvalidConfigurationException e) {
-			Bukkit.getLogger().severe("[NorthernStars] Failed to load playerdata.yml!");
+			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
 			e.printStackTrace();
 		}
 	}
 
-	public void save() {
+	@Override
+	public void load() {
+		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
+		selectorConf = new YamlConfiguration();
 		try {
-			selectorConf.save(selector);
-		} catch (IOException e) {
-			Bukkit.getLogger().severe("Failed to save playersettings.yml!");
+			selectorConf.load(selector);
+		} catch (IOException | InvalidConfigurationException e) {
+			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
 			e.printStackTrace();
 		}
 	}
 	
-	public void reload() {
+	@Override
+	public void save() {
+		this.load();
 		try {
-			selectorConf.load(selector);
-		} catch (InvalidConfigurationException | IOException e) {
-			Bukkit.getLogger().severe("Error updating playersettings.yml!");
+			selectorConf.save(selector);
+		} catch (IOException e) {
+			Bukkit.getLogger().severe("Failed to save selector.yml!");
 			e.printStackTrace();
 		}
+	}
+	
+	@Override
+	public void reload() {
+		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
+		selectorConf = new YamlConfiguration();
+		try {
+			selectorConf.load(selector);
+			failed = false;
+		} catch (IOException | InvalidConfigurationException e) {
+			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
+			failed = true;
+			e.printStackTrace();
+		}
+	}
+	
+	@Override
+	public boolean reloadFailed() {
+		return failed;
+	}
+
+	@Override
+	public FileConfiguration getSelectorFile() {
+		this.load();
+		return selectorConf;
 	}
 }
