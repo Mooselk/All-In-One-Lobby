@@ -18,6 +18,7 @@ public class SelectorGuiEvents implements Listener {
 
 	private ISelectorSettings sf = new SelectorFile();
 	private FileConfiguration c = sf.getSelectorFile();
+	private final Selector selector = new Selector();
 
 	@EventHandler
 	public void onClick(InventoryClickEvent e) {
@@ -36,7 +37,7 @@ public class SelectorGuiEvents implements Listener {
 						&& (!sec.getString("command").equalsIgnoreCase("menuclose"))) {
 					Bukkit.dispatchCommand(p, sec.getString("command"));
 				} else {
-					Selector.close(p);
+					selector.close(p);
 				}
 			}
 			e.setCancelled(true);
@@ -46,7 +47,6 @@ public class SelectorGuiEvents implements Listener {
 	@EventHandler
 	public void closeInventory(InventoryCloseEvent e) {
 		final Player p = (Player) e.getPlayer();
-		Selector.onClose(p);
-		p.sendMessage("Closed inventory");
+		selector.onClose(p);
 	}
 }
