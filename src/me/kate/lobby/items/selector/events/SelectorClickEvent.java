@@ -21,22 +21,10 @@ public class SelectorClickEvent implements Listener {
 	public void onPlayerInteractEvent(PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
 		if (p.getItemInHand().getType().equals(Material.getMaterial(c.getConfigurationSection("selector.options").getString("material")))) {
-			final Selector compass = new Selector(p);
-			compass.open();
+			final Selector compass = new Selector();
+			compass.open(p);
 		}
 	}
-	
-//	@EventHandler
-//	public void onClick(InventoryClickEvent e) {
-//		final Player p = (Player) e.getWhoClicked();
-//		if (p.getInventory().contains(Material.COMPASS)) {
-//			ItemStack is = e.getCurrentItem();
-//			if (is == null) {
-//				return;
-//			}
-//			e.setCancelled(true);
-//		}
-//	}
 	
 	@EventHandler
 	public void onDrop(PlayerDropItemEvent e) {
