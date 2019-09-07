@@ -23,6 +23,7 @@ import me.kate.lobby.events.TouchVoidEvent;
 import me.kate.lobby.items.hideplayers.events.HidePlayersInteractEvent;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
+import me.kate.lobby.items.selector.ping.PingServersBackground;
 
 public class Main extends JavaPlugin {
 
