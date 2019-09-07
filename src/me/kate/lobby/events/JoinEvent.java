@@ -18,8 +18,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.HidePlayersFile;
+import me.kate.lobby.data.files.PlayerSettingsFile;
 import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
+import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.utils.ItemBuilder;
 
@@ -30,13 +32,22 @@ public class JoinEvent implements Listener {
 	private FileConfiguration cs = sf.getSelectorFile();
 	private FileConfiguration hc = hf.getHideSettings();
 	private FileConfiguration c = Main.getInstance().getConfig();
-
+	private IPlayerSettings ps = new PlayerSettingsFile();
+	
+	
 	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
 //	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
 
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
+		
+		if (!ps.sectionExists(p.getUniqueId().toString())) {
+			ps.createSection(p.getUniqueId().toString());
+			ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString()).addDefault("hidden", false);
+			ps.save();
+		}
+		
 		p.teleport(spawn());
 	}
 

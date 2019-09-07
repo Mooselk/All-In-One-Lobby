@@ -44,6 +44,7 @@ public class PlayerSettingsFile implements IPlayerSettings {
 
 	@Override
 	public void save() {
+		//this.reload();
 		try {
 			playerSettingsConf.save(playerSettings);
 		} catch (IOException e) {
@@ -54,6 +55,10 @@ public class PlayerSettingsFile implements IPlayerSettings {
 	
 	@Override
 	public void reload() {
+		//playerSettings = null;
+		//playerSettingsConf = null;
+		playerSettings = new File(Main.getInstance().getDataFolder() + "/data/", "playersettings.yml");
+		playerSettingsConf = new YamlConfiguration();
 		try {
 			playerSettingsConf.load(playerSettings);
 		} catch (InvalidConfigurationException | IOException e) {
@@ -64,13 +69,15 @@ public class PlayerSettingsFile implements IPlayerSettings {
 
 	@Override
 	public FileConfiguration getPlayerSettings() {
+		//this.reload();
 		return playerSettingsConf;
 	}
 
 	@Override
 	public boolean sectionExists(String section) {
+		this.reload();
 		boolean exists = false;
-		if (playerSettingsConf.isConfigurationSection(section)) {
+		if (playerSettingsConf.getConfigurationSection(section) != null) {
 			exists = true;
 		}
 		return exists;
@@ -78,8 +85,8 @@ public class PlayerSettingsFile implements IPlayerSettings {
 	
 	@Override
 	public void createSection(String section) {
+		//this.reload();
 		playerSettingsConf.createSection(section);
+		playerSettingsConf.getConfigurationSection(section).set("hidden", false);
 	}
-	
-	
 }
