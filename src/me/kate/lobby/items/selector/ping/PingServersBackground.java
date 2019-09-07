@@ -3,7 +3,6 @@ package me.kate.lobby.items.selector.ping;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
@@ -51,7 +50,6 @@ public class PingServersBackground extends Thread {
 							serverInfo.put("max", ms.getMaximumPlayers());
 							serverInfo.put("version", ms.getVersion());
 							serverInfo.put("ping", ms.getLatency());
-							Bukkit.getLogger().info("updating: " + key);
 						}
 						Main.SERVER_PLACEHOLDERS.put(serverName, serverInfo);
 					}

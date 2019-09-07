@@ -22,8 +22,7 @@ import me.kate.lobby.utils.replace.Utils;
 
 public class Selector {
 
-	private Player p;
-	private static BukkitTask refreshTimer; // breaks when multiple players join, tie the player and task to a hashmap
+	private BukkitTask refreshTimer;
 	
 	private ISelectorSettings sf = new SelectorFile();
 	private FileConfiguration c = sf.getSelectorFile();
@@ -32,33 +31,32 @@ public class Selector {
 
 	private IUtils u = new Utils();
 
-	public Selector(Player player) {
-		p = player;
+	public Selector() {
 		this.update();
 	}
 
-	public void open() {
-		inv.clear();
+	public void open(Player player) {
+		this.inv.clear();
 		this.update();
-		p.openInventory(inv);
+		player.openInventory(inv);
 		refreshTimer = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
 			this.update();
-			p.sendMessage("Running task");
 		}, 1 * 20, 1 * 20);
+		Main.TASKS.put(player.getUniqueId(), refreshTimer);
 	}
 
-	public static void close(Player p) {
-		if (refreshTimer != null) {
-			refreshTimer.cancel();
-			p.sendMessage("Ending task");
+	public void close(Player player) {
+		BukkitTask bukkitTask = Main.TASKS.remove(player.getUniqueId());
+		if (bukkitTask != null) {
+			bukkitTask.cancel();
 		}
-		p.closeInventory();
+		player.closeInventory();
 	}
 
-	public static void onClose(Player p) {
-		if (refreshTimer != null) {
-			refreshTimer.cancel();
-			p.sendMessage("Ending task");
+	public void onClose(Player player) {
+		BukkitTask bukkitTask = Main.TASKS.remove(player.getUniqueId());
+		if (bukkitTask != null) {
+			bukkitTask.cancel();
 		}
 	}
 
