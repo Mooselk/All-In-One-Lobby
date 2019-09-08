@@ -2,6 +2,8 @@ package me.kate.lobby;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -24,25 +26,34 @@ import me.kate.lobby.items.hideplayers.events.HidePlayersInteractEvent;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
 import me.kate.lobby.items.selector.ping.PingServersBackground;
+import me.kate.lobby.npcs.NPCLib;
 
 public class Main extends JavaPlugin {
 
 	private static Main instance;
+	private NPCLib npclib;
 	
 	private IPlayerSettings playerSettings = new PlayerSettingsFile();
 	private ISelectorSettings selectorSettings = new SelectorFile();
 	private IHidePlayerSettings hideSettings = new HidePlayersFile();
 	
 	public static final Map<String, Map<String, Object>> SERVER_PLACEHOLDERS = new HashMap<>();
+	public static final SortedSet<String> IDS = new TreeSet<>();
+	public static final Map<String, String> NPCS = new HashMap<>();
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
 
 	public static Main getInstance() {
 		return instance;
 	}
+	
+	public NPCLib getNPCLib() {
+		return npclib;	
+	}
 
 	@Override
 	public void onEnable() {
+		npclib = new NPCLib(this);
 		instance = this;
 		playerSettings.create();
 		selectorSettings.create();

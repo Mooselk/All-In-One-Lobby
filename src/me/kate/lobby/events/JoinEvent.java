@@ -1,6 +1,7 @@
 package me.kate.lobby.events;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -23,6 +24,8 @@ import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.npcs.api.NPC;
+import me.kate.lobby.npcs.api.events.NPCInteractEvent;
 import me.kate.lobby.utils.ItemBuilder;
 
 public class JoinEvent implements Listener {
@@ -41,6 +44,8 @@ public class JoinEvent implements Listener {
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
+		
+		
 		
 		if (!ps.sectionExists(p.getUniqueId().toString())) {
 			ps.createSection(p.getUniqueId().toString());
@@ -107,4 +112,24 @@ public class JoinEvent implements Listener {
 		loc.setYaw(yaw);
 		return loc;
 	}
+	
+	public void genNPC(Player p) {
+		NPC npc = Main.getInstance().getNPCLib().createNPC(Arrays.asList(ChatColor.WHITE + "Hi there (#2)", ChatColor.YELLOW + "Click on me!"));
+        npc.setLocation(new Location(Bukkit.getWorld("world"), -13.5, 61, 0.5));
+        Main.IDS.add(npc.getId());
+        Bukkit.getLogger().info("IDS: " +  Main.IDS);
+        npc.create();
+        npc.show(p);
+	}
+	
+	@EventHandler
+    public void onNPCInteract(NPCInteractEvent event) {
+        String id = Main.NPCS.get(event.getNPC().getId());
+        if (id.equals("Factions")) {
+        	event.getWhoClicked().sendMessage(ChatColor.GREEN + "niqqa ill beat yo ass in factions");
+        }
+        if (id.equals("SkyBlock")) {
+        	event.getWhoClicked().sendMessage(ChatColor.GREEN + "im an intellegtual i lige skyblock");
+        }
+    }
 }
