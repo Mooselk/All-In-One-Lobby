@@ -27,8 +27,10 @@ public class PacketListener {
     private final Class<?> packetPlayInUseEntityClazz = Reflection.getMinecraftClass("PacketPlayInUseEntity");
 
     // Fields:
-    private final Reflection.FieldAccessor entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
-    private final Reflection.FieldAccessor actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
+    @SuppressWarnings("rawtypes")
+	private final Reflection.FieldAccessor entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
+    @SuppressWarnings("rawtypes")
+	private final Reflection.FieldAccessor actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
 
     // Prevent players from clicking at very high speeds.
     private final Set<UUID> delay = new HashSet<>();

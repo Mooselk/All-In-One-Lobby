@@ -14,7 +14,8 @@ import java.util.Collection;
  */
 public class PacketPlayOutScoreboardTeamWrapper {
 
-    public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
+    @SuppressWarnings("unchecked")
+	public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
         PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeam = new PacketPlayOutScoreboardTeam();
 
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "g", int.class)
@@ -29,9 +30,11 @@ public class PacketPlayOutScoreboardTeamWrapper {
                 .set(packetPlayOutScoreboardTeam, "never");
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "i", int.class)
                 .set(packetPlayOutScoreboardTeam, 0);
-        Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
+        @SuppressWarnings("rawtypes")
+		Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
                 packetPlayOutScoreboardTeam.getClass(), "h", Collection.class);
-        Collection collection = collectionFieldAccessor.get(packetPlayOutScoreboardTeam);
+        @SuppressWarnings("rawtypes")
+		Collection collection = collectionFieldAccessor.get(packetPlayOutScoreboardTeam);
         collection.add(name);
         collectionFieldAccessor.set(packetPlayOutScoreboardTeam, collection);
 

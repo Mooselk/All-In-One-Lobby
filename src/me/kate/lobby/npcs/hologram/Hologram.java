@@ -48,7 +48,8 @@ public class Hologram {
             .getConstructor(PACKET_PLAY_OUT_ENTITY_DESTROY_CLAZZ, int[].class);
 
     // Fields:
-    private static final Reflection.FieldAccessor playerConnectionField = Reflection.getField(ENTITY_PLAYER_CLAZZ,
+    @SuppressWarnings("rawtypes")
+	private static final Reflection.FieldAccessor playerConnectionField = Reflection.getField(ENTITY_PLAYER_CLAZZ,
             "playerConnection", PLAYER_CONNECTION_CLAZZ);
 
     // Methods:

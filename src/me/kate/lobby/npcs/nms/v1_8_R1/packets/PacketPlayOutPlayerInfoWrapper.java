@@ -15,7 +15,8 @@ import java.util.List;
  */
 public class PacketPlayOutPlayerInfoWrapper {
 
-    public PacketPlayOutPlayerInfo create(EnumPlayerInfoAction action, GameProfile gameProfile, String name) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public PacketPlayOutPlayerInfo create(EnumPlayerInfoAction action, GameProfile gameProfile, String name) {
         PacketPlayOutPlayerInfo packetPlayOutPlayerInfo = new PacketPlayOutPlayerInfo();
         Reflection.getField(packetPlayOutPlayerInfo.getClass(), "a", EnumPlayerInfoAction.class)
                 .set(packetPlayOutPlayerInfo, action);

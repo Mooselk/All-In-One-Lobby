@@ -25,7 +25,6 @@ import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.npcs.api.NPC;
-import me.kate.lobby.npcs.api.events.NPCInteractEvent;
 import me.kate.lobby.utils.ItemBuilder;
 
 public class JoinEvent implements Listener {
@@ -121,15 +120,4 @@ public class JoinEvent implements Listener {
         npc.create();
         npc.show(p);
 	}
-	
-	@EventHandler
-    public void onNPCInteract(NPCInteractEvent event) {
-        String id = Main.NPCS.get(event.getNPC().getId());
-        if (id.equals("Factions")) {
-        	event.getWhoClicked().sendMessage(ChatColor.GREEN + "niqqa ill beat yo ass in factions");
-        }
-        if (id.equals("SkyBlock")) {
-        	event.getWhoClicked().sendMessage(ChatColor.GREEN + "im an intellegtual i lige skyblock");
-        }
-    }
 }

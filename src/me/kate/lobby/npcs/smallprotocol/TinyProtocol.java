@@ -45,7 +45,8 @@ public abstract class TinyProtocol {
 
     // Packets we have to intercept
     private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
-    private static final Reflection.FieldAccessor getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START,
+    @SuppressWarnings("rawtypes")
+	private static final Reflection.FieldAccessor getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START,
             Reflection.getClass("com.mojang.authlib.GameProfile"), 0);
 
     // Speedup channel lookup

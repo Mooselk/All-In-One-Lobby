@@ -16,7 +16,8 @@ import java.util.Collection;
  */
 public class PacketPlayOutScoreboardTeamWrapper {
 
-    public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
         PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeam = new PacketPlayOutScoreboardTeam();
 
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "i", int.class)

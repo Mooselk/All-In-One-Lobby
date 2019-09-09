@@ -9,23 +9,26 @@ import java.util.UUID;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import me.kate.lobby.commands.NPCCommand;
 import me.kate.lobby.commands.ReloadConfigCommand;
 import me.kate.lobby.commands.SetSpawnCommand;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.HidePlayersFile;
+import me.kate.lobby.data.files.NPCFile;
 import me.kate.lobby.data.files.PlayerSettingsFile;
 import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.events.BlockRelatedEvent;
+import me.kate.lobby.events.InteractNPCEvent;
 import me.kate.lobby.events.JoinEvent;
 import me.kate.lobby.events.MobSpawnEvent;
 import me.kate.lobby.events.TouchVoidEvent;
 import me.kate.lobby.items.hideplayers.events.HidePlayersInteractEvent;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
-import me.kate.lobby.items.selector.ping.PingServersBackground;
+// import me.kate.lobby.items.selector.ping.PingServersBackground;
 import me.kate.lobby.npcs.NPCLib;
 
 public class Main extends JavaPlugin {
@@ -59,6 +62,7 @@ public class Main extends JavaPlugin {
 		selectorSettings.create();
 		hideSettings.create();
 		// new PingServersBackground().start();
+		NPCFile.create();
 		Config.createConfig();
 		this.registerEvents();
 		this.registerCommands();
@@ -77,10 +81,13 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new SelectorGuiEvents(), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorClickEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new HidePlayersInteractEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(), this);
+		
 	}
 
 	private void registerCommands() {
 		this.getCommand("setspawn").setExecutor(new SetSpawnCommand());
 		this.getCommand("reloadselector").setExecutor(new ReloadConfigCommand());
+		this.getCommand("npc").setExecutor(new NPCCommand());
 	}
 }

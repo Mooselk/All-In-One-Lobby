@@ -23,7 +23,8 @@ public class PacketPlayOutPlayerInfoWrapper {
     private final Reflection.ConstructorInvoker playerInfoDataConstructor = Reflection.getConstructor(playerInfoDataClazz,
             packetPlayOutPlayerInfoClazz, GameProfile.class, int.class, EnumGamemode.class, IChatBaseComponent.class);
 
-    public PacketPlayOutPlayerInfo create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction action, GameProfile gameProfile, String name) {
+    @SuppressWarnings("unchecked")
+	public PacketPlayOutPlayerInfo create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction action, GameProfile gameProfile, String name) {
         PacketPlayOutPlayerInfo packetPlayOutPlayerInfo = new PacketPlayOutPlayerInfo();
         Reflection.getField(packetPlayOutPlayerInfo.getClass(), "a", PacketPlayOutPlayerInfo.EnumPlayerInfoAction.class)
                 .set(packetPlayOutPlayerInfo, action);
@@ -33,8 +34,10 @@ public class PacketPlayOutPlayerInfoWrapper {
                 IChatBaseComponent.ChatSerializer.b("{\"text\":\"" + ChatColor.BLUE + "[NPC] " + name + "\"}")
         );
 
-        Reflection.FieldAccessor<List> fieldAccessor = Reflection.getField(packetPlayOutPlayerInfo.getClass(), "b", List.class);
-        List list = fieldAccessor.get(packetPlayOutPlayerInfo);
+        @SuppressWarnings("rawtypes")
+		Reflection.FieldAccessor<List> fieldAccessor = Reflection.getField(packetPlayOutPlayerInfo.getClass(), "b", List.class);
+        @SuppressWarnings("rawtypes")
+		List list = fieldAccessor.get(packetPlayOutPlayerInfo);
         list.add(playerInfoData);
         fieldAccessor.set(packetPlayOutPlayerInfo, list);
 
