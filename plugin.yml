@@ -8,3 +8,5 @@ commands:
     description: sets spawn
   reloadselector:
     description: reloads selector configuration
+  npc:
+    description: base npc command
