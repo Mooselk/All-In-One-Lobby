@@ -1,9 +1,9 @@
 package me.kate.lobby;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 import java.util.UUID;
 
 import org.bukkit.plugin.java.JavaPlugin;
@@ -30,6 +30,7 @@ import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
 // import me.kate.lobby.items.selector.ping.PingServersBackground;
 import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.api.NPC;
 
 public class Main extends JavaPlugin {
 
@@ -41,8 +42,10 @@ public class Main extends JavaPlugin {
 	private IHidePlayerSettings hideSettings = new HidePlayersFile();
 	
 	public static final Map<String, Map<String, Object>> SERVER_PLACEHOLDERS = new HashMap<>();
-	public static final SortedSet<String> IDS = new TreeSet<>();
-	public static final Map<String, String> NPCS = new HashMap<>();
+	
+	public static final Map<String, String> NPCINFO = new HashMap<>();
+	public static final List<NPC> NPCS = new ArrayList<>();
+	
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
 
