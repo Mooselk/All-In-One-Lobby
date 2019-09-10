@@ -4,6 +4,12 @@
 
 package me.kate.lobby.npcs.nms.v1_8_R3;
 
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.entity.Player;
+
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.hologram.Hologram;
 import me.kate.lobby.npcs.internal.MinecraftVersion;
@@ -12,12 +18,12 @@ import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutEntityHeadRotationWra
 import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutNamedEntitySpawnWrapper;
 import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutPlayerInfoWrapper;
 import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutScoreboardTeamWrapper;
-import net.minecraft.server.v1_8_R3.*;
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
-import java.util.List;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_8_R3.PacketPlayOutEntityHeadRotation;
+import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
+import net.minecraft.server.v1_8_R3.PlayerConnection;
 
 /**
  * @author Jitse Boonstra
@@ -34,7 +40,7 @@ public class NPC_v1_8_R3 extends SimpleNPC {
     public NPC_v1_8_R3(NPCLib instance, List<String> lines) {
         super(instance, lines);
     }
-
+    
     @Override
     public void createPackets() {
         this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
