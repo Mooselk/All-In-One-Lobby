@@ -1,7 +1,6 @@
 package me.kate.lobby.events;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -24,7 +23,7 @@ import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
-import me.kate.lobby.npcs.api.NPC;
+import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.ItemBuilder;
 
 public class JoinEvent implements Listener {
@@ -36,22 +35,26 @@ public class JoinEvent implements Listener {
 	private FileConfiguration c = Main.getInstance().getConfig();
 	private IPlayerSettings ps = new PlayerSettingsFile();
 	
+	private NPCBuilder npcb = new NPCBuilder();
 	
 	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
 //	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
-
+	boolean npc;
+	
 	@EventHandler
 	public void onJoin(PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
-		
-		
-		
+		p.sendMessage("List: " + Main.NPCS);
+		if (!npc) {
+			npcb.build(p);
+			npc = true;
+		}
+		npcb.showAll(false, p);
 		if (!ps.sectionExists(p.getUniqueId().toString())) {
 			ps.createSection(p.getUniqueId().toString());
 			ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString()).addDefault("hidden", false);
 			ps.save();
 		}
-		
 		p.teleport(spawn());
 	}
 
@@ -110,14 +113,5 @@ public class JoinEvent implements Listener {
 		loc.setPitch(pitch);
 		loc.setYaw(yaw);
 		return loc;
-	}
-	
-	public void genNPC(Player p) {
-		NPC npc = Main.getInstance().getNPCLib().createNPC(Arrays.asList(ChatColor.WHITE + "Hi there (#2)", ChatColor.YELLOW + "Click on me!"));
-        npc.setLocation(new Location(Bukkit.getWorld("world"), -13.5, 61, 0.5));
-        Main.IDS.add(npc.getId());
-        Bukkit.getLogger().info("IDS: " +  Main.IDS);
-        npc.create();
-        npc.show(p);
 	}
 }
