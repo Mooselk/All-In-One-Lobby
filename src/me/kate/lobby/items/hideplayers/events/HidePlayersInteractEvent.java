@@ -12,7 +12,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.HidePlayersFile;
+import me.kate.lobby.data.files.PlayerSettingsFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
+import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.items.hideplayers.HidePlayers;
 import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 import me.kate.lobby.managers.CooldownManager;
@@ -27,6 +29,8 @@ public class HidePlayersInteractEvent implements Listener {
 
 	private IHidePlayerSettings hf = new HidePlayersFile();
 	private FileConfiguration hc = hf.getHideSettings();
+	
+	private IPlayerSettings ps = new PlayerSettingsFile();
 
 	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
@@ -48,11 +52,16 @@ public class HidePlayersInteractEvent implements Listener {
 		unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
 				.name(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name"))).make();
 
+		ConfigurationSection hSection = null;
+		
 		if (p.getItemInHand().getType().equals(Material.getMaterial(hideSection.getString("material")))) {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			long now = System.currentTimeMillis();
 			if (timeLeft == 0) {
 				this.startCooldown(p);
+				hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
+				hSection.set("hidden", true);
+				ps.save();
 				h.hide(p);
 				p.getInventory().setItem(2, unhide);
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
@@ -68,10 +77,14 @@ public class HidePlayersInteractEvent implements Listener {
 			}
 			e.setCancelled(true);
 		}
+		
 		if (p.getItemInHand().getType().equals(Material.getMaterial(unhideSection.getString("material")))) {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			if (timeLeft == 0) {
 				this.startCooldown(p);
+				hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
+				hSection.set("hidden", false);
+				ps.save();
 				h.unhide(p);
 				p.getInventory().setItem(2, hide);
 				long nowEnable = System.currentTimeMillis();
