@@ -28,7 +28,7 @@ import me.kate.lobby.events.TouchVoidEvent;
 import me.kate.lobby.items.hideplayers.events.HidePlayersInteractEvent;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
-// import me.kate.lobby.items.selector.ping.PingServersBackground;
+import me.kate.lobby.items.selector.ping.PingServersBackground;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.api.NPC;
 
@@ -64,7 +64,7 @@ public class Main extends JavaPlugin {
 		playerSettings.create();
 		selectorSettings.create();
 		hideSettings.create();
-		// new PingServersBackground().start();
+		//new PingServersBackground().start();
 		NPCFile.create();
 		Config.createConfig();
 		this.registerEvents();
