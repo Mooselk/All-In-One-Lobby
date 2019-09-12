@@ -55,11 +55,6 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
     public String getId() {
         return name;
     }
-    
-    @Override
-    public String setId(String id) {
-        return name;
-    }
 
     @Override
     public NPC setSkin(Skin skin) {

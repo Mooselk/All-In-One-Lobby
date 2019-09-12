@@ -48,8 +48,6 @@ public interface NPC {
      * @return the ID of the NPC.
      */
     String getId();
-    
-    String setId(String id);
 
     /**
      * Test if a player can see the NPC.
