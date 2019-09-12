@@ -23,6 +23,8 @@ import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.items.hideplayers.HidePlayers;
+import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.ItemBuilder;
 
@@ -30,19 +32,20 @@ public class JoinEvent implements Listener {
 
 	private ISelectorSettings sf = new SelectorFile();
 	private IHidePlayerSettings hf = new HidePlayersFile();
+	private Hideable hp = new HidePlayers();
 	private FileConfiguration cs = sf.getSelectorFile();
 	private FileConfiguration hc = hf.getHideSettings();
 	private FileConfiguration c = Main.getInstance().getConfig();
 	private IPlayerSettings ps = new PlayerSettingsFile();
-	
+
 	private NPCBuilder npcb = new NPCBuilder();
-	
+
 	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
-//	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
+	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
 	boolean npc;
-	
+
 	@EventHandler
-	public void onJoin(PlayerJoinEvent e) {
+	public void onJoin(final PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
 		p.sendMessage("List: " + Main.NPCS);
 		if (!npc) {
@@ -58,21 +61,38 @@ public class JoinEvent implements Listener {
 		p.teleport(spawn());
 	}
 
+	@EventHandler
+	public void hideOnJoin(final PlayerJoinEvent e) {
+		final Player login = (Player) e.getPlayer();
+		ConfigurationSection hSection;
+		for (final Player player : Bukkit.getOnlinePlayers()) {
+			hSection = ps.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+			if (hSection.getBoolean("hidden")) {
+				player.hidePlayer(login);
+			}
+		}
+	}
+
 	private ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")))
 			.name(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name")))
-			.lores(hideSection.getStringList("lore"))
-			.make();
-//	private ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
-//			.name(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name")))
-//			.lores(colorLore(unhideSection.getStringList("lore")))
-//			.make();
+			.lores(hideSection.getStringList("lore")).make();
+	private ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
+			.name(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name")))
+			.lores(colorLore(unhideSection.getStringList("lore"))).make();
 
 	@EventHandler
-	public void giveItemsOnJoin(PlayerJoinEvent e) {
+	public void giveItemsOnJoin(final PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
 
-		if (!p.getInventory().contains(hide)) {
+		ConfigurationSection hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
+
+		if (!hSection.getBoolean("hidden")) {
 			p.getInventory().setItem(2, hide);
+			// hp.setHidden(false, p);
+		}
+		if (hSection.getBoolean("hidden")) {
+			p.getInventory().setItem(2, unhide);
+			hp.setHidden(true, p);
 		}
 
 		if (cs.getConfigurationSection("selector.options").getBoolean("enabled")) {
