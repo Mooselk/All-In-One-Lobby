@@ -69,7 +69,7 @@ public class PlayerSettingsFile implements IPlayerSettings {
 
 	@Override
 	public FileConfiguration getPlayerSettings() {
-		//this.reload();
+		this.reload();
 		return playerSettingsConf;
 	}
 
