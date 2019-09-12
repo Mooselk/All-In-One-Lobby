@@ -6,11 +6,11 @@ import org.bukkit.entity.Player;
 import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 
 public class HidePlayers implements Hideable {
-	
+
 	private boolean hidden;
 
 	public HidePlayers() {
-		
+
 	}
 
 	@Override
@@ -35,14 +35,13 @@ public class HidePlayers implements Hideable {
 		// set player settings to false
 	}
 
-	// might be useless lol
 	@Override
 	public void setHidden(boolean hide, Player p) {
 		if (hide) {
-			
+			this.hide(p);
 		}
 		if (!hide) {
-			
+			this.unhide(p);
 		}
 	}
 }
