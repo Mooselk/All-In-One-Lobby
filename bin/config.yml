@@ -1,11 +1,39 @@
 spawn:
-  x: -18.5
-  y: 61
-  z: -1.5
-  yaw: 90
+  x: 0.5
+  y: 69
+  z: 0.5
+  yaw: 180
   pitch: 0
   world: world
 
-messages:
-  blockBreakDeny: "Can't allow you to do that buddy."
-  dropItemDeny: "You're going to want to hang on to that."
+options:
+  # the world the lobby is in
+  world: world
+  
+  # Stop plants from growing
+  # Vines, Wheat, Sugarcane, etc
+  disable-plantGrowth: true
+  
+  # Disables sever weather in specified world
+  disable-weather: true
+  
+  # Locks daylight cycle in specified world
+  # to-do
+  disable-dayLightCycle: true
+  
+  # Disables mob natural mob spawing in specified world
+  # mobs can still be spawned using eggs or with commands
+  disable-mobSpawing: true
+  
+  build:
+    # Stop players from building
+    # Set bypass permission and no permission message
+    disable-block-break: true
+    block-break-msg: "&7You're not allowed to do that here!"
+    break-bypass-permission: "lobby.breakblocks"
+    
+    # Stop players from building
+    # Set bypass permission and no permission message
+    disable-block-place: true
+    block-place-msg: "&7You're not allowed to do that here!"
+    place-bypass-permission: "lobby.placeblocks"
