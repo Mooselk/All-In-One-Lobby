@@ -12,9 +12,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.HidePlayersFile;
@@ -28,7 +28,7 @@ import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.ItemBuilder;
 
-public class JoinEvent implements Listener {
+public class PlayerJoinEvents implements Listener {
 
 	private ISelectorSettings sf = new SelectorFile();
 	private IHidePlayerSettings hf = new HidePlayersFile();
@@ -42,15 +42,14 @@ public class JoinEvent implements Listener {
 
 	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
-	boolean npc;
+	private boolean npc;
 
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
-		p.sendMessage("List: " + Main.NPCS);
-		if (!npc) {
+		if (!this.npc) {
 			npcb.build(p);
-			npc = true;
+			this.npc = true;
 		}
 		npcb.showAll(false, p);
 		if (!ps.sectionExists(p.getUniqueId().toString())) {
@@ -58,7 +57,7 @@ public class JoinEvent implements Listener {
 			ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString()).addDefault("hidden", false);
 			ps.save();
 		}
-		p.teleport(spawn());
+		p.teleport(this.spawn());
 	}
 
 	@EventHandler
@@ -73,45 +72,51 @@ public class JoinEvent implements Listener {
 		}
 	}
 
-	private ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")))
-			.name(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name")))
-			.lores(hideSection.getStringList("lore")).make();
+	private ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")), 1)
+			.setName(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name"))).toItemStack();
 	private ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
-			.name(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name")))
-			.lores(colorLore(unhideSection.getStringList("lore"))).make();
+			.setName(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name"))).toItemStack();
+	private ItemStack selector = new ItemBuilder(
+			Material.getMaterial(cs.getConfigurationSection("selector.options").getString("material")))
+					.setName(ChatColor.translateAlternateColorCodes('&', cs.getConfigurationSection("selector.options").getString("item-name")))
+					.setLore(this.colorLore(cs.getConfigurationSection("selector.options").getStringList("lore")))
+					.toItemStack();
 
 	@EventHandler
 	public void giveItemsOnJoin(final PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
-
+		p.getInventory().clear();
 		ConfigurationSection hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
-
 		if (!hSection.getBoolean("hidden")) {
 			p.getInventory().setItem(2, hide);
-			// hp.setHidden(false, p);
 		}
 		if (hSection.getBoolean("hidden")) {
 			p.getInventory().setItem(2, unhide);
 			hp.setHidden(true, p);
 		}
-
 		if (cs.getConfigurationSection("selector.options").getBoolean("enabled")) {
 			ConfigurationSection section = cs.getConfigurationSection("selector.options");
 			if (!p.getInventory().contains(Material.getMaterial(section.getString("material")), 1)) {
-				p.getInventory().setItem(section.getInt("slot"),
-						giveSelector(section.getString("item-name"), section.getStringList("lore")));
+				p.getInventory().setItem(section.getInt("slot"), selector);
 			}
 		}
 	}
-
-	private ItemStack giveSelector(String displayName, List<String> lore) {
-		ItemStack item = new ItemStack(
-				Material.getMaterial(cs.getConfigurationSection("selector.options").getString("material")));
-		ItemMeta im = item.getItemMeta();
-		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
-		im.setLore(colorLore(lore));
-		item.setItemMeta(im);
-		return item;
+	
+	@EventHandler
+	public void onClick(final InventoryClickEvent e) {
+		ItemStack i = e.getCurrentItem();
+		if (i == null) {
+			return;
+		}
+		if (i.equals(selector)) {
+			e.setCancelled(true);
+		}
+		if (i.equals(hide)) {
+			e.setCancelled(true);
+		}
+		if (i.equals(unhide)) {
+			e.setCancelled(true);
+		}
 	}
 
 	private List<String> colorLore(List<String> lore) {

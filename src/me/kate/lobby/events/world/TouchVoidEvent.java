@@ -1,4 +1,4 @@
-package me.kate.lobby.events;
+package me.kate.lobby.events.world;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
@@ -16,11 +16,11 @@ import me.kate.lobby.Main;
 
 public class TouchVoidEvent implements Listener {
 
-	private FileConfiguration c = Main.getInstance().getConfig();
+	private FileConfiguration config = Main.getInstance().getConfig();
 	private int timer;
 
 	@EventHandler
-	public void onVoidTouch(EntityDamageEvent e) {
+	public void onVoidTouch(final EntityDamageEvent e) {
 		if (e.getEntity() instanceof Player) {
 			final Player p = (Player) e.getEntity();
 			if (e.getCause() == DamageCause.VOID) {
@@ -34,7 +34,7 @@ public class TouchVoidEvent implements Listener {
 	}
 
 	@EventHandler
-	public void onMove(PlayerMoveEvent e) {
+	public void onMove(final PlayerMoveEvent e) {
 		final Player p = e.getPlayer();
 		if (p.getLocation().getBlockY() < 1) {
 			p.teleport(spawn());
@@ -52,17 +52,17 @@ public class TouchVoidEvent implements Listener {
 		}
 	}
 
-	public void counter() {
+	private void counter() {
 		timer++;
 	}
 
 	private Location spawn() {
-		double x = c.getDouble("spawn.x");
-		double y = c.getDouble("spawn.y");
-		double z = c.getDouble("spawn.z");
-		int yaw = c.getInt("spawn.yaw");
-		int pitch = c.getInt("spawn.pitch");
-		String world = c.getString("spawn.world");
+		double x = config.getDouble("spawn.x");
+		double y = config.getDouble("spawn.y");
+		double z = config.getDouble("spawn.z");
+		int yaw = config.getInt("spawn.yaw");
+		int pitch = config.getInt("spawn.pitch");
+		String world = config.getString("spawn.world");
 		Location loc = new Location(Bukkit.getWorld(world), x, y, z);
 		loc.setPitch(pitch);
 		loc.setYaw(yaw);
