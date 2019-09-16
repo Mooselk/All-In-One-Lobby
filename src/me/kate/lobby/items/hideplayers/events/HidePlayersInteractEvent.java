@@ -29,7 +29,7 @@ public class HidePlayersInteractEvent implements Listener {
 
 	private IHidePlayerSettings hf = new HidePlayersFile();
 	private FileConfiguration hc = hf.getHideSettings();
-	
+
 	private IPlayerSettings ps = new PlayerSettingsFile();
 
 	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
@@ -44,16 +44,17 @@ public class HidePlayersInteractEvent implements Listener {
 	private ItemStack unhide;
 
 	@EventHandler
-	public void onInteract(PlayerInteractEvent e) {
+	public void onInteract(final PlayerInteractEvent e) {
+
 		final Player p = e.getPlayer();
 
-		hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")))
-				.name(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name"))).make();
-		unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
-				.name(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name"))).make();
+		this.hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")), 1)
+				.setName(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name"))).toItemStack();
+		this.unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
+				.setName(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name"))).toItemStack();
 
 		ConfigurationSection hSection = null;
-		
+
 		if (p.getItemInHand().getType().equals(Material.getMaterial(hideSection.getString("material")))) {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			long now = System.currentTimeMillis();
@@ -77,7 +78,7 @@ public class HidePlayersInteractEvent implements Listener {
 			}
 			e.setCancelled(true);
 		}
-		
+
 		if (p.getItemInHand().getType().equals(Material.getMaterial(unhideSection.getString("material")))) {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			if (timeLeft == 0) {

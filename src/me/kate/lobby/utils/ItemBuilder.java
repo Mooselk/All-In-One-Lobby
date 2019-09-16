@@ -1,378 +1,303 @@
 package me.kate.lobby.utils;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 import org.bukkit.Color;
+import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.material.MaterialData;
-
-import java.util.*;
 
 /**
- * NOTICE: This utility was developer as part of AeolusLib. While you can use it for your own projects, You are NOT allowed to delete or move this header comment.
- *
- * Utility:
- * Chainable {@link ItemStack}s
- *
- * Example Usage(s):
- * {@code ItemStack itemStack = new ItemBuilder(Material.SKULL_ITEM).amount(1).durability(3).skullOwner("MCAeolus").name(ChatColor.RED+"MCAeolus's Skull").make())}
- * {@code ItemStack itemStack = new ItemBuilder().type(Material.BEDROCK).lores(new String[]{"Lore1",ChatColor.RED+"Lore2"}).enchantment(Enchantment.DAMAGE_ALL, 99).make()}
- *
- * @author MCAeolus
- * @version 1.0
+ * Easily create itemstacks, without messing your hands. <i>Note that if you do
+ * use this in one of your projects, leave this notice.</i> <i>Please do credit
+ * me if you do use this in one of your projects.</i>
+ * 
+ * @author NonameSL
  */
-
 public class ItemBuilder {
+	private ItemStack is;
 
-    private final ItemStack item;
-    private final ItemMeta itemM;
+	/**
+	 * Create a new ItemBuilder from scratch.
+	 * 
+	 * @param m The material to create the ItemBuilder with.
+	 */
+	public ItemBuilder(Material m) {
+		this(m, 1);
+	}
 
-    /**
-     * Init item chainable via given Material parameter.
-     *
-     * @param itemType
-     *              the {@link Material} to initiate the instance with.
-     *
-     * @since 1.0
-     */
-    public ItemBuilder(final Material itemType){
-        item = new ItemStack(itemType);
-        itemM = item.getItemMeta();
-    }
+	/**
+	 * Create a new ItemBuilder over an existing itemstack.
+	 * 
+	 * @param is The itemstack to create the ItemBuilder over.
+	 */
+	public ItemBuilder(ItemStack is) {
+		this.is = is;
+	}
 
-    /**
-     * Init item chainable via given ItemStack parameter.
-     *
-     * @param itemStack
-     *              the {@link ItemStack} to initialize the instance with.
-     *
-     * @since 1.0
-     */
-    public ItemBuilder(final ItemStack itemStack){
-        item = itemStack;
-        itemM = item.getItemMeta();
-    }
+	/**
+	 * Create a new ItemBuilder from scratch.
+	 * 
+	 * @param m      The material of the item.
+	 * @param amount The amount of the item.
+	 */
+	public ItemBuilder(Material m, int amount) {
+		is = new ItemStack(m, amount);
+	}
 
-    /**
-     * Init the item chainable with no defined Material/ItemStack
-     *
-     * @since 1.0
-     */
-    public ItemBuilder(){
-        item = new ItemStack(Material.AIR);
-        itemM = item.getItemMeta();
-    }
+	/**
+	 * Create a new ItemBuilder from scratch.
+	 * 
+	 * @param m          The material of the item.
+	 * @param amount     The amount of the item.
+	 * @param durability The durability of the item.
+	 */
+	public ItemBuilder(Material m, int amount, byte durability) {
+		is = new ItemStack(m, amount, durability);
+	}
 
-    /**
-     * Changes the Material type of the {@link ItemStack}
-     *
-     * @param material
-     *              the new {@link Material} to set for the ItemStack.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder type(final Material material){
-        make().setType(material);
-        return this;
-    }
+	/**
+	 * Clone the ItemBuilder into a new one.
+	 * 
+	 * @return The cloned instance.
+	 */
+	public ItemBuilder clone() {
+		return new ItemBuilder(is);
+	}
 
-    /**
-     * Changes the {@link ItemStack}s size.
-     *
-     * @param itemAmt
-     *              the new Integer count of the ItemStack.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder amount(final Integer itemAmt){
-        make().setAmount(itemAmt);
-        return this;
-    }
+	/**
+	 * Change the durability of the item.
+	 * 
+	 * @param dur The durability to set it to.
+	 */
+	public ItemBuilder setDurability(short dur) {
+		is.setDurability(dur);
+		return this;
+	}
 
-    /**
-     * Changes the {@link ItemStack}s display name.
-     *
-     * @param name
-     *          the new String for the ItemStack's display name to be set to.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder name(final String name){
-        meta().setDisplayName(name);
-        make().setItemMeta(meta());
-        return this;
-    }
+	/**
+	 * Set the displayname of the item.
+	 * 
+	 * @param name The name to change it to.
+	 */
+	public ItemBuilder setName(String name) {
+		ItemMeta im = is.getItemMeta();
+		im.setDisplayName(name);
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Adds a line of lore to the {@link ItemStack}
-     *
-     * @param lore
-     *          String you want to add to the ItemStack's lore.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder lore(final String lore){
-        List<String> lores = meta().getLore();
-        if(lores == null){lores = new ArrayList<>();}
-        lores.add(lore);
-        meta().setLore(lores);
-        make().setItemMeta(meta());
-        return this;
-    }
+	/**
+	 * Add an unsafe enchantment.
+	 * 
+	 * @param ench  The enchantment to add.
+	 * @param level The level to put the enchant on.
+	 */
+	public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level) {
+		is.addUnsafeEnchantment(ench, level);
+		return this;
+	}
 
-    /**
-     * Clears the {@link ItemStack}s lore and replaces it with the defined String array.
-     *
-     * @param list
-     *            String array you want to set the ItemStack's lore to.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder lores(final List<String> list){
-//        List<String> loresList = meta().getLore();
-//        if(loresList == null){loresList = new ArrayList<>();}
-//        else{loresList.clear();}
-//        Collections.addAll(loresList, list);
-        meta().setLore(list);
-        return this;
-    }
+	/**
+	 * Remove a certain enchant from the item.
+	 * 
+	 * @param ench The enchantment to remove
+	 */
+	public ItemBuilder removeEnchantment(Enchantment ench) {
+		is.removeEnchantment(ench);
+		return this;
+	}
 
-    /**
-     * Changes the durability of the current {@link ItemStack}
-     *
-     * @param durability
-     *              the new int amount to set the ItemStack's durability to.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder durability(final int durability){
-        make().setDurability((short) durability);
-        return this;
-    }
+	/**
+	 * Set the skull owner for the item. Works on skulls only.
+	 * 
+	 * @param owner The name of the skull's owner.
+	 */
+	public ItemBuilder setSkullOwner(String owner) {
+		try {
+			SkullMeta im = (SkullMeta) is.getItemMeta();
+			im.setOwner(owner);
+			is.setItemMeta(im);
+		} catch (ClassCastException expected) {
+		}
+		return this;
+	}
 
-    /**
-     * Changes the data value of the {@link ItemStack}
-     *
-     * @param data
-     *          the new int data value (parsed as byte) to set the ItemStack's durability to.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    @SuppressWarnings("deprecation")
-    public ItemBuilder data(final int data){
-        make().setData(new MaterialData(make().getType(), (byte)data));
-        return this;
-    }
+	/**
+	 * Add an enchant to the item.
+	 * 
+	 * @param ench  The enchant to add
+	 * @param level The level
+	 */
+	public ItemBuilder addEnchant(Enchantment ench, int level) {
+		ItemMeta im = is.getItemMeta();
+		im.addEnchant(ench, level, true);
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Adds and UnsafeEnchantment to the {@link ItemStack} with a defined level int value.
-     *
-     * @param enchantment
-     *              the {@link Enchantment} to add to the ItemStack.
-     *
-     * @param level
-     *          the int amount that the Enchantment's level will be set to.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder enchantment(final Enchantment enchantment, final int level){
-        make().addUnsafeEnchantment(enchantment, level);
-        return this;
-    }
+	/**
+	 * Add multiple enchants at once.
+	 * 
+	 * @param enchantments The enchants to add.
+	 */
+	public ItemBuilder addEnchantments(Map<Enchantment, Integer> enchantments) {
+		is.addEnchantments(enchantments);
+		return this;
+	}
 
-    /**
-     * Adds and UnsafeEnchantment to the {@Link} with a level int value of 1.
-     *
-     * @param enchantment
-     *              the {@link Enchantment} to add to the ItemStack.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder enchantment(final Enchantment enchantment){
-        make().addUnsafeEnchantment(enchantment, 1);
-        return this;
-    }
+	/**
+	 * Sets infinity durability on the item by setting the durability to
+	 * Short.MAX_VALUE.
+	 */
+	public ItemBuilder setInfinityDurability() {
+		is.setDurability(Short.MAX_VALUE);
+		return this;
+	}
 
-    /**
-     * Clears all {@link Enchantment}s from the current {@link ItemStack} then adds the defined array of Enchantments to the ItemStack.
-     *
-     * @param enchantments
-     *              the Enchantment array to replace any current enchantments applied on the ItemStack.
-     *
-     * @param level
-     *              the int level value for all Enchantments to be set to.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder enchantments(final Enchantment[] enchantments, final int level){
-        make().getEnchantments().clear();
-        for(Enchantment enchantment : enchantments){
-            make().addUnsafeEnchantment(enchantment, level);
-        }
-        return this;
-    }
+	/**
+	 * Re-sets the lore.
+	 * 
+	 * @param lore The lore to set it to.
+	 */
+	public ItemBuilder setLore(String... lore) {
+		ItemMeta im = is.getItemMeta();
+		im.setLore(Arrays.asList(lore));
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Clears all {@link Enchantment}s from the current {@link ItemStack} then adds the defined array of Enchantments to the ItemStack with a level int value of 1.
-     *
-     * @param enchantments
-     *              the Enchantment array to replace any current enchantments applied on the ItemStack.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder enchantments(final Enchantment[] enchantments){
-        make().getEnchantments().clear();
-        for(Enchantment enchantment : enchantments){
-            make().addUnsafeEnchantment(enchantment, 1);
-        }
-        return this;
-    }
+	/**
+	 * Re-sets the lore.
+	 * 
+	 * @param lore The lore to set it to.
+	 */
+	public ItemBuilder setLore(List<String> lore) {
+		ItemMeta im = is.getItemMeta();
+		im.setLore(lore);
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Clears the defined {@link Enchantment} from the {@link ItemStack}
-     *
-     * @param enchantment
-     *              the Enchantment to remove from the ItemStack.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder clearEnchantment(final Enchantment enchantment){
-        Map<Enchantment, Integer> itemEnchantments = make().getEnchantments();
-        for(Enchantment enchantmentC : itemEnchantments.keySet()){
-            if(enchantment == enchantmentC){
-                itemEnchantments.remove(enchantmentC);
-            }
-        }
-        return this;
-    }
+	/**
+	 * Remove a lore line.
+	 * 
+	 * @param lore The lore to remove.
+	 */
+	public ItemBuilder removeLoreLine(String line) {
+		ItemMeta im = is.getItemMeta();
+		List<String> lore = new ArrayList<>(im.getLore());
+		if (!lore.contains(line))
+			return this;
+		lore.remove(line);
+		im.setLore(lore);
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Clears all {@link Enchantment}s from the {@link ItemStack}
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder clearEnchantments(){
-        make().getEnchantments().clear();
-        return this;
-    }
+	/**
+	 * Remove a lore line.
+	 * 
+	 * @param index The index of the lore line to remove.
+	 */
+	public ItemBuilder removeLoreLine(int index) {
+		ItemMeta im = is.getItemMeta();
+		List<String> lore = new ArrayList<>(im.getLore());
+		if (index < 0 || index > lore.size())
+			return this;
+		lore.remove(index);
+		im.setLore(lore);
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Clears the defined {@link String} of lore from the {@link ItemStack}
-     *
-     * @param lore
-     *          the String to be removed from the ItemStack.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder clearLore(final String lore){
-        if(meta().getLore().contains(lore)){
-            meta().getLore().remove(lore);
-        }
-        make().setItemMeta(meta());
-        return this;
-    }
+	/**
+	 * Add a lore line.
+	 * 
+	 * @param line The lore line to add.
+	 */
+	public ItemBuilder addLoreLine(String line) {
+		ItemMeta im = is.getItemMeta();
+		List<String> lore = new ArrayList<>();
+		if (im.hasLore())
+			lore = new ArrayList<>(im.getLore());
+		lore.add(line);
+		im.setLore(lore);
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Clears all lore {@link String}s from the {@link ItemStack}
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder clearLores(){
-        meta().getLore().clear();
-        make().setItemMeta(meta());
-        return this;
-    }
+	/**
+	 * Add a lore line.
+	 * 
+	 * @param line The lore line to add.
+	 * @param pos  The index of where to put it.
+	 */
+	public ItemBuilder addLoreLine(String line, int pos) {
+		ItemMeta im = is.getItemMeta();
+		List<String> lore = new ArrayList<>(im.getLore());
+		lore.set(pos, line);
+		im.setLore(lore);
+		is.setItemMeta(im);
+		return this;
+	}
 
-    /**
-     * Sets the {@link Color} of any LEATHER_ARMOR {@link Material} types of the {@link ItemStack}
-     *
-     * @param color
-     *          the Color to set the LEATHER_ARMOR ItemStack to.
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder color(final Color color){
-        if(make().getType() == Material.LEATHER_HELMET
-                || make().getType() == Material.LEATHER_CHESTPLATE
-                || make().getType() == Material.LEATHER_LEGGINGS
-                || make().getType() == Material.LEATHER_BOOTS ){
-            LeatherArmorMeta meta = (LeatherArmorMeta) meta();
-            meta.setColor(color);
-            make().setItemMeta(meta);
-        }
-        return this;
-    }
+	/**
+	 * Sets the dye color on an item. <b>* Notice that this doesn't check for item
+	 * type, sets the literal data of the dyecolor as durability.</b>
+	 * 
+	 * @param color The color to put.
+	 */
+	@SuppressWarnings("deprecation")
+	public ItemBuilder setDyeColor(DyeColor color) {
+		this.is.setDurability(color.getData());
+		return this;
+	}
 
-    /**
-     * Clears the {@link Color} of any LEATHER_ARMOR {@link Material} types of the {@link ItemStack}
-     *
-     * @return the current instance for chainable application.
-     * @since 1.0
-     */
-    public ItemBuilder clearColor(){
-        if(make().getType() == Material.LEATHER_HELMET
-                || make().getType() == Material.LEATHER_CHESTPLATE
-                || make().getType() == Material.LEATHER_LEGGINGS
-                || make().getType() == Material.LEATHER_BOOTS ){
-            LeatherArmorMeta meta = (LeatherArmorMeta) meta();
-            meta.setColor(null);
-            make().setItemMeta(meta);
-        }
-        return this;
-    }
+	/**
+	 * Sets the dye color of a wool item. Works only on wool.
+	 * 
+	 * @deprecated As of version 1.2 changed to setDyeColor.
+	 * @see ItemBuilder@setDyeColor(DyeColor)
+	 * @param color The DyeColor to set the wool item to.
+	 */
+	@Deprecated
+	public ItemBuilder setWoolColor(DyeColor color) {
+		if (!is.getType().equals(Material.WOOL))
+			return this;
+		this.is.setDurability(color.getData());
+		return this;
+	}
 
-    /**
-     * Sets the skullOwner {@link SkullMeta} of the current SKULL_ITEM {@link Material} type {@link ItemStack}
-     *
-     * @param name
-     *          the {@link String} value to set the SkullOwner meta to for the SKULL_ITEM Material type ItemStack.
-     *
-     * @return the current instance for chainable application
-     * @since 1.0
-     */
-    public ItemBuilder skullOwner(final String name){
-        if(make().getType() == Material.SKULL_ITEM && make().getDurability() == (byte) 3){
-            SkullMeta skullMeta = (SkullMeta) meta();
-            skullMeta.setOwner(name);
-            make().setItemMeta(meta());
-        }
-        return this;
-    }
+	/**
+	 * Sets the armor color of a leather armor piece. Works only on leather armor
+	 * pieces.
+	 * 
+	 * @param color The color to set it to.
+	 */
+	public ItemBuilder setLeatherArmorColor(Color color) {
+		try {
+			LeatherArmorMeta im = (LeatherArmorMeta) is.getItemMeta();
+			im.setColor(color);
+			is.setItemMeta(im);
+		} catch (ClassCastException expected) {
+		}
+		return this;
+	}
 
-    /**
-     * Returns the {@link ItemMeta} of the {@link ItemStack}
-     *
-     * @return the ItemMeta of the ItemStack.
-     */
-    public ItemMeta meta(){
-        return itemM;
-    }
-
-    /**
-     * Returns the {@link ItemStack} of the {@link ItemBuilder} instance.
-     *
-     * @return the ItemStack of the ItemBuilder instance.
-     */
-    public ItemStack make(){
-        return item;
-    }
-
+	/**
+	 * Retrieves the itemstack from the ItemBuilder.
+	 * 
+	 * @return The itemstack created/modified by the ItemBuilder instance.
+	 */
+	public ItemStack toItemStack() {
+		return is;
+	}
 }
