@@ -24,7 +24,7 @@ public final class NPCLib {
 
     public NPCLib(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.logger = new Logger("NPCLib");
+        this.logger = new Logger("[Lobby]");
 
         String versionName = plugin.getServer().getClass().getPackage().getName().split("\\.")[3];
 
