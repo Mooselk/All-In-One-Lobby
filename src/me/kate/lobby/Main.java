@@ -20,19 +20,34 @@ import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
-import me.kate.lobby.events.BlockRelatedEvent;
 import me.kate.lobby.events.InteractNPCEvent;
-import me.kate.lobby.events.JoinEvent;
-import me.kate.lobby.events.MobSpawnEvent;
-import me.kate.lobby.events.TouchVoidEvent;
+import me.kate.lobby.events.PlayerJoinEvents;
+import me.kate.lobby.events.world.BlockRelatedEvent;
+import me.kate.lobby.events.world.MobSpawnEvent;
+import me.kate.lobby.events.world.PlantGrowthEvent;
+import me.kate.lobby.events.world.TouchVoidEvent;
 import me.kate.lobby.items.hideplayers.events.HidePlayersInteractEvent;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
-import me.kate.lobby.items.selector.ping.PingServersBackground;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.api.NPC;
 
 public class Main extends JavaPlugin {
+	
+	
+	
+	
+	/* * * * * TO-DO * * * * * 
+	 * 
+	 * Finish /npc create
+	 * Jump pads
+	 * Join / Leave messages
+	 * Remove debug messages
+	 * 
+	 * * * * * * * * * * * * */
+	
+	
+	
 
 	private static Main instance;
 	private NPCLib npclib;
@@ -59,11 +74,11 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onEnable() {
-		npclib = new NPCLib(this);
 		instance = this;
-		playerSettings.create();
-		selectorSettings.create();
-		hideSettings.create();
+		this.npclib = new NPCLib(this);
+		this.playerSettings.create();
+		this.selectorSettings.create();
+		this.hideSettings.create();
 		//new PingServersBackground().start();
 		NPCFile.create();
 		Config.createConfig();
@@ -77,7 +92,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void registerEvents() {
-		this.getServer().getPluginManager().registerEvents(new JoinEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerJoinEvents(), this);
 		this.getServer().getPluginManager().registerEvents(new TouchVoidEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new BlockRelatedEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new MobSpawnEvent(), this);
@@ -85,7 +100,7 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new SelectorClickEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new HidePlayersInteractEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(), this);
-		
+		this.getServer().getPluginManager().registerEvents(new PlantGrowthEvent(), this);
 	}
 
 	private void registerCommands() {
