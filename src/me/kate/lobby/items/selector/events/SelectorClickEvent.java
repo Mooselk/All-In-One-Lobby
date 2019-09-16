@@ -15,19 +15,19 @@ import me.kate.lobby.items.selector.Selector;
 public class SelectorClickEvent implements Listener {
 
 	private ISelectorSettings sf = new SelectorFile();
-	private FileConfiguration c = sf.getSelectorFile();
+	private FileConfiguration config = sf.getSelectorFile();
 	
 	@EventHandler
-	public void onPlayerInteractEvent(PlayerInteractEvent e) {
+	public void onPlayerInteractEvent(final PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
-		if (p.getItemInHand().getType().equals(Material.getMaterial(c.getConfigurationSection("selector.options").getString("material")))) {
+		if (p.getItemInHand().getType().equals(Material.getMaterial(config.getConfigurationSection("selector.options").getString("material")))) {
 			final Selector compass = new Selector();
 			compass.open(p);
 		}
 	}
 	
 	@EventHandler
-	public void onDrop(PlayerDropItemEvent e) {
+	public void onDrop(final PlayerDropItemEvent e) {
 		e.setCancelled(true);
 	}
 }
