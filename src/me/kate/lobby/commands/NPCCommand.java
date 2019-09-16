@@ -1,5 +1,7 @@
 package me.kate.lobby.commands;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -16,9 +18,7 @@ public class NPCCommand implements CommandExecutor {
 		final Player p = (Player) sender;
 		if (cmd.getName().equalsIgnoreCase("npc")) {
 			if (args[0].equalsIgnoreCase("test")) {
-				p.sendMessage("Building npcs...");
-				p.sendMessage("Sending packets...");
-				npcb.build(p);
+
 			}
 
 			if (args[0].equalsIgnoreCase("reload")) {
@@ -29,6 +29,8 @@ public class NPCCommand implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("create")) {
 				if (args.length < 3) {
 					p.sendMessage("Usage: /npc create <npc_name> <skin_id>");
+				} else {
+					this.npcToConfig(args[1], args[2], p.getLocation());
 				}
 			}
 
@@ -45,5 +47,9 @@ public class NPCCommand implements CommandExecutor {
 			}
 		}
 		return true;
+	}
+
+	private void npcToConfig(String id, String skin, Location loc) {
+		Bukkit.getLogger().info("Skin: " + skin + " ID:" + id + " Location: " + loc.toString());
 	}
 }
