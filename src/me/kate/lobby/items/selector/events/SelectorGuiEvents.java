@@ -8,6 +8,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
 
 import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
@@ -21,7 +22,7 @@ public class SelectorGuiEvents implements Listener {
 	private final Selector selector = new Selector();
 
 	@EventHandler
-	public void onClick(InventoryClickEvent e) {
+	public void onClick(final InventoryClickEvent e) {
 		final Player p = (Player) e.getWhoClicked();
 		int slot = e.getSlot();
 		ConfigurationSection sec = c.getConfigurationSection("selector." + slot);
@@ -39,13 +40,16 @@ public class SelectorGuiEvents implements Listener {
 				} else {
 					selector.close(p);
 				}
+				selector.close(p);
 			}
-			e.setCancelled(true);
+			if (!e.getInventory().getType().equals(InventoryType.PLAYER)) {
+				e.setCancelled(true);
+			}
 		}
 	}
 
 	@EventHandler
-	public void closeInventory(InventoryCloseEvent e) {
+	public void closeInventory(final InventoryCloseEvent e) {
 		final Player p = (Player) e.getPlayer();
 		selector.onClose(p);
 	}
