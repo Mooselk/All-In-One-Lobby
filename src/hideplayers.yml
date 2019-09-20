@@ -11,12 +11,6 @@ item:
   hide:
     material: "REDSTONE_TORCH_ON"
     name: "Unhide players (Right-Click)"
-    lore:
-      - "egg"
-      - " bean"
   unhide:
     material: "LEVER"
     name: "Unhide players (Right-Click)"
-    lore:
-      - "egg"
-      - " bean"
