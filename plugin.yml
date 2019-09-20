@@ -10,3 +10,5 @@ commands:
     description: reloads selector configuration
   npc:
     description: base npc command
+  portal:
+    description: base portal command
