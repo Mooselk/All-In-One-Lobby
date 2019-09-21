@@ -17,7 +17,7 @@ public class WandInteractEvent implements Listener {
 	@EventHandler
 	public void onClick(final PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
-		if (p.hasPermission("portal.create") || p.isOp()) {
+		if (p.hasPermission("lobby.portal.create") || p.isOp()) {
 			ItemStack wand = PortalWand.WAND;
 			if (e.getItem() == null) {
 				return;
@@ -72,9 +72,4 @@ public class WandInteractEvent implements Listener {
 			}
 		}
 	}
-	// Hash map to store positions,
-	// Store whole location,
-	// On first select, check if it exists,
-	// On reselect, check if exists, delete and add new,
-	// /portal create will add coords to config.
 }
