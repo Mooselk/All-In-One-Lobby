@@ -9,10 +9,12 @@ import me.kate.lobby.Main;
 public class Portal {
 
 	public Portal() {
-		
 	}
 	
 	public void load() {
+		if (!Main.PORTALS.isEmpty()) {
+			Main.PORTALS.clear();
+		}
 		for (String key : Main.getInstance().getConfig().getConfigurationSection("portals").getKeys(false)) {
 			final ConfigurationSection section = Main.getInstance().getConfig().getConfigurationSection("portals." + key);
 			final Location loc1 = new Location(Bukkit.getWorld(
@@ -26,6 +28,25 @@ public class Portal {
 					section.getInt("loc-2.y"),
 					section.getInt("loc-2.z"));
 			Main.PORTALS.put(key, new Cuboid(loc1, loc2));
+		}
+	}
+	
+	public void reload() {
+		for (String key : Main.getInstance().getConfig().getConfigurationSection("portals").getKeys(false)) {
+			final ConfigurationSection section = Main.getInstance().getConfig().getConfigurationSection("portals." + key);
+			if (!Main.PORTALS.containsKey(key)) {
+				final Location loc1 = new Location(Bukkit.getWorld(
+						section.getString("world")),
+						section.getInt("loc-1.x"),
+						section.getInt("loc-1.y"),
+						section.getInt("loc-1.z"));
+				final Location loc2 = new Location(Bukkit.getWorld(
+						section.getString("world")),
+						section.getInt("loc-2.x"),
+						section.getInt("loc-2.y"),
+						section.getInt("loc-2.z"));
+				Main.PORTALS.put(key, new Cuboid(loc1, loc2));
+			}
 		}
 	}
 }
