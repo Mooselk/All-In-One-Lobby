@@ -16,7 +16,7 @@ public class NPCFile {
 	private static FileConfiguration npcconf;
 	
 	public static FileConfiguration getNPCConfig() {
-		forceLoad();
+		//forceLoad();
 		return npcconf;
 	}
 
