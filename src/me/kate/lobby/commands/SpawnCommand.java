@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import me.kate.lobby.Main;
 import net.md_5.bungee.api.ChatColor;
 
-public class SetSpawnCommand implements CommandExecutor {
+public class SpawnCommand implements CommandExecutor {
 
 	private FileConfiguration c = Main.getInstance().getConfig();
 
@@ -46,7 +46,24 @@ public class SetSpawnCommand implements CommandExecutor {
 					p.sendMessage(ChatColor.RED + "You do not have permission to use that command!");
 				}
 			}
+			if (cmd.getName().equalsIgnoreCase("spawn")) {
+				p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Teleporting to spawn..."));
+				p.teleport(this.spawn());
+			}
 		}
 		return true;
+	}
+	
+	private Location spawn() {
+		double x = c.getDouble("spawn.x");
+		double y = c.getDouble("spawn.y");
+		double z = c.getDouble("spawn.z");
+		int yaw = c.getInt("spawn.yaw");
+		int pitch = c.getInt("spawn.pitch");
+		String world = c.getString("spawn.world");
+		Location loc = new Location(Bukkit.getWorld(world), x, y, z);
+		loc.setPitch(pitch);
+		loc.setYaw(yaw);
+		return loc;
 	}
 }
