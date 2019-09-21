@@ -1,5 +1,6 @@
 package me.kate.lobby.items.hideplayers.events;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -8,9 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.data.files.HidePlayersFile;
 import me.kate.lobby.data.files.PlayerSettingsFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
@@ -59,7 +58,8 @@ public class HidePlayersInteractEvent implements Listener {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			long now = System.currentTimeMillis();
 			if (timeLeft == 0) {
-				this.startCooldown(p);
+				cooldownManager.startCooldown(p, hf.getCooldownLength());
+				Bukkit.getLogger().info("" + ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString()));
 				hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
 				hSection.set("hidden", true);
 				ps.save();
@@ -82,7 +82,7 @@ public class HidePlayersInteractEvent implements Listener {
 		if (p.getItemInHand().getType().equals(Material.getMaterial(unhideSection.getString("material")))) {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			if (timeLeft == 0) {
-				this.startCooldown(p);
+				cooldownManager.startCooldown(p, hf.getCooldownLength());
 				hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
 				hSection.set("hidden", false);
 				ps.save();
@@ -103,19 +103,5 @@ public class HidePlayersInteractEvent implements Listener {
 			}
 			e.setCancelled(true);
 		}
-	}
-
-	public void startCooldown(Player p) {
-		cooldownManager.setCooldown(p.getUniqueId(), CooldownManager.DEFAULT_COOLDOWN);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
-				cooldownManager.setCooldown(p.getUniqueId(), --timeLeft);
-				if (timeLeft == 0) {
-					this.cancel();
-				}
-			}
-		}.runTaskTimer(Main.getInstance(), 20, 20);
 	}
 }
