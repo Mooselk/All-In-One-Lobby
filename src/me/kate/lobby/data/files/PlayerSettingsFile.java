@@ -13,8 +13,8 @@ import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 
 public class PlayerSettingsFile implements IPlayerSettings {
 
-	private File playerSettings;
-	private FileConfiguration playerSettingsConf;
+	public File playerSettings;
+	public FileConfiguration playerSettingsConf;
 
 	public PlayerSettingsFile() {
 	}
@@ -55,8 +55,8 @@ public class PlayerSettingsFile implements IPlayerSettings {
 	
 	@Override
 	public void reload() {
-		//playerSettings = null;
-		//playerSettingsConf = null;
+		playerSettings = null;
+		playerSettingsConf = null;
 		playerSettings = new File(Main.getInstance().getDataFolder() + "/data/", "playersettings.yml");
 		playerSettingsConf = new YamlConfiguration();
 		try {
