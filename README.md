@@ -85,7 +85,7 @@ options:
 ### Commands
 
 - /npc help  - `lobby.npc.help` _Displays all NPC commands in chat_
-- /npc create <npc_name> <skinId> - `lobby.npc.create`   _Creates NPC at players location_
+- /npc create <npc_name> _<skinId>_ - `lobby.npc.create`   _Creates NPC at players location_
 - /npc move <npc_name> - `lobby.npc.move`  _Moves NPC to players location_
 - /npc delete <npc_name> - `lobby.npc.delete`  _Deletes specified NPC_
 - /npc reload - `lobby.npc.reload`  _Reloads ALL NPCs_
