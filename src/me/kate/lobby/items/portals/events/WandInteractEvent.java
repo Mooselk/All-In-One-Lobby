@@ -8,6 +8,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.items.portals.PortalWand;
 import net.md_5.bungee.api.ChatColor;
 
@@ -17,10 +18,19 @@ public class WandInteractEvent implements Listener {
 	public void onClick(final PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
 		if (p.hasPermission("portal.create") || p.isOp()) {
-			final ItemStack wand = PortalWand.WAND;
+			ItemStack wand = PortalWand.WAND;
+			if (e.getItem() == null) {
+				return;
+			}
 			if (e.getItem().equals(wand)) {
 				if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 					Location pos1 = e.getClickedBlock().getLocation();
+					if (Main.SELECTIONS.containsKey("pos1")) {
+						Main.SELECTIONS.remove("pos1");
+						Main.SELECTIONS.put("pos1", pos1);
+					} else {
+						Main.SELECTIONS.put("pos1", pos1);
+					}
 					p.sendMessage("Position " 
 					+ ChatColor.GOLD 
 					+ "#1" 
@@ -38,6 +48,12 @@ public class WandInteractEvent implements Listener {
 				}
 				if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					Location pos2 = e.getClickedBlock().getLocation();
+					if (Main.SELECTIONS.containsKey("pos2")) {
+						Main.SELECTIONS.remove("pos2");
+						Main.SELECTIONS.put("pos2", pos2);
+					} else {
+						Main.SELECTIONS.put("pos2", pos2);
+					}
 					p.sendMessage("Position "
 					+ ChatColor.GOLD 
 					+ "#2" 
@@ -60,5 +76,5 @@ public class WandInteractEvent implements Listener {
 	// Store whole location,
 	// On first select, check if it exists,
 	// On reselect, check if exists, delete and add new,
-	// /portal create wall add coords to config.
+	// /portal create will add coords to config.
 }
