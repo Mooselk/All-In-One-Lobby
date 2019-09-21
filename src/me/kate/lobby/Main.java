@@ -17,6 +17,7 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.HidePlayersFile;
 import me.kate.lobby.data.files.NPCFile;
 import me.kate.lobby.data.files.PlayerSettingsFile;
+import me.kate.lobby.data.files.PortalsFile;
 import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
@@ -84,9 +85,11 @@ public class Main extends JavaPlugin {
 		this.hideSettings.create();
 		this.portals.load();
 		//new PingServersBackground().start();
+		PortalsFile.create();
 		NPCFile.create();
 		Config.createConfig();
 		this.registerEvents();
+		this.registerChannel();
 		this.registerCommands();
 	}
 
@@ -114,5 +117,9 @@ public class Main extends JavaPlugin {
 		this.getCommand("lobby").setExecutor(new LobbyCommand());
 		this.getCommand("npc").setExecutor(new NPCCommand());
 		this.getCommand("portal").setExecutor(new PortalCommand());
+	}
+	
+	private void registerChannel() {
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
 }
