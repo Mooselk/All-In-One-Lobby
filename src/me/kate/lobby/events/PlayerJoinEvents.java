@@ -54,7 +54,7 @@ public class PlayerJoinEvents implements Listener {
 		npcb.showAll(false, p);
 		if (!ps.sectionExists(p.getUniqueId().toString())) {
 			ps.createSection(p.getUniqueId().toString());
-			ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString()).addDefault("hidden", false);
+			ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString()).set("hidden", false);
 			ps.save();
 		}
 		p.teleport(this.spawn());
