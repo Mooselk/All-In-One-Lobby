@@ -33,7 +33,7 @@ public class NPCBuilder {
 		NPCFile.getNPCConfig().set("npcs." + name + ".skin", skinId);
 		NPCFile.getNPCConfig().set("npcs." + name + ".holotext", defaultLore);
 		NPCFile.getNPCConfig().set("npcs." + name + ".message", "Default message!");
-		NPCFile.getNPCConfig().set("npcs." + name + ".command", "none");
+		NPCFile.getNPCConfig().set("npcs." + name + ".server", "none");
 		NPCFile.getNPCConfig().createSection("npcs." + name + ".location");
 		NPCFile.getNPCConfig().set("npcs." + name + ".location.x", loc.getBlockX());
 		NPCFile.getNPCConfig().set("npcs." + name + ".location.y", loc.getBlockY());
@@ -47,6 +47,7 @@ public class NPCBuilder {
 	}
 
 	public void build(Player p) {
+		this.npcClear();
 		for (String name : NPCFile.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
 			Bukkit.getLogger().info(name);
 			ConfigurationSection section = NPCFile.getNPCConfig().getConfigurationSection("npcs." + name);
@@ -79,6 +80,7 @@ public class NPCBuilder {
 	public void destroy(String name) {
 		if (Main.NPCINFO.containsValue(name)) {
 			NPC npcs = getNPCById(getValue(Main.NPCINFO, name));
+			npcs.destroy();
 		}
 	}
 
@@ -127,8 +129,7 @@ public class NPCBuilder {
 				hologram.destroy(p);
 			}
 		}
-		Main.NPCS.clear();
-		Main.NPCINFO.clear();
+		this.npcClear();
 	}
 
 	public void showAll(boolean update, Player p) {
@@ -149,6 +150,15 @@ public class NPCBuilder {
 					npc.show(p);
 				}
 			}
+		}
+	}
+	
+	private void npcClear() {
+		if (!Main.NPCS.isEmpty()) {
+			Main.NPCS.clear();
+		}
+		if (!Main.NPCINFO.isEmpty()) {
+			Main.NPCINFO.clear();
 		}
 	}
 
