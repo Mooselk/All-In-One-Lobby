@@ -47,13 +47,16 @@ options:
 ### Commands
 
 - /lobby  - `lobby.help` _Displays all Lobby commands in chat_
-- /lobby reload <selector | hideplayers | config> - `lobby.reload` _Reloads specified config file_
+- /lobby reload \<selector | hideplayers | config> - `lobby.reload` _Reloads specified config file_
 - /lobby setspawn - `lobby.setspawn` _Sets lobby spawn point_
 - /lobby spawn - `lobby.spawn` _Teleports player to spawn_
 
 # NPC
 ### Config example
 ```
+# Interact cool down
+cooldown: 2
+
  # NPC name
  mooselk:
  
@@ -85,7 +88,17 @@ options:
 ### Commands
 
 - /npc help  - `lobby.npc.help` _Displays all NPC commands in chat_
-- /npc create <npc_name> _<skinId>_ - `lobby.npc.create`   _Creates NPC at players location_
-- /npc move <npc_name> - `lobby.npc.move`  _Moves NPC to players location_
-- /npc delete <npc_name> - `lobby.npc.delete`  _Deletes specified NPC_
+- /npc create \<npc_name> \<skinId> - `lobby.npc.create`   _Creates NPC at players location_
+- /npc move \<npc_name> - `lobby.npc.move`  _Moves NPC to players location_
+- /npc delete \<npc_name> - `lobby.npc.delete`  _Deletes specified NPC_
 - /npc reload - `lobby.npc.reload`  _Reloads ALL NPCs_
+
+# Portals
+
+### Commands
+- /portal help  - `lobby.portal.help` _Displays all Portal commands in chat_
+- /portal wand - `lobby.portal.wand` _Special tool used to select portal region_
+- /portal clear - `lobby.portal.clear` _Clears current portal selection_
+- /portal create \<name> \<server>  - `lobby.portal.create` _Creates portal in selected region_
+- /portal delete \<name> - `lobby.portal.delete` _Deletes specified portal_
+- /portal reload - `lobby.portal.reload` _Reloads ALL portals_
