@@ -1,5 +1,6 @@
 # Lobby
 
+
 ### Config example
 ```
 # Spawn coords storage
@@ -51,7 +52,10 @@ options:
 - /lobby setspawn - `lobby.setspawn` _Sets lobby spawn point_
 - /lobby spawn - `lobby.spawn` _Teleports player to spawn_
 
+
+
 # NPC
+
 ### Config example
 ```
 # Interact cool down
@@ -93,6 +97,8 @@ cooldown: 2
 - /npc delete \<npc_name> - `lobby.npc.delete`  _Deletes specified NPC_
 - /npc reload - `lobby.npc.reload`  _Reloads ALL NPCs_
 
+
+
 # Portals
 
 ### Commands
@@ -103,10 +109,14 @@ cooldown: 2
 - /portal delete \<name> - `lobby.portal.delete` _Deletes specified portal_
 - /portal reload - `lobby.portal.reload` _Reloads ALL portals_
 
+
+
 # Server Selector
 
 [Full Server-selector config example](https://github.com/Mooselk/All-In-One-Lobby/blob/master/src/selector.yml)
+[Example menu](https://github.com/Mooselk/All-In-One-Lobby/blob/master/Menu-example.png)
 
+### Config
 ```
 selector:
   options:
