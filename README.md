@@ -47,13 +47,16 @@ options:
 ### Commands
 
 - /lobby  - `lobby.help` _Displays all Lobby commands in chat_
-- /lobby reload <selector | hideplayers | config> - `lobby.reload` _Reloads specified config file_
+- /lobby reload \<selector | hideplayers | config> - `lobby.reload` _Reloads specified config file_
 - /lobby setspawn - `lobby.setspawn` _Sets lobby spawn point_
 - /lobby spawn - `lobby.spawn` _Teleports player to spawn_
 
 # NPC
 ### Config example
 ```
+# Interact cool down
+cooldown: 2
+
  # NPC name
  mooselk:
  
@@ -85,7 +88,139 @@ options:
 ### Commands
 
 - /npc help  - `lobby.npc.help` _Displays all NPC commands in chat_
-- /npc create <npc_name> _<skinId>_ - `lobby.npc.create`   _Creates NPC at players location_
-- /npc move <npc_name> - `lobby.npc.move`  _Moves NPC to players location_
-- /npc delete <npc_name> - `lobby.npc.delete`  _Deletes specified NPC_
+- /npc create \<npc_name> \<skinId> - `lobby.npc.create`   _Creates NPC at players location_
+- /npc move \<npc_name> - `lobby.npc.move`  _Moves NPC to players location_
+- /npc delete \<npc_name> - `lobby.npc.delete`  _Deletes specified NPC_
 - /npc reload - `lobby.npc.reload`  _Reloads ALL NPCs_
+
+# Portals
+
+### Commands
+- /portal help  - `lobby.portal.help` _Displays all Portal commands in chat_
+- /portal wand - `lobby.portal.wand` _Special tool used to select portal region_
+- /portal clear - `lobby.portal.clear` _Clears current portal selection_
+- /portal create \<name> \<server>  - `lobby.portal.create` _Creates portal in selected region_
+- /portal delete \<name> - `lobby.portal.delete` _Deletes specified portal_
+- /portal reload - `lobby.portal.reload` _Reloads ALL portals_
+
+# Server Selector
+
+[Full Server-selector config example](https://github.com/Mooselk/All-In-One-Lobby/blob/master/src/selector.yml)
+
+```
+selector:
+  options:
+    
+    # Enable / disable selector item
+    enabled: true
+    
+    # Number of menu rows
+    rows: 6
+    
+    # Selector item
+    material: "COMPASS"
+    
+    # Item display name
+    item-name: "&4Server-Selector &8(&7Right-click&8)"
+    
+    # Set selector lore here
+    lore:
+      - "&8Selects server"
+    
+    # Name at the top of menu
+    name: "&4&lExample &8&l>> &cServers"
+    
+    # Slot item appears in inventory
+    slot: 0
+    
+  # Inventory slot
+  19:
+  
+    # If server status is equal to online, this info is shown.
+    online:
+    
+      # Item name
+      name: '&8* &cFactions Hell &7(HCF) &8*'
+      
+      # Item material
+      material: "TNT"
+      
+      # Item data
+      byte: 0
+      
+      # Item appears enchanted
+      enchanted: false
+      
+      # Item Lore
+      lore:
+        - '&8&m&l|-&r &cDescription'
+        - '&8&m&l|&r &7&o"Hardcore factions when you'
+        - '&8&m&l|&r &7&odie you are banned for'
+        - '&8&m&l|&r &7&oset about of time!"'
+        - '&8&m&l|-&r &cStatistics'
+        - '&8&m&l|&r &fSupported: &71.8.8 - 1.13'
+        - '&8&m&l|&r &fRecommended: &71.8.8 - 1.8.9'
+        - '&8&m&l|&r &fONLINE: &7%online%/%max%'
+        - '&8&m&l|&r &fMAP: &7#1'
+        - '&8&m&l|&r &8- &aONLINE &8-'
+        - '&8&m&l|-&r'
+    # If server status is equal to offline, this info is shown.
+    offline:
+    
+      # Item-name
+      name: '&8* &cFactions Hell &7(HCF) &8*'
+      
+      # Material
+      material: "WOOL"
+      
+      # Material data (Red wool)
+      byte: 14
+      
+      # Item appears enchanted
+      enchanted: false
+      
+      # Item lore
+      lore:
+        - " "
+        - "&7- &cOFFLINE &7-"
+        - " "
+      
+    # Server ping settings
+    server:
+      
+      # ID can by anything aslong as it's unique
+      server-id: factions
+      
+      # Ping server for live info
+      ping-server: true
+      
+      # IP to get data from 
+      ip: me.hypixel.net
+      
+      # Port
+      port: 25565
+      
+      # false for local host, true for external server
+      external-query: true
+      
+      # Ping timeout
+      ping-timeout: 10
+      
+    # Server to connect to
+    server: factions
+    
+    # Message sent on click
+    message: "&f[&6Lobby&f] Sending you to server '&6factions&f'!"
+    
+    
+    # Example deco item
+    # Can be used to display a message or to fill the rest of the inventory
+    45:
+    
+    # Must be set to true to ignore all normal options
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 0
+```
+
