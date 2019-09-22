@@ -111,8 +111,7 @@ public class PortalCommand implements CommandExecutor {
 	}
 
 	private void helpMessage(Player p) {
-		p.sendMessage(
-				ChatColor.translateAlternateColorCodes('&', "&m-------------&r[ &l&6Portal Help&r ]&m-------------"));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m-------------&r[ &l&6Portal Help&r ]&m-------------"));
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal wand &f- Gives portal selection tool."));
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal create <&fname&6> <&fserver&6> &f- Create portal."));

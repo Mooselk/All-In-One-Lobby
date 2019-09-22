@@ -34,6 +34,7 @@ import me.kate.lobby.items.portals.events.PlayerPortalEvent;
 import me.kate.lobby.items.portals.events.WandInteractEvent;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
+import me.kate.lobby.items.selector.ping.PingServersBackground;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.api.NPC;
 
@@ -84,7 +85,7 @@ public class Main extends JavaPlugin {
 		this.selectorSettings.create();
 		this.hideSettings.create();
 		this.portals.load();
-		//new PingServersBackground().start();
+		new PingServersBackground().start();
 		PortalsFile.create();
 		NPCFile.create();
 		Config.createConfig();

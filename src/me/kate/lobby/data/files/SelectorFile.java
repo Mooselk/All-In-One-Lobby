@@ -46,6 +46,8 @@ public class SelectorFile implements ISelectorSettings {
 
 	@Override
 	public void load() {
+		selector = null;
+		selectorConf = null;
 		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
 		selectorConf = new YamlConfiguration();
 		try {
@@ -69,6 +71,8 @@ public class SelectorFile implements ISelectorSettings {
 	
 	@Override
 	public void reload() {
+		selector = null;
+		selectorConf = null;
 		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
 		selectorConf = new YamlConfiguration();
 		try {

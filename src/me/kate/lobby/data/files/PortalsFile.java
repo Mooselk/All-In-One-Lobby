@@ -55,6 +55,8 @@ public class PortalsFile {
 	}
 	
 	public static void forceLoad() {
+		portalfile = null;
+		portalconf= null;
 		portalfile = new File(Main.getInstance().getDataFolder(), "portals.yml");
 		portalconf = new YamlConfiguration();
 		try {
