@@ -12,7 +12,6 @@ import org.bukkit.scheduler.BukkitTask;
 import me.kate.lobby.commands.LobbyCommand;
 import me.kate.lobby.commands.NPCCommand;
 import me.kate.lobby.commands.PortalCommand;
-import me.kate.lobby.commands.SpawnCommand;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.HidePlayersFile;
 import me.kate.lobby.data.files.NPCFile;
@@ -24,14 +23,16 @@ import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.events.InteractNPCEvent;
 import me.kate.lobby.events.PlayerJoinEvents;
+import me.kate.lobby.events.PlayerLeaveEvents;
 import me.kate.lobby.events.world.BlockRelatedEvent;
 import me.kate.lobby.events.world.MobSpawnEvent;
 import me.kate.lobby.events.world.TouchVoidEvent;
+import me.kate.lobby.events.world.WeatherBlockEvent;
 import me.kate.lobby.items.hideplayers.events.HidePlayersInteractEvent;
-import me.kate.lobby.items.portals.Cuboid;
 import me.kate.lobby.items.portals.Portal;
 import me.kate.lobby.items.portals.events.PlayerPortalEvent;
 import me.kate.lobby.items.portals.events.WandInteractEvent;
+import me.kate.lobby.items.portals.utils.Cuboid;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
 import me.kate.lobby.items.selector.ping.PingServersBackground;
@@ -42,11 +43,9 @@ public class Main extends JavaPlugin {
 	
 	/* * * * * TO-DO * * * * * 
 	 * 
-	 * Finish /npc create
 	 * Jump pads
-	 * Join / Leave messages
 	 * Remove debug messages
-	 * Portal commands
+	 * NPC move
 	 * 
 	 * * * * * * * * * * * * */
 
@@ -80,12 +79,12 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
+		this.startThread();
 		this.npclib = new NPCLib(this);
 		this.playerSettings.create();
 		this.selectorSettings.create();
 		this.hideSettings.create();
 		this.portals.load();
-		new PingServersBackground().start();
 		PortalsFile.create();
 		NPCFile.create();
 		Config.createConfig();
@@ -96,7 +95,7 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public void onDisable() {
-
+		instance = null;
 	}
 
 	private void registerEvents() {
@@ -109,12 +108,12 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new HidePlayersInteractEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerPortalEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerLeaveEvents(), this);
 		this.getServer().getPluginManager().registerEvents(new WandInteractEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new WeatherBlockEvent(), this);
 	}
 
 	private void registerCommands() {
-		this.getCommand("setspawn").setExecutor(new SpawnCommand());
-		this.getCommand("spawn").setExecutor(new SpawnCommand());
 		this.getCommand("lobby").setExecutor(new LobbyCommand());
 		this.getCommand("npc").setExecutor(new NPCCommand());
 		this.getCommand("portal").setExecutor(new PortalCommand());
@@ -122,5 +121,9 @@ public class Main extends JavaPlugin {
 	
 	private void registerChannel() {
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	}
+	
+	private void startThread() {
+		new PingServersBackground().start();
 	}
 }
