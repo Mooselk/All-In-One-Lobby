@@ -26,7 +26,7 @@ public class PingServersBackground extends Thread {
 
 					if (!sec.getBoolean("decoration") && !key.equals("options")) {
 						try {
-							Thread.sleep(750); // default: 2000
+							Thread.sleep(1500); // default: 2000
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
