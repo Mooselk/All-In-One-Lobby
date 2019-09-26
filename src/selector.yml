@@ -1,56 +1,52 @@
-compass:
+selector:
   options:
     enabled: true
-    
     # Number of menu rows
     rows: 6
+    
+    # Selector item
+    material: "COMPASS"
     
     # Item display name
     item-name: "&4Server-Selector &8(&7Right-click&8)"
     
-    # Set compass lore here
+    # Set selector lore here
     lore:
       - "&8Selects server"
     
     # Name at the top of menu
-    name: "&4Server Selector"
+    name: "&4&lExample &8&l>> &cServers"
     
     # Slot item appears in inventory
     slot: 0
     
   19:
     online:
-      name: "&c&lFactions &7- &a%ping%"
+      name: '&8* &cFactions Hell &7(HCF) &8*'
       material: "TNT"
       byte: 0
       enchanted: false
       lore:
-        - "&8Territory control"
-        - " "
-        - "&7 Compete with other greasy toxic"
-        - "&7 assholes for a chance to win some"
-        - "&7 shitty cash prize you'll have to share"
-        - "&7 with the rest of the degenerates in your faction!"
-        - " "
-        - "&a&l> Click to Connect"
-        - "&7%online%/%max% currently online!"
-        - " "
+        - '&8&m&l|-&r &cDescription'
+        - '&8&m&l|&r &7&o"Hardcore factions when you'
+        - '&8&m&l|&r &7&odie you are banned for'
+        - '&8&m&l|&r &7&oset about of time!"'
+        - '&8&m&l|-&r &cStatistics'
+        - '&8&m&l|&r &fSupported: &71.7.10 - 1.13'
+        - '&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9'
+        - '&8&m&l|&r &fONLINE: &7%online%/%max%'
+        - '&8&m&l|&r &fMAP: &7#1'
+        - '&8&m&l|&r &8- &aONLINE &8-'
+        - '&8&m&l|-&r'
       
     offline:
-      name: "&c&lFactions &7- &4Offline"
+      name: '&8* &cFactions Hell &7(HCF) &8*'
       material: "WOOL"
       byte: 14
       enchanted: false
       lore:
-        - "&8Territory control"
         - " "
-        - "&7 Compete with other greasy toxic"
-        - "&7 assholes for a chance to win some"
-        - "&7 shitty cash prize you'll have to share"
-        - "&7 with the rest of the degenerates in your faction!"
-        - " "
-        - "&a&m&l> Click to Connect"
-        - "&70/0 server is offline!"
+        - "&7- &cOFFLINE &7-"
         - " "
       
     server:
@@ -61,42 +57,36 @@ compass:
       external-query: true
       ping-timeout: 10
       
-    command: "/server factions"
-    message: "&cSending you to server 'factions'!"
+    server: "/factions"
+    message: "&8[&cLobby&8] &7Sending you to 'factions'!"
     
   21:
     online:
-      name: "&e&lPractice &7- &a%ping%"
+      name: '&8* &5Factions Void &7(Cannoning) &8*'
       material: "DIAMOND_SWORD"
       byte: 0
       enchanted: false
       lore:
-        - "&8Competitive"
-        - " "
-        - " &7Do you think you're the best?"
-        - " &7Flex your e-peen by competing"
-        - " &7with other degenerates to increase"
-        - " &7your &belo &7&o(e-peen size) &7in 1v1 battles!"
-        - " "
-        - "&a&l> Click to Connect"
-        - "&7%online%/%max% currently online!"
-        - " "
+        - '&8&m&l|-&r &5Description'
+        - '&8&m&l|&r &7&o"Cannon your eveny bases'
+        - '&8&m&l|&r &7&oraid all there loot'
+        - '&8&m&l|&r &7&oand become the top of the server!"'
+        - '&8&m&l|-&r &5Statistics'
+        - '&8&m&l|&r &fSupported: &71.7.10 - 1.13'
+        - '&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9'
+        - '&8&m&l|&r &fONLINE: &7%online%/%max%'
+        - '&8&m&l|&r &fMAP: &7#1'
+        - '&8&m&l|&r &8- &aONLINE &8-'
+        - '&8&m&l|-&r'
         
     offline:
-      name: "&e&lPractice &7- &4Offline"
+      name: '&8* &5Factions Void &7(Cannoning) &8*'
       material: "WOOL"
       byte: 14
       enchanted: false
       lore:
-        - "&8Competitive"
         - " "
-        - " &7Do you think you're the best?"
-        - " &7Flex your e-peen by competing"
-        - " &7with other degenerates to increase"
-        - " &7your &belo &7&o(e-peen size) &7in 1v1 battles!"
-        - " "
-        - "&a&m&l> Click to Connect"
-        - "&70/0 server is offline!"
+        - "&7- &cOFFLINE &7-"
         - " "
         
     server:
@@ -107,41 +97,38 @@ compass:
       external-query: true
       ping-timeout: 10
       
-    command: "server pvp"
-    message: "&eSending you to server 'pvp'!"
+    server: "pvp"
+    message: "&8[&cLobby&8] &7Sending you to 'pvp'!"
     
     
   23:
     online:
-      name: "&d&lSkyBlock &7- &a%ping%"
+      name: '&8* &dFactions Rose &7(Survival) &8*'
       material: "GRASS"
       byte: 0
       enchanted: false
       lore:
-        - "&8Competitive"
-        - " "
-        - " &7Do you think you're the best?"
-        - " &7Flex your e-peen by competing"
-        - " &7with other degenerates to increase"
-        - " &7your &belo &7&o(e-peen size) &7in 1v1 battles!"
-        - " "
-        - "&a&l> Click to Connect"
-        - "&7%online%/%max% currently online!"
-        - " "
+        - '&8&m&l|-&r &dDescription'
+        - '&8&8&m&l|&r &7&o"Build a Grate faction'
+        - '&8&8&m&l|&r &7&oraid and pvp with out'
+        - '&8&8&m&l|&r &7&ofear of losing your faction!"'
+        - '&8&m&l|-&r &dStatistics'
+        - '&8&8&m&l|&r &fSupported: &71.7.10 - 1.13 '
+        - '&8&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9 &8(&7PvP&8)'
+        - '&8&8&m&l|&r &fRecommended: &71.12 - 1.13 &8(&7Building&8)'
+        - '&8&8&m&l|&r &fONLINE: &7%online%/%max%'
+        - '&8&8&m&l|&r &fMAP: &7#1'
+        - '&8&8&m&l|&r &8- &aONLINE &8-'
+        - '&8&m&l|-&r'
         
     offline:
-      name: "&d&lSkyBlock &7- &4Offline"
+      name: '&8* &dFactions Rose &7(Survival) &8*'
       material: "WOOL"
       byte: 14
       enchanted: false
       lore:
-        - "&8Skyblock"
         - " "
-        - " &7A block in the sky!"
-        - " &7What did you expect?"
-        - " "
-        - "&a&m&l> Click to Connect"
-        - "&70/0 server is offline!"
+        - "&7- &cOFFLINE &7-"
         - " "
         
     server:
@@ -152,33 +139,37 @@ compass:
       external-query: true
       ping-timeout: 10
     
-    command: "server skyblock"
-    message: "&aSending you to server 'skyblock'!"
+    server: "skyblock"
+    message: "&8[&cLobby&8] &7Sending you to 'skyblock'!"
     
     
   25:
     online:
-      name: "&b&lDev &7- &a%ping%"
+      name: '&8* &5Cannon Testing &8*'
       material: "FURNACE"
       byte: 0
       enchanted: false
       lore:
-        - "&8Dev server"
-        - " "
-        - "&a&l> Click to Connect"
-        - "&7%online%/%max% currently online!"
-        - " "
+       - '&8&8&m&l|-&r &5Description'
+       - '&8&8&m&l|&r &7&o"Test your cannons &'
+       - '&8&8&m&l|&r &7&oBases to see if they '
+       - '&8&8&m&l|&r &7&owill work on our Servers"'
+       - '&8&m&l|-&r &5Statistics'
+       - '&8&8&m&l|&r &fPatched Cannoning'
+       - '&8&8&m&l|&r &fSupported: &71.7.10 - 1.13 '
+       - '&8&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9'
+       - '&8&8&m&l|&r &fONLINE: &7%online%/%max%'
+       - '&8&8&m&l|&r &8- &aONLINE &8-'
+       - '&8&m&l|-&r'
         
     offline:
-      name: "&b&lDev &7- &4Offline"
+      name: '&8* &5Cannon Testing &8*'
       material: "WOOL"
       byte: 14
       enchanted: false
       lore:
-        - "&8Dev server"
         - " "
-        - "&a&m&l> Click to Connect"
-        - "&70/0 server is offline!"
+        - "&7- &cOFFLINE &7-"
         - " "
         
     server:
@@ -189,12 +180,12 @@ compass:
       external-query: true
       ping-timeout: 10
     
-    command: "none"
+    server: "none"
     message: "none"
     
   29:
     online:
-      name: "&b&lPlaceHolder &7- &a%ping%"
+      name: '&8* &6Invalid &8*'
       material: "WORKBENCH"
       byte: 0
       enchanted: false
@@ -206,15 +197,13 @@ compass:
         - " "
         
     offline:
-      name: "&b&lPlaceHolder &7- &4Offline"
+      name: '&8* &6Invalid &8*'
       material: "WOOL"
       byte: 14
       enchanted: false
       lore:
-        - "&8Sample server"
         - " "
-        - "&a&m&l> Click to Connect"
-        - "&70/0 server is offline!"
+        - "&7- &cOFFLINE &7-"
         - " "
         
     server:
@@ -225,32 +214,35 @@ compass:
       external-query: true
       ping-timeout: 10
     
-    command: "none"
+    server: "none"
     message: "none"
     
   31:
     online:
-      name: "&7&lPrison &7- &a%ping%"
+      name: '&8* &6Practice &8*'
       material: "IRON_FENCE"
       byte: 0
       enchanted: false
       lore:
-        - "&8Sample server"
-        - " "
-        - "&a&l> Click to Connect"
-        - "&7%online%/%max% currently online!"
-        - " "
-        
+       - '&8&m&l|-&r &6Description'
+       - '&8&8&m&l|&r &7&o"Practice your PvP Skills'
+       - '&8&8&m&l|&r &7&oin 1v1s / 2v2 / join or make '
+       - '&8&8&m&l|&r &7&oa team and pvp with friends!'
+       - '&8&m&l|-&r &6Statistics'
+       - '&8&8&m&l|&r &fSupported: &71.7.10 - 1.13 '
+       - '&8&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9 &8(&7PvP&8)'
+       - '&8&8&m&l|&r &fONLINE: &7%online%/%max%'
+       - '&8&8&m&l|&r &8- &aONLINE &8-'
+       - '&8&m&l|-&r'
+       
     offline:
-      name: "&7&lPrison &7- &4Offline"
+      name: '&8* &6Practice &8*'
       material: "WOOL"
       byte: 14
       enchanted: false
       lore:
-        - "&8Sample server"
         - " "
-        - "&a&m&l> Click to Connect"
-        - "&70/0 server is offline!"
+        - "&7- &cOFFLINE &7-"
         - " "
     
     server:
@@ -261,12 +253,12 @@ compass:
       external-query: true
       ping-timeout: 10
     
-    command: "none"
+    server: "none"
     message: "none"
     
   33:
     online:
-      name: "&b&lPlaceHolder &7- &a%ping%"
+      name: '&8* &6Invalid &8*'
       material: "BOOKSHELF"
       byte: 0
       enchanted: false
@@ -278,15 +270,13 @@ compass:
         - " "
         
     offline:
-      name: "&b&lPlaceHolder &7- &4Offline"
+      name: '&8* &6Invalid &8*'
       material: "WOOL"
       byte: 14
       enchanted: false
       lore:
-        - "&8Sample server"
         - " "
-        - "&a&m&l> Click to Connect"
-        - "&70/0 server is offline!"
+        - "&7- &cOFFLINE &7-"
         - " "
     
     server:
@@ -297,51 +287,31 @@ compass:
       external-query: true
       ping-timeout: 10
     
-    command: "none"
+    server: "none"
     message: "none"
     
   45:
-    offline:
-      name: "&4&lClose"
-      material: "BOOKSHELF"
-      byte: 0
-      enchanted: false
-      lore:
-        - "&8Exits menu"
-        
-    server:
-      ping-server: false
-    
-    command: "menuclose"
-    message: "none"
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 0
     
   53:
-    offline:
-      name: "&3&lDiscord"
-      material: "SIGN"
-      byte: 0
-      enchanted: false
-      lore:
-        - "&8Join our discord server!"
-        - " "
-        - "&7(discord link)"
-        
-    server:
-      ping-server: false
-    material: "SIGN"
-    command: "menuclose"
-    message: "none"  
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 0
     
   0:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 0
   1:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 2
   2:
     decoration: true
     name: " "
@@ -371,13 +341,48 @@ compass:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 2
   8:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 0
   9:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 2
+  10:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  11:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  12:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  13:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  14:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  15:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  16:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
@@ -386,13 +391,28 @@ compass:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 2
   18:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
     byte: 7
   18:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  20:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  22:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  24:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
@@ -407,6 +427,26 @@ compass:
     name: " "
     material: "STAINED_GLASS_PANE"
     byte: 7
+  28:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  30:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  32:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  34:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
   35:
     decoration: true
     name: " "
@@ -416,17 +456,52 @@ compass:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
+    byte: 2
+  37:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  38:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  39:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  40:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  41:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  42:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
+    byte: 7
+  43:
+    decoration: true
+    name: " "
+    material: "STAINED_GLASS_PANE"
     byte: 7
   44:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 2
   46:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 2
   47:
     decoration: true
     name: " "
@@ -456,4 +531,4 @@ compass:
     decoration: true
     name: " "
     material: "STAINED_GLASS_PANE"
-    byte: 7
+    byte: 2
