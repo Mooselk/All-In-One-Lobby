@@ -49,12 +49,8 @@ public class NPCBuilder {
 	public void build(Player p) {
 		this.npcClear();
 		for (String name : NPCFile.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
-			Bukkit.getLogger().info(name);
 			ConfigurationSection section = NPCFile.getNPCConfig().getConfigurationSection("npcs." + name);
 			int skinId = section.getInt("skin");
-			Bukkit.getLogger().info("x: " + section.getDouble("location.x"));
-			Bukkit.getLogger().info("y: " + section.getDouble("location.y"));
-			Bukkit.getLogger().info("z: " + section.getDouble("location.z"));
 			MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
 				NPC npc = Main.getInstance().getNPCLib().createNPC(colorParser(section.getStringList("holotext")));
 				Location loc = new Location(Bukkit.getWorld("world"), section.getDouble("location.x"),
@@ -97,7 +93,6 @@ public class NPCBuilder {
 	public NPC getNPCById(String id) {
 		for (int i = 0; i < Main.NPCS.size(); i++) {
 			NPC match = Main.NPCS.get(i);
-			Bukkit.getLogger().info("NPC2: " + Main.NPCS.get(i));
 			if (match.getId().equals(id)) {
 				return match;
 			}
