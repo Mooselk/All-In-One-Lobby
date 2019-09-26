@@ -1,6 +1,5 @@
 package me.kate.lobby.items.selector.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -12,6 +11,7 @@ import org.bukkit.event.inventory.InventoryType;
 
 import me.kate.lobby.data.files.SelectorFile;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.items.portals.utils.SendToServer;
 import me.kate.lobby.items.selector.Selector;
 import net.md_5.bungee.api.ChatColor;
 
@@ -34,9 +34,9 @@ public class SelectorGuiEvents implements Listener {
 				if (!sec.getString("message").equalsIgnoreCase("none")) {
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&', sec.getString("message")));
 				}
-				if (!sec.getString("command").equalsIgnoreCase("none")
-						&& (!sec.getString("command").equalsIgnoreCase("menuclose"))) {
-					Bukkit.dispatchCommand(p, sec.getString("command"));
+				if (!sec.getString("connect").equalsIgnoreCase("none")
+						&& (!sec.getString("connect").equalsIgnoreCase("menuclose"))) {
+					SendToServer.send(p, sec.getString("connect"));
 				} else {
 					selector.close(p);
 				}
