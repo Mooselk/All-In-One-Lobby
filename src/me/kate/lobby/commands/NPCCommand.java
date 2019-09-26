@@ -12,7 +12,7 @@ import me.kate.lobby.npcs.NPCBuilder;
 
 public class NPCCommand implements CommandExecutor {
 
-	private NPCBuilder npcb = new NPCBuilder();
+	private final NPCBuilder npcb = new NPCBuilder();
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
