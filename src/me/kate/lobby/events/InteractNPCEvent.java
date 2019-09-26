@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCFile;
-import me.kate.lobby.items.portals.SendToServer;
+import me.kate.lobby.items.portals.utils.SendToServer;
 import me.kate.lobby.managers.CooldownManager;
 import me.kate.lobby.npcs.api.events.NPCInteractEvent;
 

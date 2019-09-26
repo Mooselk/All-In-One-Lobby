@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsFile;
 import me.kate.lobby.items.portals.Portal;
-import me.kate.lobby.items.portals.PortalWand;
+import me.kate.lobby.items.portals.utils.PortalWand;
 
 public class PortalCommand implements CommandExecutor {
 

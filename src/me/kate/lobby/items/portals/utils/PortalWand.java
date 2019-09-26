@@ -1,4 +1,4 @@
-package me.kate.lobby.items.portals;
+package me.kate.lobby.items.portals.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
