@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsFile;
-import me.kate.lobby.items.portals.Cuboid;
-import me.kate.lobby.items.portals.SendToServer;
+import me.kate.lobby.items.portals.utils.Cuboid;
+import me.kate.lobby.items.portals.utils.SendToServer;
 import me.kate.lobby.managers.CooldownManager;
 
 public class PlayerPortalEvent implements Listener {

@@ -6,6 +6,7 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsFile;
+import me.kate.lobby.items.portals.utils.Cuboid;
 
 public class Portal {
 

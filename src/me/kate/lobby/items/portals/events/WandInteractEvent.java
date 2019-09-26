@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.items.portals.PortalWand;
+import me.kate.lobby.items.portals.utils.PortalWand;
 import net.md_5.bungee.api.ChatColor;
 
 public class WandInteractEvent implements Listener {
