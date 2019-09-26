@@ -47,6 +47,9 @@ public class PlayerJoinEvents implements Listener {
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent e) {
 		final Player p = (Player) e.getPlayer();
+		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
+			e.setJoinMessage(this.replace(Main.getInstance().getConfig().getString("options.custom-joinmsg"), p));
+		}
 		if (!this.npc) {
 			npcb.build(p);
 			this.npc = true;
@@ -125,6 +128,12 @@ public class PlayerJoinEvents implements Listener {
 			nlore.add(ChatColor.translateAlternateColorCodes('&', l));
 		}
 		return nlore;
+	}
+	
+	private String replace(String in, Player p) {
+		String out = in.replaceAll("%player%", p.getName());
+		out = ChatColor.translateAlternateColorCodes('&', out);
+		return out;
 	}
 
 	private Location spawn() {
