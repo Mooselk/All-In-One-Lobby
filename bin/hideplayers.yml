@@ -3,20 +3,14 @@ options:
   cooldown: 3
 
 messages:
-  hide: "&8[&cLobby&8] &7All players have been hidden."
-  unhide: "&8[&cLobby&8] &7All players have been unhidden."
-  cooldown: "&8[&cLobby&8] &7%timeleft% seconds before you can use this again."
+  hide: "&f[&6Lobby&f] All players have been hidden."
+  unhide: "&f[&6Lobby&f] &7All players have been unhidden."
+  cooldown: "&f[&6Lobby&f] %timeleft% seconds before you can use this again."
   
 item:
   hide:
     material: "REDSTONE_TORCH_ON"
     name: "Unhide players (Right-Click)"
-    lore:
-      - "egg"
-      - " bean"
   unhide:
     material: "LEVER"
     name: "Unhide players (Right-Click)"
-    lore:
-      - "egg"
-      - " bean"
