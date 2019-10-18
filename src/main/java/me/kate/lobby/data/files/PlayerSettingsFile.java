@@ -13,8 +13,8 @@ import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 
 public class PlayerSettingsFile implements IPlayerSettings {
 
-	public File playerSettings;
-	public FileConfiguration playerSettingsConf;
+	public static File playerSettings;
+	public static FileConfiguration playerSettingsConf;
 
 	public PlayerSettingsFile() {
 	}
@@ -69,13 +69,13 @@ public class PlayerSettingsFile implements IPlayerSettings {
 
 	@Override
 	public FileConfiguration getPlayerSettings() {
-		this.reload();
+		//this.reload();
 		return playerSettingsConf;
 	}
 
 	@Override
 	public boolean sectionExists(String section) {
-		this.reload();
+		//this.reload();
 		boolean exists = false;
 		if (playerSettingsConf.getConfigurationSection(section) != null) {
 			exists = true;
