@@ -53,8 +53,10 @@ public class NPCBuilder {
 			int skinId = section.getInt("skin");
 			MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
 				NPC npc = Main.getInstance().getNPCLib().createNPC(colorParser(section.getStringList("holotext")));
-				Location loc = new Location(Bukkit.getWorld("world"), section.getDouble("location.x"),
-						section.getDouble("location.y"), section.getDouble("location.z"));
+				Location loc = new Location(Bukkit.getWorld("world"), 
+						section.getDouble("location.x"),
+						section.getDouble("location.y"), 
+						section.getDouble("location.z"));
 				loc.setPitch(section.getInt("location.pitch"));
 				loc.setYaw(section.getInt("location.yaw"));
 				npc.setLocation(loc);

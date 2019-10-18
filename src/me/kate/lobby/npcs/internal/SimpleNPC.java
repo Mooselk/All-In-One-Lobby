@@ -13,6 +13,7 @@ import me.kate.lobby.npcs.api.events.NPCShowEvent;
 import me.kate.lobby.npcs.api.skin.Skin;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -20,13 +21,9 @@ import java.util.*;
 
 public abstract class SimpleNPC implements NPC, PacketHandler {
 
-	/*
-	 *  Change uuid to a configurable id?
-	 */
     protected final UUID uuid = UUID.randomUUID();
     protected final int entityId = Integer.MAX_VALUE - NPCManager.getAllNPCs().size();
     protected final String name = uuid.toString().replace("-", "").substring(0, 10);
-    //protected final String name = "bob";
     protected final GameProfile gameProfile = new GameProfile(uuid, name);
 
     protected final List<String> lines;
@@ -61,20 +58,14 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
         this.skin = skin;
 
         gameProfile.getProperties().get("textures").clear();
-
-        if (skin != null) {
+        if (skin != null)
             gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
-        }
 
         return this;
     }
 
     @Override
     public void destroy() {
-        destroy(true);
-    }
-
-    public void destroy(boolean scheduler) {
         NPCManager.remove(this);
 
         // Destroy NPC for every player that is still seeing it.
@@ -83,7 +74,7 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
                 continue;
             }
 
-            hide(Bukkit.getPlayer(uuid), true, scheduler);
+            hide(Bukkit.getPlayer(uuid), true);
         }
     }
 
@@ -108,6 +99,11 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
         return location;
     }
 
+    @Override
+    public World getWorld() {
+        return location != null ? location.getWorld() : null;
+    }
+
     public int getEntityId() {
         return entityId;
     }
@@ -127,6 +123,11 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
     public NPC create() {
         createPackets();
         return this;
+    }
+
+    public void onLogout(Player player) {
+        getAutoHidden().remove(player.getUniqueId());
+        getShown().remove(player.getUniqueId()); // Don't need to use NPC#hide since the entity is not registered in the NMS server.
     }
 
     @Override
@@ -179,10 +180,10 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
 
     @Override
     public void hide(Player player) {
-        hide(player, false, true);
+        hide(player, false);
     }
 
-    public void hide(Player player, boolean auto, boolean scheduler) {
+    public void hide(Player player, boolean auto) {
         NPCHideEvent event = new NPCHideEvent(this, player, auto);
         Bukkit.getServer().getPluginManager().callEvent(event);
         if (event.isCancelled()) {
@@ -190,7 +191,7 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
         }
 
         if (auto) {
-            sendHidePackets(player, scheduler);
+            sendHidePackets(player);
         } else {
             if (!shown.contains(player.getUniqueId())) {
                 throw new RuntimeException("Cannot call hide method without calling NPC#show.");
@@ -200,7 +201,7 @@ public abstract class SimpleNPC implements NPC, PacketHandler {
 
             if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location)
                     <= instance.getAutoHideDistance()) {
-                sendHidePackets(player, scheduler);
+                sendHidePackets(player);
             } else {
                 autoHidden.remove(player.getUniqueId());
             }
