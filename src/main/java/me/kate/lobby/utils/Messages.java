@@ -1,0 +1,55 @@
+package me.kate.lobby.utils;
+
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+
+public class Messages {
+	
+	public Messages() {}
+	
+	public void send(String msg, Player player) {
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
+	}
+	
+	public void noPermission(Player p) {
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "You do not have permission to use this command."));
+	}
+	
+	public void lobbyHelp(Player p) {
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m------------&r[ &l&6Lobby Help&r ]&m------------"));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/spawn &f- Sends you to lobby spawn point."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/lobby setspawn &f- Sets lobby spawn point."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/npc help &f- Lists all NPC commands."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal help &f - Lists all portal commands."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/lobby reload <config> &f- Reload specifed config."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+	}
+
+	public void lobbyHelpReload(Player p) {
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Lobby&f] Reloadable configs: lobby, selector, playerhider"));
+	}
+	
+	public void npcHelp(Player p) {
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m-------------&r[ &l&6NPC Help&r ]&m-------------"));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/npc create <&fnpc_name&6> <&fskin_id&6> &f- Creates NPC."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/npc move <&fnpc_name&6> &f- Move NPC to your location."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/npc delete <&fnpc_name&6> &f- Lists all portal commands."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/npc setskin <&fskin_id&6> &f- Change a specfic NPCs skin."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/npc reload &f- Reloads NPC config and respawns NPCs."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Note: &f&oSkin ids can be otained from https://mineskin.org/"));
+	}
+	
+	public void portalHelp(Player p) {
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m-------------&r[ &l&6Portal Help&r ]&m-------------"));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal wand &f- Gives portal selection tool."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal create <&fname&6> <&fserver&6> &f- Create portal."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal delete <&fname&6> &f- Deletes specified portal."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal clear &f- Clears current portal selection."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal reload &f- Reload portal storage config."));
+		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
+	}
+}
