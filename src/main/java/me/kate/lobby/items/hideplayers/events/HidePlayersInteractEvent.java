@@ -1,6 +1,5 @@
 package me.kate.lobby.items.hideplayers.events;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,9 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.data.files.HidePlayersFile;
-import me.kate.lobby.data.files.PlayerSettingsFile;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
-import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.items.hideplayers.HidePlayers;
 import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 import me.kate.lobby.managers.CooldownManager;
@@ -28,8 +25,6 @@ public class HidePlayersInteractEvent implements Listener {
 
 	private IHidePlayerSettings hf = new HidePlayersFile();
 	private FileConfiguration hc = hf.getHideSettings();
-
-	private IPlayerSettings ps = new PlayerSettingsFile();
 
 	private ConfigurationSection hideSection = hc.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hc.getConfigurationSection("item.unhide");
@@ -47,10 +42,17 @@ public class HidePlayersInteractEvent implements Listener {
 
 		final Player p = e.getPlayer();
 
-		this.hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")), 1)
-				.setName(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name"))).toItemStack();
-		this.unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
-				.setName(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name"))).toItemStack();
+		hide = new ItemBuilder(Material.getMaterial(
+				hideSection.getString("material")), 1)
+				.setName(ChatColor.translateAlternateColorCodes('&', 
+				hideSection.getString("name")))
+				.toItemStack();
+		
+		unhide = new ItemBuilder(Material.getMaterial(
+				unhideSection.getString("material")))
+				.setName(ChatColor.translateAlternateColorCodes('&', 
+				unhideSection.getString("name")))
+				.toItemStack();
 
 		ConfigurationSection hSection = null;
 
@@ -59,11 +61,7 @@ public class HidePlayersInteractEvent implements Listener {
 			long now = System.currentTimeMillis();
 			if (timeLeft == 0) {
 				cooldownManager.startCooldown(p, hf.getCooldownLength());
-				Bukkit.getLogger().info("" + ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString()));
-				hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
-				hSection.set("hidden", true);
-				ps.save();
-				h.hide(p);
+				h.hide(p, hSection);
 				p.getInventory().setItem(2, unhide);
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
@@ -83,10 +81,7 @@ public class HidePlayersInteractEvent implements Listener {
 			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
 			if (timeLeft == 0) {
 				cooldownManager.startCooldown(p, hf.getCooldownLength());
-				hSection = ps.getPlayerSettings().getConfigurationSection(p.getUniqueId().toString());
-				hSection.set("hidden", false);
-				ps.save();
-				h.unhide(p);
+				h.unhide(p, hSection);
 				p.getInventory().setItem(2, hide);
 				long nowEnable = System.currentTimeMillis();
 				if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
@@ -97,8 +92,7 @@ public class HidePlayersInteractEvent implements Listener {
 				long now = System.currentTimeMillis();
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
-					p.sendMessage(
-							ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
+					p.sendMessage(ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
 				}
 			}
 			e.setCancelled(true);
