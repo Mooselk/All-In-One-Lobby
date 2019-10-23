@@ -13,8 +13,8 @@ import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 
 public class SelectorFile implements ISelectorSettings {
 	
-	private File selector;
-	private FileConfiguration selectorConf;
+	private static File selector;
+	private static FileConfiguration selectorConf;
 	private boolean failed;
 	
 	
