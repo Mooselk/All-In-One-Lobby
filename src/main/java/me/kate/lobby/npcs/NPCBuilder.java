@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
@@ -16,6 +15,7 @@ import me.kate.lobby.data.files.NPCFile;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.hologram.Hologram;
+import me.kate.lobby.utils.Messages;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
@@ -26,6 +26,8 @@ public class NPCBuilder {
 	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "In the npc config!");
 
 	private final IUtils utils = new Utils();
+	
+	private final Messages msgs = new Messages();
 	
 	public NPCBuilder() {}
 
@@ -82,7 +84,7 @@ public class NPCBuilder {
 			public void run() {
 				npcb.showAll(true, null);
 				if (msg) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6NPC&f] Reload complete!"));
+					msgs.send("&f[&6NPC&f] Reload complete!", player);
 				}
 			}
 

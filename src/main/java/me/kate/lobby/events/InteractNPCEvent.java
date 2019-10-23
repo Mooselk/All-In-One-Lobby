@@ -11,10 +11,12 @@ import me.kate.lobby.data.files.NPCFile;
 import me.kate.lobby.items.portals.utils.SendToServer;
 import me.kate.lobby.managers.CooldownManager;
 import me.kate.lobby.npcs.api.events.NPCInteractEvent;
+import me.kate.lobby.utils.Messages;
 
 public class InteractNPCEvent implements Listener {
 
 	private final CooldownManager cooldownManager = new CooldownManager();
+	private final Messages msgs = new Messages();
 
 	@EventHandler
 	public void onNPCInteract(NPCInteractEvent event) {
@@ -32,7 +34,7 @@ public class InteractNPCEvent implements Listener {
 						SendToServer.send(p, server);
 					}
 					if (!msg.equalsIgnoreCase("none")) {
-						p.sendMessage(msg);
+						msgs.send(msg, p);
 					}
 				}
 			}

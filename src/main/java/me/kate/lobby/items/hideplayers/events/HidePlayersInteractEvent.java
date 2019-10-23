@@ -15,6 +15,7 @@ import me.kate.lobby.items.hideplayers.HidePlayers;
 import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 import me.kate.lobby.managers.CooldownManager;
 import me.kate.lobby.utils.ItemBuilder;
+import me.kate.lobby.utils.Messages;
 import net.md_5.bungee.api.ChatColor;
 
 public class HidePlayersInteractEvent implements Listener {
@@ -22,6 +23,7 @@ public class HidePlayersInteractEvent implements Listener {
 	private Hideable h = new HidePlayers();
 	private IHidePlayerSettings hideSettings = new HidePlayersFile();
 	private final CooldownManager cooldownManager = new CooldownManager();
+	private final Messages msgs = new Messages();
 
 	private IHidePlayerSettings hf = new HidePlayersFile();
 	private FileConfiguration hc = hf.getHideSettings();
@@ -65,13 +67,12 @@ public class HidePlayersInteractEvent implements Listener {
 				p.getInventory().setItem(2, unhide);
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', hideSettings.getHideMessage()));
+					msgs.send(hideSettings.getHideMessage(), p);
 				}
 			} else {
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
-					p.sendMessage(
-							ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
+					msgs.send(hideSettings.getCooldownMessage(timeLeft), p);
 				}
 			}
 			e.setCancelled(true);
@@ -86,13 +87,13 @@ public class HidePlayersInteractEvent implements Listener {
 				long nowEnable = System.currentTimeMillis();
 				if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
 					lastEnableMessage = nowEnable;
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', hideSettings.getUnhideMessage()));
+					msgs.send(hideSettings.getUnhideMessage(), p);
 				}
 			} else {
 				long now = System.currentTimeMillis();
 				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 					lastMessage = now;
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', hideSettings.getCooldownMessage(timeLeft)));
+					msgs.send(hideSettings.getCooldownMessage(timeLeft), p);
 				}
 			}
 			e.setCancelled(true);

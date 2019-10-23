@@ -11,39 +11,41 @@ import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsFile;
 import me.kate.lobby.items.portals.Portal;
 import me.kate.lobby.items.portals.utils.PortalWand;
+import me.kate.lobby.utils.Messages;
 
 public class PortalCommand implements CommandExecutor {
 
 	private final Portal portal = new Portal();
+	private final Messages msgs = new Messages();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		final Player p = (Player) sender;
 		if (cmd.getName().equalsIgnoreCase("portal")) {
 			if (args.length == 0) {
-				this.helpMessage(p);
+				msgs.portalHelp(p);
 			} else {
 				if (args[0].equalsIgnoreCase("help")) {
 					if (p.hasPermission("lobby.portal.help")) {
-						this.helpMessage(p);
+						msgs.portalHelp(p);
 					} else {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "You do not have permission to use this command."));
+						msgs.noPermission(p);
 					}
 				}
 
 				if (args[0].equalsIgnoreCase("wand")) {
 					if (p.hasPermission("lobby.portal.wand")) {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] &5Left click: &dSelect pos #1; &5Right click: &dSelect pos #2"));
+						msgs.send("&f[&6Portal&f] &5Left click: &dSelect pos #1; &5Right click: &dSelect pos #2", p);
 						p.getInventory().addItem(PortalWand.WAND);
 					} else {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "You do not have permission to use this command."));
+						msgs.noPermission(p);
 					}
 				}
 
 				if (args[0].equalsIgnoreCase("create")) {
 					if (p.hasPermission("lobby.portal.create")) {
 						if (args.length < 3) {
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Usage: &f/portal create <portal_name> <server>"));
+							msgs.send("&6Usage: &f/portal create <portal_name> <server>", p);
 						} else {
 							if (args.length == 3) {
 								String name = args[1];
@@ -55,32 +57,32 @@ public class PortalCommand implements CommandExecutor {
 									p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] Created portal '" + name + "'."));
 									portal.create(pos1, pos2, name, world, server);
 								} else {
-									p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] Create a selection before creating a portal."));
+									msgs.send("&f[&6Portal&f] Create a selection before creating a portal.", p);
 								}
 							}
 						}
 					} else {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "You do not have permission to use this command."));
+						msgs.noPermission(p);
 					}
 				}
 
 				if (args[0].equalsIgnoreCase("delete")) {
 					if (p.hasPermission("lobby.portal.delete")) {
 						if (args.length < 2) {
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Usage: &f/portal delete <portal_name>"));
+							msgs.send("&6Usage: &f/portal delete <portal_name>", p);
 						} else {
 							if (args.length == 2) {
 								String name = args[1];
 								if (PortalsFile.portalconf.getString("portals." + name) != null) {
 									portal.delete(name);
-									p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] Deleted portal '" + name + "'."));
+									msgs.send("&f[&6Portal&f] Deleted portal '" + name + "'.", p);
 								} else {
-									p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] Error deleting portal '" + name + "'. Portal does not exist!"));
+									msgs.send("&f[&6Portal&f] Error deleting portal '" + name + "'. Portal does not exist!", p);
 								}
 							}
 						}
 					} else {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "You do not have permission to use this command."));
+						msgs.noPermission(p);
 					}
 				}
 				
@@ -88,36 +90,25 @@ public class PortalCommand implements CommandExecutor {
 					if (p.hasPermission("lobby.portal.clear")) {
 						if (!Main.PORTALS.isEmpty()) {
 							Main.PORTALS.clear();
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] Cleared last selection."));
+							msgs.send("&f[&6Portal&f] Cleared last selection.", p);
 						} else {
-							p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] No selections to clear."));
+							msgs.send("&f[&6Portal&f] No selections to clear.", p);
 						}
 					} else {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "You do not have permission to use this command."));
+						msgs.noPermission(p);
 					}
 				}
 
 				if (args[0].equalsIgnoreCase("reload")) {
 					if (p.hasPermission("lobby.portal.reload")) {
 						portal.reloadAll();
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portals&f] Reloading all portals."));
+						msgs.send("&f[&6Portals&f] Reloading all portals.", p);
 					} else {
-						p.sendMessage(ChatColor.translateAlternateColorCodes('&', "You do not have permission to use this command."));
+						msgs.noPermission(p);
 					}
 				}
 			}
 		}
 		return false;
-	}
-
-	private void helpMessage(Player p) {
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m-------------&r[ &l&6Portal Help&r ]&m-------------"));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal wand &f- Gives portal selection tool."));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal create <&fname&6> <&fserver&6> &f- Create portal."));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal delete <&fname&6> &f- Deletes specified portal."));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal clear &f- Clears current portal selection."));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal reload &f- Reload portal storage config."));
-		p.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 	}
 }

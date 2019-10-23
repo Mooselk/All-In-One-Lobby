@@ -8,21 +8,20 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import me.kate.lobby.Main;
-import net.md_5.bungee.api.ChatColor;
+import me.kate.lobby.utils.Messages;
 
 public class BlockRelatedEvent implements Listener {
 
 	private FileConfiguration config = Main.getInstance().getConfig();
+	private final Messages msgs = new Messages();
 
 	@EventHandler
 	public void onBlockBreak(final BlockBreakEvent e) {
 		final Player p = (Player) e.getPlayer();
 		if (config.getConfigurationSection("options.build").getBoolean("disable-block-place")) {
-			if (!p.hasPermission(config.getConfigurationSection("options.build").getString("break-bypass-permission"))
-					|| !p.isOp()) {
+			if (!p.hasPermission(config.getConfigurationSection("options.build").getString("break-bypass-permission")) || !p.isOp()) {
+				msgs.send(config.getConfigurationSection("options.build").getString("block-break-msg"), p);
 				e.setCancelled(true);
-				p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-						config.getConfigurationSection("options.build").getString("block-break-msg")));
 			}
 		}
 	}
@@ -31,11 +30,9 @@ public class BlockRelatedEvent implements Listener {
 	public void onBlockPlace(final BlockPlaceEvent e) {
 		final Player p = (Player) e.getPlayer();
 		if (config.getConfigurationSection("options.build").getBoolean("disable-block-break")) {
-			if (!p.hasPermission(config.getConfigurationSection("options.build").getString("place-bypass-permission"))
-					|| !p.isOp()) {
+			if (!p.hasPermission(config.getConfigurationSection("options.build").getString("place-bypass-permission")) || !p.isOp()) {
+				msgs.send(config.getConfigurationSection("options.build").getString("block-place-msg"), p);
 				e.setCancelled(true);
-				p.sendMessage(ChatColor.translateAlternateColorCodes('&',
-						config.getConfigurationSection("options.build").getString("block-place-msg")));
 			}
 		}
 	}

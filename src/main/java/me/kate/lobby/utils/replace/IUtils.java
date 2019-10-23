@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface IUtils {
@@ -14,4 +15,6 @@ public interface IUtils {
 	ItemStack itemStackBuilder(String mat, ItemStack item, String displayName, List<String> lore, boolean enchanted, int type);
 	
 	ArrayList<String> colorParser(List<String> list);
+	
+	String replacePlayer(String in, Player player);
 }

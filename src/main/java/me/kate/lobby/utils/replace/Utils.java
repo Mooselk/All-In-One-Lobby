@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -26,6 +27,13 @@ public class Utils implements IUtils {
 		im.setLore(lore);
 		item.setItemMeta(im);
 		return item;
+	}
+	
+	@Override
+	public String replacePlayer(String in, Player player) {
+		String out = in.replaceAll("%player%", player.getName());
+		out = ChatColor.translateAlternateColorCodes('&', out);
+		return out;
 	}
 
 	@Override

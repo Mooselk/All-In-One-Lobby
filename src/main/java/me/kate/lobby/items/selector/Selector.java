@@ -29,7 +29,7 @@ public class Selector {
 	private Inventory inv = Bukkit.createInventory(null, c.getInt("selector.options.rows") * 9,
 			ChatColor.translateAlternateColorCodes('&', c.getString("selector.options.name")));
 
-	private IUtils u = new Utils();
+	private final IUtils utils = new Utils();
 
 	public Selector() {
 		this.update();
@@ -87,26 +87,26 @@ public class Selector {
 							int slot = Integer.valueOf(key);
 							lore = section.getStringList("online.lore");
 							inv.setItem(slot,
-									u.itemStackBuilder(section.getString("online.material"), i,
-											u.replace(section.getString("online.name"), section, max, online, ping),
-											u.replaceLore(lore, max, online, ping, false),
+									utils.itemStackBuilder(section.getString("online.material"), i,
+											utils.replace(section.getString("online.name"), section, max, online, ping),
+											utils.replaceLore(lore, max, online, ping, false),
 											section.getBoolean("online.enchanted"), section.getInt("online.byte")));
 						}
 						if (!isOnline) {
 							int slot = Integer.valueOf(key);
 							lore = section.getStringList("offline.lore");
 							inv.setItem(slot,
-									u.itemStackBuilder(section.getString("offline.material"), i,
-											u.replace(section.getString("offline.name"), section, 0, 0, 0),
-											u.replaceLore(lore, 0, 0, 0, false),
+									utils.itemStackBuilder(section.getString("offline.material"), i,
+											utils.replace(section.getString("offline.name"), section, 0, 0, 0),
+											utils.replaceLore(lore, 0, 0, 0, false),
 											section.getBoolean("offline.enchanted"), section.getInt("offline.byte")));
 						}
 					} else {
 						int slot = Integer.valueOf(key);
 						lore = section.getStringList("offline.lore");
 						inv.setItem(slot,
-								u.itemStackBuilder(section.getString("offline.material"), i,
-										section.getString("offline.name"), u.replaceLore(lore, 0, 0, 0, true),
+								utils.itemStackBuilder(section.getString("offline.material"), i,
+										section.getString("offline.name"), utils.replaceLore(lore, 0, 0, 0, true),
 										section.getBoolean("offline.enchanted"), section.getInt("offline.byte")));
 					}
 				}
