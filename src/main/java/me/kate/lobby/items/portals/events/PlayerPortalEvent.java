@@ -23,7 +23,6 @@ public class PlayerPortalEvent implements Listener {
 		final Player p = e.getPlayer();
 		Location to = e.getTo();
 		Location from = e.getFrom();
-
 		if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
 			if (this.isInCuboid(p)) {
 
