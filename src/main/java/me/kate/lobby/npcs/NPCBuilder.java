@@ -1,6 +1,5 @@
 package me.kate.lobby.npcs;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -17,21 +16,24 @@ import me.kate.lobby.data.files.NPCFile;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.hologram.Hologram;
+import me.kate.lobby.utils.replace.IUtils;
+import me.kate.lobby.utils.replace.Utils;
 
 public class NPCBuilder {
 
 	private Hologram hologram;
 
-	private final List<String> defaultLore = Arrays.asList("Edit this text", "In the npc config!");
+	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "In the npc config!");
 
-	public NPCBuilder() {
-	}
+	private final IUtils utils = new Utils();
+	
+	public NPCBuilder() {}
 
 	public void create(int skinId, String name, Location loc, Player p) {
 		NPCFile.getNPCConfig().createSection("npcs." + name);
 		NPCFile.getNPCConfig().set("npcs." + name + ".id", name);
 		NPCFile.getNPCConfig().set("npcs." + name + ".skin", skinId);
-		NPCFile.getNPCConfig().set("npcs." + name + ".holotext", defaultLore);
+		NPCFile.getNPCConfig().set("npcs." + name + ".holotext", defaultHoloText);
 		NPCFile.getNPCConfig().set("npcs." + name + ".message", "Default message!");
 		NPCFile.getNPCConfig().set("npcs." + name + ".server", "none");
 		NPCFile.getNPCConfig().createSection("npcs." + name + ".location");
@@ -46,13 +48,13 @@ public class NPCBuilder {
 		this.build(p);
 	}
 
-	public void build(Player p) {
+	public void build(Player player) {
 		this.npcClear();
 		for (String name : NPCFile.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
-			ConfigurationSection section = NPCFile.getNPCConfig().getConfigurationSection("npcs." + name);
+			final ConfigurationSection section = NPCFile.getNPCConfig().getConfigurationSection("npcs." + name);
 			int skinId = section.getInt("skin");
 			MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
-				NPC npc = Main.getInstance().getNPCLib().createNPC(colorParser(section.getStringList("holotext")));
+				NPC npc = Main.getInstance().getNPCLib().createNPC(utils.colorParser(section.getStringList("holotext")));
 				Location loc = new Location(Bukkit.getWorld("world"), 
 						section.getDouble("location.x"),
 						section.getDouble("location.y"), 
@@ -66,13 +68,33 @@ public class NPCBuilder {
 				npc.create();
 				// The SkinFetcher fetches the skin async, you can only show the NPC to the
 				// player sync.
-				Bukkit.getScheduler().runTask(Main.getInstance(), () -> npc.show(p));
+				Bukkit.getScheduler().runTask(Main.getInstance(), () -> npc.show(player));
 			});
 		}
 	}
+	
+	public void reloadNPCs(Player player, NPCBuilder npcb, boolean msg) {
+		this.destroyAll(player);
+		NPCFile.reload();
+		this.build(player);
+		new BukkitRunnable() {
+			@Override
+			public void run() {
+				npcb.showAll(true, null);
+				if (msg) {
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6NPC&f] Reload complete!"));
+				}
+			}
+
+		}.runTaskLater(Main.getInstance(), 20);
+	}
 
 	public void move(NPC npc) {
-
+		// TO-DO
+		// npc.destroy();
+		// Update location in npcs.yml
+		// Rebuild NPC
+		// this.build(player);
 	}
 
 	public void destroy(String name) {
@@ -102,34 +124,18 @@ public class NPCBuilder {
 		return null;
 	}
 
-	public void reloadNPCs(Player p, NPCBuilder npcb, boolean msg) {
-		this.destroyAll(p);
-		NPCFile.reload();
-		this.build(p);
-		new BukkitRunnable() {
-			@Override
-			public void run() {
-				npcb.showAll(true, null);
-				if (msg) {
-					p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6NPC&f] Reload complete!"));
-				}
-			}
-
-		}.runTaskLater(Main.getInstance(), 20);
-	}
-
-	public void destroyAll(Player p) {
+	public void destroyAll(Player player) {
 		for (int i = 0; i < Main.NPCS.size(); i++) {
 			NPC npc = Main.NPCS.get(i);
 			npc.destroy();
 			if (hologram != null) {
-				hologram.destroy(p);
+				hologram.destroy(player);
 			}
 		}
 		this.npcClear();
 	}
 
-	public void showAll(boolean update, Player p) {
+	public void showAll(boolean update, Player player) {
 		if (update) {
 			for (Player online : Bukkit.getOnlinePlayers()) {
 				for (int i = 0; i < Main.NPCS.size(); i++) {
@@ -140,11 +146,11 @@ public class NPCBuilder {
 				}
 			}
 		}
-		if (!update && p != null) {
+		if (!update && player != null) {
 			for (int i = 0; i < Main.NPCS.size(); i++) {
 				NPC npc = Main.NPCS.get(i);
-				if (!npc.isShown(p)) {
-					npc.show(p);
+				if (!npc.isShown(player)) {
+					npc.show(player);
 				}
 			}
 		}
@@ -157,14 +163,5 @@ public class NPCBuilder {
 		if (!Main.NPCINFO.isEmpty()) {
 			Main.NPCINFO.clear();
 		}
-	}
-
-	public ArrayList<String> colorParser(List<String> list) {
-		ArrayList<String> newList = null;
-		newList = new ArrayList<String>();
-		for (String line : list) {
-			newList.add(ChatColor.translateAlternateColorCodes('&', line));
-		}
-		return newList;
 	}
 }

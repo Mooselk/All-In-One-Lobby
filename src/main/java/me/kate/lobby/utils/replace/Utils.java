@@ -78,4 +78,14 @@ public class Utils implements IUtils {
 		}
 		return out;
 	}
+	
+	@Override
+	public ArrayList<String> colorParser(List<String> list) {
+		ArrayList<String> newList = null;
+		newList = new ArrayList<String>();
+		for (String line : list) {
+			newList.add(ChatColor.translateAlternateColorCodes('&', line));
+		}
+		return newList;
+	}
 }
