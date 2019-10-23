@@ -96,7 +96,7 @@ public class LobbyCommand implements CommandExecutor {
 	
 	private void reload(String conf) {
 		if (conf.equalsIgnoreCase("selector")) {
-			Bukkit.getLogger().info("relod");
+			
 		}
 		if (conf.equalsIgnoreCase("playerhider")) {
 			
