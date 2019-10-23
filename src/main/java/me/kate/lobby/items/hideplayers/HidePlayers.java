@@ -1,12 +1,17 @@
 package me.kate.lobby.items.hideplayers;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import me.kate.lobby.data.files.PlayerSettingsFile;
+import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 
 public class HidePlayers implements Hideable {
 
+	private IPlayerSettings ps = new PlayerSettingsFile();
+	
 	private boolean hidden;
 
 	public HidePlayers() {
@@ -15,33 +20,42 @@ public class HidePlayers implements Hideable {
 
 	@Override
 	public boolean isHidden(Player p) {
-		hidden = false; // get players setting
+		// TO-DO get players setting
 		return hidden;
 	}
 
 	@Override
-	public void hide(Player p) {
+	public void hide(Player player, ConfigurationSection section) {
 		for (Player online : Bukkit.getOnlinePlayers()) {
-			p.hidePlayer(online);
+			player.hidePlayer(online);
 		}
-		// set player settings to true
+		section = ps.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+		ps.save();
+		section.set("hidden", true);
 	}
 
 	@Override
-	public void unhide(Player p) {
+	public void unhide(Player player, ConfigurationSection section) {
+		section = null;
 		for (Player online : Bukkit.getOnlinePlayers()) {
-			p.showPlayer(online);
+			player.showPlayer(online);
 		}
-		// set player settings to false
+		section = ps.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+		ps.save();
+		section.set("hidden", false);
 	}
 
 	@Override
-	public void setHidden(boolean hide, Player p) {
+	public void setHidden(boolean hide, Player player) {
 		if (hide) {
-			this.hide(p);
+			for (Player online : Bukkit.getOnlinePlayers()) {
+				player.hidePlayer(online);
+			}
 		}
 		if (!hide) {
-			this.unhide(p);
+			for (Player online : Bukkit.getOnlinePlayers()) {
+				player.showPlayer(online);
+			}
 		}
 	}
 }
