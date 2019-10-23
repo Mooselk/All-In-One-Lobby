@@ -13,7 +13,7 @@ import me.kate.lobby.utils.replace.Utils;
 
 public class PortalWand {
 	
-	private final static IUtils UTILS = new Utils();
+	private static final IUtils UTILS = new Utils();
 	
 	private static final String NAME = "&5Left click: &dSelect pos #1; &5Right click: &dSelect pos #2";
 	private static final  List<String> LORE = Arrays.asList("&8A special portal-tool.");
