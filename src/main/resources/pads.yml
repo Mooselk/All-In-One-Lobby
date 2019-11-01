@@ -1,0 +1,10 @@
+jumppad:
+  enabled: true
+  sound: false
+
+settings:
+  power: 15.0
+  height: 1.0
+  top-block: STONE_PLATE
+  bottom-block: REDSTONE_BLOCK
+  sound: BAT_TAKEOFF
