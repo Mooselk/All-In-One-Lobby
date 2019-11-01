@@ -25,6 +25,10 @@ options:
   # mobs can still be spawned using eggs or with commands
   disable-mobSpawing: true
   
+  # Use 'none' to hide join messages all together
+  custom-joinmsg: '&f[&6+&f] %player%'
+  custom-leavemsg: '&f[&6-&f] %player%'
+  
   build:
     # Stop players from building
     # Set bypass permission and no permission message

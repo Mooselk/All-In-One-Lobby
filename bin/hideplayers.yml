@@ -10,7 +10,7 @@ messages:
 item:
   hide:
     material: "REDSTONE_TORCH_ON"
-    name: "Unhide players (Right-Click)"
+    name: "&4Hide players &8(&7Right-Click&8)"
   unhide:
     material: "LEVER"
-    name: "Unhide players (Right-Click)"
+    name: "&4Unhide players &8(&7Right-Click&8)"
