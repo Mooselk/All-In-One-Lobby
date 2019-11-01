@@ -1,4 +1,4 @@
-package me.kate.lobby.items.hideplayers.interfaces;
+package me.kate.lobby.items.toggleplayers;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;

@@ -1,22 +1,19 @@
-package me.kate.lobby.items.hideplayers;
+package me.kate.lobby.items.toggleplayers;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
-import me.kate.lobby.data.files.PlayerSettingsFile;
+import me.kate.lobby.data.files.PlayerSettingsConfig;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
-import me.kate.lobby.items.hideplayers.interfaces.Hideable;
 
-public class HidePlayers implements Hideable {
+public class TogglePlayers implements Hideable {
 
-	private IPlayerSettings ps = new PlayerSettingsFile();
+	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
 	
 	private boolean hidden;
 
-	public HidePlayers() {
-
-	}
+	public TogglePlayers() {}
 
 	@Override
 	public boolean isHidden(Player p) {
@@ -29,8 +26,8 @@ public class HidePlayers implements Hideable {
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			player.hidePlayer(online);
 		}
-		section = ps.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
-		ps.save();
+		section = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+		playerSettings.save();
 		section.set("hidden", true);
 	}
 
@@ -40,8 +37,8 @@ public class HidePlayers implements Hideable {
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			player.showPlayer(online);
 		}
-		section = ps.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
-		ps.save();
+		section = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+		playerSettings.save();
 		section.set("hidden", false);
 	}
 
