@@ -4,7 +4,7 @@
         <mkdir dir="target"></mkdir>
         <jar destfile="C:\Servers\spigot-1.8.8\plugins\${ant.project.name}.jar">
             <fileset dir="bin"></fileset>
-            <fileset file="plugin.yml"></fileset>
+        	<fileset dir="src/main/resources"></fileset>
         </jar>
     </target>
 </project>
