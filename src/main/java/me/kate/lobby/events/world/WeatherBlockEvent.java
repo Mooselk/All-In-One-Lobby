@@ -9,10 +9,10 @@ import me.kate.lobby.Main;
 public class WeatherBlockEvent implements Listener {
 
 	@EventHandler
-	public void onWeatherChange(final WeatherChangeEvent e) {
-		if (e.toWeatherState()) {
+	public void onWeatherChange(final WeatherChangeEvent event) {
+		if (event.toWeatherState()) {
 			if (Main.getInstance().getConfig().getConfigurationSection("options").getBoolean("disable-weather")) {
-				e.setCancelled(true);
+				event.setCancelled(true);
 			}
 		}
 	}

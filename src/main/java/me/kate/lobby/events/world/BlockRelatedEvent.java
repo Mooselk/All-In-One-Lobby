@@ -16,23 +16,23 @@ public class BlockRelatedEvent implements Listener {
 	private final Messages msgs = new Messages();
 
 	@EventHandler
-	public void onBlockBreak(final BlockBreakEvent e) {
-		final Player p = (Player) e.getPlayer();
+	public void onBlockBreak(final BlockBreakEvent event) {
+		final Player player = (Player) event.getPlayer();
 		if (config.getConfigurationSection("options.build").getBoolean("disable-block-place")) {
-			if (!p.hasPermission(config.getConfigurationSection("options.build").getString("break-bypass-permission")) || !p.isOp()) {
-				msgs.send(config.getConfigurationSection("options.build").getString("block-break-msg"), p);
-				e.setCancelled(true);
+			if (!player.hasPermission(config.getConfigurationSection("options.build").getString("break-bypass-permission")) || !player.isOp()) {
+				msgs.send(config.getConfigurationSection("options.build").getString("block-break-msg"), player);
+				event.setCancelled(true);
 			}
 		}
 	}
 
 	@EventHandler
-	public void onBlockPlace(final BlockPlaceEvent e) {
-		final Player p = (Player) e.getPlayer();
+	public void onBlockPlace(final BlockPlaceEvent event) {
+		final Player player = (Player) event.getPlayer();
 		if (config.getConfigurationSection("options.build").getBoolean("disable-block-break")) {
-			if (!p.hasPermission(config.getConfigurationSection("options.build").getString("place-bypass-permission")) || !p.isOp()) {
-				msgs.send(config.getConfigurationSection("options.build").getString("block-place-msg"), p);
-				e.setCancelled(true);
+			if (!player.hasPermission(config.getConfigurationSection("options.build").getString("place-bypass-permission")) || !player.isOp()) {
+				msgs.send(config.getConfigurationSection("options.build").getString("block-place-msg"), player);
+				event.setCancelled(true);
 			}
 		}
 	}

@@ -7,14 +7,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.files.SelectorFile;
+import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.utils.MineStat;
 
 public class PingServersBackground extends Thread {
 
-	private ISelectorSettings sf = new SelectorFile();
-	private FileConfiguration config = sf.getSelectorFile();
+	private ISelectorSettings selectorFile = new SelectorConfig();
+	private FileConfiguration config = selectorFile.getSelectorFile();
 
 	@Override
 	public void run() {

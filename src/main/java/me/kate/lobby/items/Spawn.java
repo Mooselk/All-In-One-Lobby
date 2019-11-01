@@ -10,17 +10,17 @@ import me.kate.lobby.utils.Messages;
 
 public class Spawn {
 
-	private static FileConfiguration c = Main.getInstance().getConfig();
+	private static FileConfiguration config = Main.getInstance().getConfig();
 	
 	private static final Messages MSGS = new Messages();
 	
 	public static Location toSpawn() {
-		double x = c.getDouble("spawn.x");
-		double y = c.getDouble("spawn.y");
-		double z = c.getDouble("spawn.z");
-		int yaw = c.getInt("spawn.yaw");
-		int pitch = c.getInt("spawn.pitch");
-		String world = c.getString("options.world");
+		double x = config.getDouble("spawn.x");
+		double y = config.getDouble("spawn.y");
+		double z = config.getDouble("spawn.z");
+		int yaw = config.getInt("spawn.yaw");
+		int pitch = config.getInt("spawn.pitch");
+		String world = config.getString("options.world");
 		Location loc = new Location(Bukkit.getWorld(world), x, y, z);
 		loc.setPitch(pitch);
 		loc.setYaw(yaw);
@@ -28,12 +28,12 @@ public class Spawn {
 	}
 	
 	public static void setSpawn(Player player, Location loc) {
-		c.set("options.world", player.getWorld().getName());
-		c.set("spawn.x", loc.getBlockX());
-		c.set("spawn.y", loc.getBlockY());
-		c.set("spawn.z", loc.getBlockZ());
-		c.set("spawn.yaw", loc.getYaw());
-		c.set("spawn.pitch", loc.getPitch());
+		config.set("options.world", player.getWorld().getName());
+		config.set("spawn.x", loc.getBlockX());
+		config.set("spawn.y", loc.getBlockY());
+		config.set("spawn.z", loc.getBlockZ());
+		config.set("spawn.yaw", loc.getYaw());
+		config.set("spawn.pitch", loc.getPitch());
 		MSGS.send("&f[&6Lobby&f] Set spawn in world '&6" 
 		+ player.getWorld().getName() 
 		+ "&f' at X: &6" + loc.getBlockX() 

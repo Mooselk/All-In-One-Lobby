@@ -11,9 +11,9 @@ import me.kate.lobby.Main;
 
 public class SendToServer {
 
-	public static void send(Player p, String server) {
-		ByteArrayOutputStream b = new ByteArrayOutputStream();
-		DataOutputStream out = new DataOutputStream(b);
+	public static void send(Player player, String server) {
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(byteStream);
 		try {
 			out.writeUTF("Connect");
 			out.writeUTF(server);
@@ -21,6 +21,6 @@ public class SendToServer {
 			Bukkit.getLogger().severe("Error sending player to server, are you not running bungeecord?");
 			e.printStackTrace();
 		}
-		Bukkit.getPlayer(p.getName()).sendPluginMessage(Main.getInstance(), "BungeeCord", b.toByteArray());
+		Bukkit.getPlayer(player.getName()).sendPluginMessage(Main.getInstance(), "BungeeCord", byteStream.toByteArray());
 	}
 }

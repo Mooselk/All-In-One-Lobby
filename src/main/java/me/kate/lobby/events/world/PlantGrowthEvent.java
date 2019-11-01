@@ -1,6 +1,5 @@
 package me.kate.lobby.events.world;
 
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockGrowEvent;
@@ -11,17 +10,16 @@ import me.kate.lobby.Main;
 public class PlantGrowthEvent implements Listener {
 
 	@EventHandler
-	public void onGrow(final BlockGrowEvent e) {
+	public void onGrow(final BlockGrowEvent event) {
 		if (Main.getInstance().getConfig().getConfigurationSection("options").getBoolean("disable-plantGrowth")) {
-			Bukkit.getLogger().info("Stopped plant growth");
-			e.setCancelled(true);
+			event.setCancelled(true);
 		}
 	}
 
-	public void onVineGrow(final BlockSpreadEvent e) {
+	@EventHandler
+	public void onVineGrow(final BlockSpreadEvent event) {
 		if (Main.getInstance().getConfig().getConfigurationSection("options").getBoolean("disable-plantGrowth")) {
-			Bukkit.getLogger().info("Stopped plant spread");
-			e.setCancelled(true);
+			event.setCancelled(true);
 		}
 	}
 }

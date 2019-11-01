@@ -14,10 +14,10 @@ public class PlayerLeaveEvents implements Listener {
 	private final IUtils utils = new Utils();
 	
 	@EventHandler
-	public void onLeave(PlayerQuitEvent e) {
-		final Player p = e.getPlayer();
+	public void onLeave(final PlayerQuitEvent event) {
+		final Player player = event.getPlayer();
 		if (!Main.getInstance().getConfig().getString("options.custom-leavemsg").equals("none")) {
-			e.setQuitMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-leavemsg"), p));
+			event.setQuitMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-leavemsg"), player));
 		}
 	}
 }

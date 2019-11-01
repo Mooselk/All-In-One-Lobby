@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.files.SelectorFile;
+import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
@@ -24,10 +24,10 @@ public class Selector {
 
 	private BukkitTask refreshTimer;
 	
-	private ISelectorSettings sf = new SelectorFile();
-	private FileConfiguration c = sf.getSelectorFile();
-	private Inventory inv = Bukkit.createInventory(null, c.getInt("selector.options.rows") * 9,
-			ChatColor.translateAlternateColorCodes('&', c.getString("selector.options.name")));
+	private ISelectorSettings selectorFile = new SelectorConfig();
+	private FileConfiguration selectorConf = selectorFile.getSelectorFile();
+	private Inventory inv = Bukkit.createInventory(null, selectorConf.getInt("selector.options.rows") * 9,
+			ChatColor.translateAlternateColorCodes('&', selectorConf.getString("selector.options.name")));
 
 	private final IUtils utils = new Utils();
 
@@ -36,8 +36,7 @@ public class Selector {
 	}
 
 	public void open(Player player) {
-		this.inv.clear();
-		this.update();
+		inv.clear(); this.update();
 		player.openInventory(inv);
 		refreshTimer = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
 			this.update();
@@ -61,10 +60,10 @@ public class Selector {
 	}
 
 	public void update() {
-		for (final String key : c.getConfigurationSection("selector").getKeys(false)) {
+		for (final String key : selectorConf.getConfigurationSection("selector").getKeys(false)) {
 			final ItemStack i = new ItemStack(Material.AIR);
 			if (!key.equals("options")) {
-				final ConfigurationSection section = c.getConfigurationSection("selector." + key);
+				final ConfigurationSection section = selectorConf.getConfigurationSection("selector." + key);
 				if (!section.getBoolean("decoration")) {
 					List<String> lore = null;
 					if (section.getBoolean("server.ping-server")) {
