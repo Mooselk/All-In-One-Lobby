@@ -12,21 +12,22 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 
-public class HidePlayersFile implements IHidePlayerSettings {
+public class HidePlayersConfig implements IHidePlayerSettings {
 
 	private static File hideSettings;
 	private static FileConfiguration hideSettingsConf;
-	
+
 	@Override
 	public void create() {
-		hideSettings = new File(Main.getInstance().getDataFolder(), "hidesettings.yml");
+		hideSettings = new File(Main.getInstance().getDataFolder(), "hideplayers.yml");
 		if (!hideSettings.exists()) {
 			hideSettings.getParentFile().mkdirs();
+			Main.getInstance().saveResource("hideplayers.yml", false);
 			try {
 				hideSettings.createNewFile();
-				Bukkit.getLogger().info("[Lobby] Creating hidesettings...");
+				Bukkit.getLogger().info("[Lobby] Creating hideplayers...");
 			} catch (IOException e) {
-				Bukkit.getLogger().severe("[Lobby] Failed to create hidesettings.yml!");
+				Bukkit.getLogger().severe("[Lobby] Failed to create hideplayers.yml!");
 				e.printStackTrace();
 			}
 		}
@@ -35,21 +36,21 @@ public class HidePlayersFile implements IHidePlayerSettings {
 			hideSettingsConf.load(hideSettings);
 			Bukkit.getLogger().info("[Lobby] Loading playerdata file...");
 		} catch (IOException | InvalidConfigurationException e) {
-			Bukkit.getLogger().severe("[Lobby] Failed to load hidesettings.yml!");
+			Bukkit.getLogger().severe("[Lobby] Failed to load hideplayers.yml!");
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void load() {
 		hideSettings = null;
 		hideSettingsConf = null;
-		hideSettings = new File(Main.getInstance().getDataFolder(), "hidesettings.yml");
+		hideSettings = new File(Main.getInstance().getDataFolder(), "hideplayers.yml");
 		hideSettingsConf = new YamlConfiguration();
 		try {
 			hideSettingsConf.load(hideSettings);
 		} catch (IOException | InvalidConfigurationException e) {
-			Bukkit.getLogger().severe("[Lobby] Failed to load hidesettings.yml!");
+			Bukkit.getLogger().severe("[Lobby] Failed to load hideplayers.yml!");
 			e.printStackTrace();
 		}
 	}
@@ -59,78 +60,68 @@ public class HidePlayersFile implements IHidePlayerSettings {
 		try {
 			hideSettingsConf.save(hideSettings);
 		} catch (IOException e) {
-			Bukkit.getLogger().severe("[Lobby] Failed to save hidesettings.yml!");
+			Bukkit.getLogger().severe("[Lobby] Failed to save hideplayers.yml!");
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void reload() {
 		try {
 			hideSettingsConf.load(hideSettings);
 		} catch (InvalidConfigurationException | IOException e) {
-			Bukkit.getLogger().severe("[Lobby] Error updating hidesettings.yml!");
+			Bukkit.getLogger().severe("[Lobby] Error updating hideplayers.yml!");
 			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public FileConfiguration getHideSettings() {
-		this.load();
 		return hideSettingsConf;
 	}
-	
+
 	@Override
 	public String getHideMessage() {
-		this.load();
 		return hideSettingsConf.getString("messages.hide");
 	}
 
 	@Override
 	public String getUnhideMessage() {
-		this.load();
+
 		return hideSettingsConf.getString("messages.unhide");
 	}
 
 	@Override
 	public String getHideDisplayName() {
-		this.load();
 		return hideSettingsConf.getString("item.hide.name");
 	}
 
 	@Override
 	public String getUnhideDisplayName() {
-		this.load();
 		return hideSettingsConf.getString("item.unhide.name");
 	}
 
 	@Override
 	public List<String> getHideLore() {
-		this.load();
 		return hideSettingsConf.getStringList("item.hide.lore");
 	}
 
 	@Override
 	public List<String> getUnhideLore() {
-		this.load();
 		return hideSettingsConf.getStringList("item.unhide.lore");
 	}
-
 	@Override
 	public String getHideMaterial() {
-		this.load();
 		return hideSettingsConf.getString("item.hide.material");
 	}
 
 	@Override
 	public String getUnHideMaterial() {
-		this.load();
 		return hideSettingsConf.getString("item.unhide.material");
 	}
 
 	@Override
 	public String getCooldownMessage(int timeleft) {
-		this.load();
 		String message = hideSettingsConf.getString("messages.cooldown");
 		if (message.contains("%timeleft%")) {
 			message = message.replaceAll("%timeleft%", String.valueOf(timeleft));
@@ -140,8 +131,7 @@ public class HidePlayersFile implements IHidePlayerSettings {
 
 	@Override
 	public int getCooldownLength() {
-		this.load();
 		return hideSettingsConf.getInt("options.cooldown");
 	}
-	
+
 }

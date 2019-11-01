@@ -11,14 +11,14 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 
-public class SelectorFile implements ISelectorSettings {
+public class SelectorConfig implements ISelectorSettings {
 	
 	private static File selector;
 	private static FileConfiguration selectorConf;
 	private boolean failed;
 	
 	
-	public SelectorFile() {
+	public SelectorConfig() {
 	}
 	
 	@Override
@@ -26,6 +26,7 @@ public class SelectorFile implements ISelectorSettings {
 		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
 		if (!selector.exists()) {
 			selector.getParentFile().mkdirs();
+			Main.getInstance().saveResource("selector.yml", false);
 			try {
 				selector.createNewFile();
 				Bukkit.getLogger().info("[Lobby] Creating selector.yml...");
@@ -60,7 +61,6 @@ public class SelectorFile implements ISelectorSettings {
 	
 	@Override
 	public void save() {
-		this.load();
 		try {
 			selectorConf.save(selector);
 		} catch (IOException e) {
@@ -92,7 +92,6 @@ public class SelectorFile implements ISelectorSettings {
 
 	@Override
 	public FileConfiguration getSelectorFile() {
-		this.load();
 		return selectorConf;
 	}
 }

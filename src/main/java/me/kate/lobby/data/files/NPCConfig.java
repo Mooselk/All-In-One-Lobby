@@ -10,13 +10,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
 
-public class NPCFile {
+public class NPCConfig {
 	
 	private static File npcfile;
 	private static FileConfiguration npcconf;
 	
 	public static FileConfiguration getNPCConfig() {
-		//forceLoad();
 		return npcconf;
 	}
 

@@ -11,12 +11,12 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 
-public class PlayerSettingsFile implements IPlayerSettings {
+public class PlayerSettingsConfig implements IPlayerSettings {
 
 	public static File playerSettings;
 	public static FileConfiguration playerSettingsConf;
 
-	public PlayerSettingsFile() {
+	public PlayerSettingsConfig() {
 	}
 
 	@Override
@@ -44,7 +44,6 @@ public class PlayerSettingsFile implements IPlayerSettings {
 
 	@Override
 	public void save() {
-		//this.reload();
 		try {
 			playerSettingsConf.save(playerSettings);
 		} catch (IOException e) {
@@ -69,23 +68,19 @@ public class PlayerSettingsFile implements IPlayerSettings {
 
 	@Override
 	public FileConfiguration getPlayerSettings() {
-		//this.reload();
 		return playerSettingsConf;
 	}
 
 	@Override
 	public boolean sectionExists(String section) {
-		//this.reload();
-		boolean exists = false;
 		if (playerSettingsConf.getConfigurationSection(section) != null) {
-			exists = true;
+			return true;
 		}
-		return exists;
+		return false;
 	}
 	
 	@Override
 	public void createSection(String section) {
-		//this.reload();
 		playerSettingsConf.createSection(section);
 		playerSettingsConf.getConfigurationSection(section).set("hidden", false);
 	}

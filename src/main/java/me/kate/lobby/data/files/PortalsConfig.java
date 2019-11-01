@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
 
-public class PortalsFile {
+public class PortalsConfig {
 	
 	public static File portalfile;
 	public static FileConfiguration portalconf;
@@ -65,5 +65,4 @@ public class PortalsFile {
 			e.printStackTrace();
 		}
 	}
-
 }
