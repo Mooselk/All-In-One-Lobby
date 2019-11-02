@@ -11,7 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.files.NPCFile;
+import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.hologram.Hologram;
@@ -26,63 +26,65 @@ public class NPCBuilder {
 	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "In the npc config!");
 
 	private final IUtils utils = new Utils();
-	
+
 	private final Messages msgs = new Messages();
-	
-	public NPCBuilder() {}
+
+	public NPCBuilder() {
+	}
 
 	public void create(int skinId, String name, Location loc, Player p) {
-		NPCFile.getNPCConfig().createSection("npcs." + name);
-		NPCFile.getNPCConfig().set("npcs." + name + ".id", name);
-		NPCFile.getNPCConfig().set("npcs." + name + ".skin", skinId);
-		NPCFile.getNPCConfig().set("npcs." + name + ".holotext", defaultHoloText);
-		NPCFile.getNPCConfig().set("npcs." + name + ".message", "Default message!");
-		NPCFile.getNPCConfig().set("npcs." + name + ".server", "none");
-		NPCFile.getNPCConfig().createSection("npcs." + name + ".location");
-		NPCFile.getNPCConfig().set("npcs." + name + ".location.x", loc.getBlockX());
-		NPCFile.getNPCConfig().set("npcs." + name + ".location.y", loc.getBlockY());
-		NPCFile.getNPCConfig().set("npcs." + name + ".location.z", loc.getBlockZ());
-		NPCFile.getNPCConfig().set("npcs." + name + ".location.yaw", loc.getYaw());
-		NPCFile.getNPCConfig().set("npcs." + name + ".location.ptich", loc.getPitch());
-		NPCFile.save();
-		NPCFile.reload();
+		NPCConfig.getNPCConfig().createSection("npcs." + name);
+		NPCConfig.getNPCConfig().set("npcs." + name + ".id", name);
+		NPCConfig.getNPCConfig().set("npcs." + name + ".skin", skinId);
+		NPCConfig.getNPCConfig().set("npcs." + name + ".holotext", defaultHoloText);
+		NPCConfig.getNPCConfig().set("npcs." + name + ".message", "Default message!");
+		NPCConfig.getNPCConfig().set("npcs." + name + ".server", "none");
+		NPCConfig.getNPCConfig().createSection("npcs." + name + ".location");
+		NPCConfig.getNPCConfig().set("npcs." + name + ".location.x", loc.getBlockX());
+		NPCConfig.getNPCConfig().set("npcs." + name + ".location.y", loc.getBlockY());
+		NPCConfig.getNPCConfig().set("npcs." + name + ".location.z", loc.getBlockZ());
+		NPCConfig.getNPCConfig().set("npcs." + name + ".location.yaw", loc.getYaw());
+		NPCConfig.getNPCConfig().set("npcs." + name + ".location.ptich", loc.getPitch());
+		NPCConfig.save();
+		NPCConfig.reload();
 		this.destroyAll(p);
 		this.build(p);
 	}
 
 	public void build(Player player) {
 		this.npcClear();
-		for (String name : NPCFile.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
-			final ConfigurationSection section = NPCFile.getNPCConfig().getConfigurationSection("npcs." + name);
-			int skinId = section.getInt("skin");
-			MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
-				NPC npc = Main.getInstance().getNPCLib().createNPC(utils.colorParser(section.getStringList("holotext")));
-				Location loc = new Location(Bukkit.getWorld("world"), 
-						section.getDouble("location.x"),
-						section.getDouble("location.y"), 
-						section.getDouble("location.z"));
-				loc.setPitch(section.getInt("location.pitch"));
-				loc.setYaw(section.getInt("location.yaw"));
-				npc.setLocation(loc);
-				npc.setSkin(skin);
-				Main.NPCS.add(npc);
-				Main.NPCINFO.put(npc.getId(), name);
-				npc.create();
-				// The SkinFetcher fetches the skin async, you can only show the NPC to the
-				// player sync.
-				Bukkit.getScheduler().runTask(Main.getInstance(), () -> npc.show(player));
-			});
+		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
+			for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
+				final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
+				int skinId = section.getInt("skin");
+				MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
+					NPC npc = Main.getInstance().getNPCLib()
+							.createNPC(utils.colorParser(section.getStringList("holotext")));
+					Location loc = new Location(Bukkit.getWorld("world"), section.getDouble("location.x"),
+							section.getDouble("location.y"), section.getDouble("location.z"));
+					loc.setPitch(section.getInt("location.pitch"));
+					loc.setYaw(section.getInt("location.yaw"));
+					npc.setLocation(loc);
+					npc.setSkin(skin);
+					Main.NPCS.add(npc);
+					Main.NPCINFO.put(npc.getId(), name);
+					npc.create();
+					// The SkinFetcher fetches the skin async, you can only show the NPC to the
+					// player sync.
+					Bukkit.getScheduler().runTask(Main.getInstance(), () -> npc.show(player));
+				});
+			}
 		}
 	}
-	
-	public void reloadNPCs(Player player, NPCBuilder npcb, boolean msg) {
+
+	public void reloadNPCs(Player player, NPCBuilder builder, boolean msg) {
 		this.destroyAll(player);
-		NPCFile.reload();
+		NPCConfig.reload();
 		this.build(player);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				npcb.showAll(true, null);
+				builder.showAll(true, null);
 				if (msg) {
 					msgs.send("&f[&6NPC&f] Reload complete!", player);
 				}
@@ -157,7 +159,7 @@ public class NPCBuilder {
 			}
 		}
 	}
-	
+
 	private void npcClear() {
 		if (!Main.NPCS.isEmpty()) {
 			Main.NPCS.clear();
