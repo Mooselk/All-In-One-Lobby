@@ -4,10 +4,16 @@
 
 package me.kate.lobby.npcs.api;
 
-import me.kate.lobby.npcs.api.skin.Skin;
+import java.util.List;
+
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import me.kate.lobby.npcs.api.skin.Skin;
+import me.kate.lobby.npcs.api.state.NPCSlot;
+import me.kate.lobby.npcs.api.state.NPCState;
 
 public interface NPC {
 
@@ -88,4 +94,46 @@ public interface NPC {
      * Requires {@link NPC#create} to be used first.
      */
     void destroy();
+
+    /**
+     * Toggle a state of the NPC.
+     *
+     * @param state The state to be toggled.
+     * @return Object instance.
+     */
+    NPC toggleState(NPCState state);
+    
+    /**
+     * Get state of NPC.
+     *
+     * @param state The state requested.
+     * @return boolean on/off status.
+     */
+    boolean getState(NPCState state);
+
+    /**
+     * Change the item in the inventory of the NPC.
+     *
+     * @param slot The slot to set the item of.
+     * @param item The item to set.
+     * @return Object instance.
+     */
+    NPC setItem(NPCSlot slot, ItemStack item);
+
+    NPC setText(List<String> text);
+    
+    /**
+     * Get the text of an NPC
+     *
+     * @return List<String> text
+     */
+    List<String> getText();
+    
+    /**
+     * Get a NPC's item.
+     *
+     * @param slot The slot the item is in.
+     * @return ItemStack item.
+     */
+    ItemStack getItem(NPCSlot slot);
 }

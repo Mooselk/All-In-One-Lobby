@@ -4,36 +4,29 @@
 
 package me.kate.lobby.npcs.nms.v1_8_R3;
 
+import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.api.state.NPCSlot;
+import me.kate.lobby.npcs.hologram.Hologram;
+import me.kate.lobby.npcs.internal.MinecraftVersion;
+import me.kate.lobby.npcs.internal.NPCBase;
+import me.kate.lobby.npcs.nms.v1_8_R3.packets.*;
+import net.minecraft.server.v1_8_R3.*;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
-import org.bukkit.craftbukkit.v1_8_R3.entity.CraftPlayer;
-import org.bukkit.entity.Player;
-
-import me.kate.lobby.npcs.NPCLib;
-import me.kate.lobby.npcs.hologram.Hologram;
-import me.kate.lobby.npcs.internal.MinecraftVersion;
-import me.kate.lobby.npcs.internal.SimpleNPC;
-import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutEntityHeadRotationWrapper;
-import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutPlayerInfoWrapper;
-import me.kate.lobby.npcs.nms.v1_8_R3.packets.PacketPlayOutScoreboardTeamWrapper;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityDestroy;
-import net.minecraft.server.v1_8_R3.PacketPlayOutEntityHeadRotation;
-import net.minecraft.server.v1_8_R3.PacketPlayOutNamedEntitySpawn;
-import net.minecraft.server.v1_8_R3.PacketPlayOutPlayerInfo;
-import net.minecraft.server.v1_8_R3.PacketPlayOutScoreboardTeam;
-import net.minecraft.server.v1_8_R3.PlayerConnection;
-
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_8_R3 extends SimpleNPC {
+public class NPC_v1_8_R3 extends NPCBase {
 
-    private Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
@@ -47,8 +40,7 @@ public class NPC_v1_8_R3 extends SimpleNPC {
 
     @Override
     public void createPackets() {
-        this.hologram = new Hologram(location.clone().add(0, 0.5, 0), lines);
-        hologram.generatePackets(MinecraftVersion.V1_8_R3);
+        this.hologram = new Hologram(MinecraftVersion.V1_8_R3, location.clone().add(0, 0.5, 0), text);
 
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
@@ -88,8 +80,7 @@ public class NPC_v1_8_R3 extends SimpleNPC {
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
 
-        hologram.spawn(player);
-
+        hologram.show(player);
 
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
                 playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
@@ -101,6 +92,47 @@ public class NPC_v1_8_R3 extends SimpleNPC {
 
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
-        hologram.destroy(player);
+
+        hologram.hide(player);
+    }
+
+    @Override
+    public void sendMetadataPacket(Player player) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+        PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadataWrapper().create(activeStates, entityId);
+
+        playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        ItemStack item;
+        switch (slot) {
+            case HELMET:
+                item = helmet;
+                break;
+            case CHESTPLATE:
+                item = chestplate;
+                break;
+            case LEGGINGS:
+                item = leggings;
+                break;
+            case BOOTS:
+                item = boots;
+                break;
+            case MAINHAND:
+                item = inHand;
+                break;
+            default:
+                if (!auto) {
+                    throw new IllegalArgumentException(slot.toString() + " is not a supported slot for the version of your server");
+                }
+                return;
+        }
+
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, slot.getSlot(), CraftItemStack.asNMSCopy(item));
+        playerConnection.sendPacket(packet);
     }
 }

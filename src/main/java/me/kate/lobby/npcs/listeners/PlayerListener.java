@@ -4,9 +4,6 @@
 
 package me.kate.lobby.npcs.listeners;
 
-import me.kate.lobby.npcs.NPCLib;
-import me.kate.lobby.npcs.internal.NPCManager;
-import me.kate.lobby.npcs.internal.SimpleNPC;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,6 +16,10 @@ import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+
+import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.internal.NPCBase;
+import me.kate.lobby.npcs.internal.NPCManager;
 
 /**
  * @author Jitse Boonstra
@@ -42,7 +43,7 @@ public class PlayerListener implements Listener {
     }
 
     private void onPlayerLeave(Player player) {
-        for (SimpleNPC npc : NPCManager.getAllNPCs())
+        for (NPCBase npc : NPCManager.getAllNPCs())
             npc.onLogout(player);
     }
 
@@ -52,7 +53,7 @@ public class PlayerListener implements Listener {
         World from = event.getFrom();
 
         // The PlayerTeleportEvent is call, and will handle visibility in the new world.
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (npc.getWorld().equals(from)) {
                 if (!npc.getAutoHidden().contains(player.getUniqueId())) {
                     npc.getAutoHidden().add(player.getUniqueId());
@@ -79,7 +80,7 @@ public class PlayerListener implements Listener {
 
     private void handleMove(Player player) {
         World world = player.getWorld();
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (!npc.getShown().contains(player.getUniqueId())) {
                 continue; // NPC was never supposed to be shown to the player.
             }

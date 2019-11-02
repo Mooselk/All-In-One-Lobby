@@ -4,21 +4,22 @@
 
 package me.kate.lobby.npcs.listeners;
 
-import me.kate.lobby.npcs.smallprotocol.Reflection;
-import me.kate.lobby.npcs.smallprotocol.TinyProtocol;
-import me.kate.lobby.npcs.NPCLib;
-import me.kate.lobby.npcs.api.events.NPCInteractEvent;
-import me.kate.lobby.npcs.internal.NPCManager;
-import me.kate.lobby.npcs.internal.SimpleNPC;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.api.events.NPCInteractEvent;
+import me.kate.lobby.npcs.internal.NPCBase;
+import me.kate.lobby.npcs.internal.NPCManager;
+import me.kate.lobby.npcs.smallprotocol.Reflection;
+import me.kate.lobby.npcs.smallprotocol.TinyProtocol;
 
 /**
  * @author Jitse Boonstra
@@ -55,7 +56,7 @@ public class PacketListener {
         if (!packetPlayInUseEntityClazz.isInstance(packet))
             return true; // We aren't handling the packet.
 
-        SimpleNPC npc = null;
+        NPCBase npc = null;
         int packetEntityId = (int) entityIdField.get(packet);
 
         // Not using streams here is an intentional choice.
@@ -64,7 +65,7 @@ public class PacketListener {
         // So, we're avoiding them here.
         // ~ Kneesnap, 9 / 20 / 2019.
 
-        for (SimpleNPC testNPC : NPCManager.getAllNPCs()) {
+        for (NPCBase testNPC : NPCManager.getAllNPCs()) {
             if (testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
                 npc = testNPC;
                 break;

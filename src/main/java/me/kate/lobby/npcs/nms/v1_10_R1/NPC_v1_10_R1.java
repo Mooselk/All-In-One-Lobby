@@ -5,17 +5,17 @@
 package me.kate.lobby.npcs.nms.v1_10_R1;
 
 import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.api.state.NPCSlot;
 import me.kate.lobby.npcs.hologram.Hologram;
 import me.kate.lobby.npcs.internal.MinecraftVersion;
-import me.kate.lobby.npcs.internal.SimpleNPC;
-import me.kate.lobby.npcs.nms.v1_10_R1.packets.PacketPlayOutEntityHeadRotationWrapper;
-import me.kate.lobby.npcs.nms.v1_10_R1.packets.PacketPlayOutNamedEntitySpawnWrapper;
-import me.kate.lobby.npcs.nms.v1_10_R1.packets.PacketPlayOutPlayerInfoWrapper;
-import me.kate.lobby.npcs.nms.v1_10_R1.packets.PacketPlayOutScoreboardTeamWrapper;
+import me.kate.lobby.npcs.internal.NPCBase;
+import me.kate.lobby.npcs.nms.v1_10_R1.packets.*;
 import net.minecraft.server.v1_10_R1.*;
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_10_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_10_R1.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.HashSet;
 import java.util.List;
@@ -25,9 +25,8 @@ import java.util.UUID;
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_10_R1 extends SimpleNPC {
+public class NPC_v1_10_R1 extends NPCBase {
 
-    private Hologram hologram;
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
@@ -41,8 +40,7 @@ public class NPC_v1_10_R1 extends SimpleNPC {
 
     @Override
     public void createPackets() {
-        this.hologram = new Hologram(location.clone().subtract(0, 0.5, 0), lines);
-        hologram.generatePackets(MinecraftVersion.V1_10_R1);
+        this.hologram = new Hologram(MinecraftVersion.V1_10_R1, location.clone().subtract(0, 0.5, 0), text);
 
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
@@ -82,8 +80,7 @@ public class NPC_v1_10_R1 extends SimpleNPC {
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
 
-        hologram.spawn(player);
-
+        hologram.show(player);
 
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
                 playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
@@ -95,6 +92,57 @@ public class NPC_v1_10_R1 extends SimpleNPC {
 
         playerConnection.sendPacket(packetPlayOutEntityDestroy);
         playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
-        hologram.destroy(player);
+
+        hologram.hide(player);
+    }
+
+    @Override
+    public void sendMetadataPacket(Player player) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+        PacketPlayOutEntityMetadata packet = new PacketPlayOutEntityMetadataWrapper().create(activeStates, entityId);
+
+        playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto) {
+        PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+
+        EnumItemSlot nmsSlot;
+        ItemStack item;
+        switch (slot) {
+            case HELMET:
+                item = helmet;
+                nmsSlot = EnumItemSlot.HEAD;
+                break;
+            case CHESTPLATE:
+                item = chestplate;
+                nmsSlot = EnumItemSlot.CHEST;
+                break;
+            case LEGGINGS:
+                item = leggings;
+                nmsSlot = EnumItemSlot.LEGS;
+                break;
+            case BOOTS:
+                item = boots;
+                nmsSlot = EnumItemSlot.FEET;
+                break;
+            case MAINHAND:
+                item = inHand;
+                nmsSlot = EnumItemSlot.MAINHAND;
+                break;
+            case OFFHAND:
+                item = offHand;
+                nmsSlot = EnumItemSlot.OFFHAND;
+                break;
+            default:
+                if (!auto) {
+                    throw new IllegalArgumentException(slot.toString() + " is not a supported slot for the version of your server");
+                }
+                return;
+        }
+
+        PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, nmsSlot, CraftItemStack.asNMSCopy(item));
+        playerConnection.sendPacket(packet);
     }
 }

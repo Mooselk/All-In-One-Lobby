@@ -9,21 +9,17 @@ import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
-import me.kate.lobby.npcs.hologram.Hologram;
 import me.kate.lobby.utils.Messages;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
 public class NPCBuilder {
 
-	private Hologram hologram;
-
-	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "In the npc config!");
+	private List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
 
 	private final IUtils utils = new Utils();
 
@@ -132,9 +128,9 @@ public class NPCBuilder {
 		for (int i = 0; i < Main.NPCS.size(); i++) {
 			NPC npc = Main.NPCS.get(i);
 			npc.destroy();
-			if (hologram != null) {
-				hologram.destroy(player);
-			}
+//			if (hologram != null) {
+//				hologram.destroy(player);
+//			}
 		}
 		this.npcClear();
 	}

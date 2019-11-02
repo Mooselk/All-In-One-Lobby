@@ -24,7 +24,7 @@ public final class NPCLib {
 
     public NPCLib(JavaPlugin plugin) {
         this.plugin = plugin;
-        this.logger = new Logger("[Lobby]");
+        this.logger = new Logger("[Lobby-NPC]");
 
         String versionName = plugin.getServer().getClass().getPackage().getName().split("\\.")[3];
 
@@ -89,12 +89,12 @@ public final class NPCLib {
     /**
      * Create a new non-player character (NPC).
      *
-     * @param lines The text you want to sendShowPackets above the NPC (null = no text).
+     * @param text The text you want to sendShowPackets above the NPC (null = no text).
      * @return The NPC object you may use to sendShowPackets it to players.
      */
-    public NPC createNPC(List<String> lines) {
+    public NPC createNPC(List<String> text) {
         try {
-            return (NPC) npcClass.getConstructors()[0].newInstance(this, lines);
+            return (NPC) npcClass.getConstructors()[0].newInstance(this, text);
         } catch (Exception exception) {
             logger.warning("Failed to create NPC. Please report the following stacktrace message: " + exception.getMessage());
         }

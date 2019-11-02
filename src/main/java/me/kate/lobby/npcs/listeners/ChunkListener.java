@@ -4,9 +4,9 @@
 
 package me.kate.lobby.npcs.listeners;
 
-import me.kate.lobby.npcs.NPCLib;
-import me.kate.lobby.npcs.internal.NPCManager;
-import me.kate.lobby.npcs.internal.SimpleNPC;
+import java.util.Objects;
+import java.util.UUID;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -16,8 +16,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 
-import java.util.Objects;
-import java.util.UUID;
+import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.internal.NPCBase;
+import me.kate.lobby.npcs.internal.NPCManager;
 
 /**
  * @author Jitse Boonstras
@@ -34,8 +35,8 @@ public class ChunkListener implements Listener {
     public void onChunkUnload(ChunkUnloadEvent event) {
         Chunk chunk = event.getChunk();
 
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
-            if (!isSameChunk(npc.getLocation(), chunk))
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
+            if (npc.getLocation() == null || !isSameChunk(npc.getLocation(), chunk))
                 continue; // We aren't unloading the chunk with the NPC in it.
 
             // We found an NPC in the chunk being unloaded. Time to hide this NPC from all players.
@@ -55,7 +56,7 @@ public class ChunkListener implements Listener {
     public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
 
-        for (SimpleNPC npc : NPCManager.getAllNPCs()) {
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
             if (!isSameChunk(npc.getLocation(), chunk))
                 continue; // The NPC is not in the loaded chunk.
 
