@@ -13,11 +13,12 @@ import me.kate.lobby.commands.LobbyCommand;
 import me.kate.lobby.commands.NPCCommand;
 import me.kate.lobby.commands.PortalCommand;
 import me.kate.lobby.data.Config;
-import me.kate.lobby.data.files.HidePlayersFile;
-import me.kate.lobby.data.files.NPCFile;
-import me.kate.lobby.data.files.PlayerSettingsFile;
-import me.kate.lobby.data.files.PortalsFile;
-import me.kate.lobby.data.files.SelectorFile;
+import me.kate.lobby.data.files.HidePlayersConfig;
+import me.kate.lobby.data.files.JumpPadConfig;
+import me.kate.lobby.data.files.NPCConfig;
+import me.kate.lobby.data.files.PlayerSettingsConfig;
+import me.kate.lobby.data.files.PortalsConfig;
+import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
@@ -26,16 +27,19 @@ import me.kate.lobby.events.PlayerJoinEvents;
 import me.kate.lobby.events.PlayerLeaveEvents;
 import me.kate.lobby.events.world.BlockRelatedEvent;
 import me.kate.lobby.events.world.MobSpawnEvent;
+import me.kate.lobby.events.world.PlantGrowthEvent;
 import me.kate.lobby.events.world.TouchVoidEvent;
 import me.kate.lobby.events.world.WeatherBlockEvent;
-import me.kate.lobby.items.hideplayers.events.HidePlayersInteractEvent;
+import me.kate.lobby.items.pads.JumpPadInteractEvent;
 import me.kate.lobby.items.portals.Portal;
+import me.kate.lobby.items.portals.Position;
 import me.kate.lobby.items.portals.events.PlayerPortalEvent;
 import me.kate.lobby.items.portals.events.WandInteractEvent;
 import me.kate.lobby.items.portals.utils.Cuboid;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
 import me.kate.lobby.items.selector.ping.PingServersBackground;
+import me.kate.lobby.items.toggleplayers.events.TogglePlayersEvent;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.api.NPC;
 
@@ -43,18 +47,21 @@ public class Main extends JavaPlugin {
 	
 	/* * * * * TO-DO * * * * * 
 	 * 
-	 * Jump pads
-	 * Remove debug messages
+	 * Fix portal selections (Make them per player)
+	 * Jump pads (WIP)
 	 * NPC move
+	 * Edit NPCs with commands
 	 * 
 	 * * * * * * * * * * * * */
 
+	public static final boolean DEBUG = true;
+	
 	private static Main instance;
 	private NPCLib npclib;
 	
-	private IPlayerSettings playerSettings = new PlayerSettingsFile();
-	private ISelectorSettings selectorSettings = new SelectorFile();
-	private IHidePlayerSettings hideSettings = new HidePlayersFile();
+	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
+	private ISelectorSettings selectorSettings = new SelectorConfig();
+	private IHidePlayerSettings hideSettings = new HidePlayersConfig();
 	private Portal portals = new Portal();
 	
 	public static final Map<String, Map<String, Object>> SERVER_PLACEHOLDERS = new HashMap<>();
@@ -66,7 +73,8 @@ public class Main extends JavaPlugin {
 	public static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
 	
 	public static final Map<String, Cuboid> PORTALS = new HashMap<>();
-	public static final Map<String, Location> SELECTIONS = new HashMap<>();
+	public static final Map<UUID, Map<Position, Location>> PLAYER_SELECTIONS = new HashMap<>();
+	public static final Map<Position, Location> SELECTIONS = new HashMap<>();
 
 	public static Main getInstance() {
 		return instance;
@@ -79,18 +87,19 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 		instance = this;
-		this.startThread();
+		//this.startThread();
 		this.npclib = new NPCLib(this);
 		this.playerSettings.create();
 		this.selectorSettings.create();
 		this.hideSettings.create();
-		this.portals.load();
-		PortalsFile.create();
-		NPCFile.create();
+		PortalsConfig.create();
+		JumpPadConfig.create();
+		NPCConfig.create();
 		Config.createConfig();
 		this.registerEvents();
 		this.registerChannel();
 		this.registerCommands();
+		this.portals.load();
 	}
 
 	@Override
@@ -105,12 +114,14 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new MobSpawnEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorGuiEvents(), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorClickEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new HidePlayersInteractEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new TogglePlayersEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerPortalEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerLeaveEvents(), this);
 		this.getServer().getPluginManager().registerEvents(new WandInteractEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new WeatherBlockEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new PlantGrowthEvent(), this);
 	}
 
 	private void registerCommands() {
@@ -122,6 +133,7 @@ public class Main extends JavaPlugin {
 	private void registerChannel() {
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
+	
 	
 	private void startThread() {
 		new PingServersBackground().start();

@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
@@ -95,5 +97,15 @@ public class Utils implements IUtils {
 			newList.add(ChatColor.translateAlternateColorCodes('&', line));
 		}
 		return newList;
+	}
+	
+	// Test first
+	// @Override
+	public void toConfig(Location location, 
+			FileConfiguration config, 
+			String path) {
+		config.set(path, location.getBlockX());
+		config.set(path, location.getBlockY());
+		config.set(path, location.getBlockZ());
 	}
 }

@@ -9,9 +9,10 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 public class MobSpawnEvent implements Listener {
 	
 	@EventHandler
-	public void onMobSpawn(final CreatureSpawnEvent e) {
-		if (e.getEntity().getType() != EntityType.PLAYER && e.getSpawnReason() == SpawnReason.NATURAL) {
-			e.setCancelled(true);
+	public void onMobSpawn(final CreatureSpawnEvent event) {
+		if (event.getEntity().getType() != EntityType.PLAYER 
+				&& event.getSpawnReason() == SpawnReason.NATURAL) {
+			event.setCancelled(true);
 		}
 	}
 }

@@ -1,6 +1,5 @@
 package me.kate.lobby.commands;
 
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -8,8 +7,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.files.PortalsFile;
+import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.items.portals.Portal;
+import me.kate.lobby.items.portals.Position;
 import me.kate.lobby.items.portals.utils.PortalWand;
 import me.kate.lobby.utils.Messages;
 
@@ -52,9 +52,9 @@ public class PortalCommand implements CommandExecutor {
 								String server = args[2];
 								String world = p.getWorld().getName();
 								if (!Main.SELECTIONS.isEmpty()) {
-									Location pos1 = Main.SELECTIONS.get("pos1");
-									Location pos2 = Main.SELECTIONS.get("pos2");
-									p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Portal&f] Created portal '" + name + "'."));
+									Location pos1 = Main.SELECTIONS.get(Position.POS1);
+									Location pos2 = Main.SELECTIONS.get(Position.POS2);
+									msgs.send("&f[&6Portal&f] Created portal '" + name + "'.", p);
 									portal.create(pos1, pos2, name, world, server);
 								} else {
 									msgs.send("&f[&6Portal&f] Create a selection before creating a portal.", p);
@@ -73,7 +73,7 @@ public class PortalCommand implements CommandExecutor {
 						} else {
 							if (args.length == 2) {
 								String name = args[1];
-								if (PortalsFile.portalconf.getString("portals." + name) != null) {
+								if (PortalsConfig.portalconf.getString("portals." + name) != null) {
 									portal.delete(name);
 									msgs.send("&f[&6Portal&f] Deleted portal '" + name + "'.", p);
 								} else {

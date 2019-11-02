@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import me.kate.lobby.data.files.NPCFile;
+import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.Messages;
 
@@ -63,11 +63,11 @@ public class NPCCommand implements CommandExecutor {
 							msgs.send("&6Usage: &f/npc delete <npc_name>", p);
 						}
 						if (args.length == 2) {
-							if (NPCFile.getNPCConfig().getString("npcs." + args[1]) != null) {
+							if (NPCConfig.getNPCConfig().getString("npcs." + args[1]) != null) {
 								msgs.send("&f[&6NPC&f] Deleted NPC '" + args[1] + "'.", p);
-								NPCFile.getNPCConfig().set("npcs." + args[1], null);
-								NPCFile.save();
-								NPCFile.reload();
+								NPCConfig.getNPCConfig().set("npcs." + args[1], null);
+								NPCConfig.save();
+								NPCConfig.reload();
 								npcb.destroy(args[1]);
 								npcb.reloadNPCs(p, npcb, false);
 							} else {

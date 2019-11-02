@@ -9,65 +9,42 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.items.portals.Position;
 import me.kate.lobby.items.portals.utils.PortalWand;
-import net.md_5.bungee.api.ChatColor;
+import me.kate.lobby.utils.Messages;
 
 public class WandInteractEvent implements Listener {
-	
+
+	private final Messages msgs = new Messages();
+
 	@EventHandler
-	public void onClick(final PlayerInteractEvent e) {
-		final Player p = e.getPlayer();
-		if (p.hasPermission("lobby.portal.create") || p.isOp()) {
-			ItemStack wand = PortalWand.WAND;
-			if (e.getItem() == null) {
-				return;
-			}
-			if (e.getItem().equals(wand)) {
-				if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
-					Location pos1 = e.getClickedBlock().getLocation();
-					if (Main.SELECTIONS.containsKey("pos1")) {
-						Main.SELECTIONS.remove("pos1");
-						Main.SELECTIONS.put("pos1", pos1);
+	public void onClick(final PlayerInteractEvent event) {
+		final Player player = event.getPlayer();
+		if (player.hasPermission("lobby.portal.create") || player.isOp()) {
+			final ItemStack wand = PortalWand.WAND;
+			if (event.getItem() == null) {return;}
+			if (event.getItem().equals(wand)) {
+				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+					Location pos1 = event.getClickedBlock().getLocation();
+					if (Main.SELECTIONS.containsKey(Position.POS1)) {
+						Main.SELECTIONS.remove(Position.POS1);
+						Main.SELECTIONS.put(Position.POS1, pos1);
 					} else {
-						Main.SELECTIONS.put("pos1", pos1);
+						Main.SELECTIONS.put(Position.POS1, pos1);
 					}
-					p.sendMessage("Position " 
-					+ ChatColor.GOLD 
-					+ "#1" 
-					+ ChatColor.WHITE
-					+ " set to ("
-					+ ChatColor.GOLD 
-					+ pos1.getBlockX()
-					+ ", "
-					+ pos1.getBlockY()
-					+ ", "
-					+ pos1.getBlockZ()
-					+ ChatColor.WHITE
-					+ ").");
-					e.setCancelled(true);
+					msgs.send("Position &6#1 &fset to (&6" + pos1.getBlockX() + ", " + pos1.getBlockY() + ", " + pos1.getBlockZ() + "&f).", player);
+					event.setCancelled(true);
 				}
-				if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
-					Location pos2 = e.getClickedBlock().getLocation();
-					if (Main.SELECTIONS.containsKey("pos2")) {
-						Main.SELECTIONS.remove("pos2");
-						Main.SELECTIONS.put("pos2", pos2);
+				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					Location pos2 = event.getClickedBlock().getLocation();
+					if (Main.SELECTIONS.containsKey(Position.POS2)) {
+						Main.SELECTIONS.remove(Position.POS2);
+						Main.SELECTIONS.put(Position.POS2, pos2);
 					} else {
-						Main.SELECTIONS.put("pos2", pos2);
+						Main.SELECTIONS.put(Position.POS2, pos2);
 					}
-					p.sendMessage("Position "
-					+ ChatColor.GOLD 
-					+ "#2" 
-					+ ChatColor.WHITE 
-					+ " set to ("
-					+ ChatColor.GOLD 
-					+ pos2.getBlockX()
-					+ ", "
-					+ pos2.getBlockY()
-					+ ", "
-					+ pos2.getBlockZ()
-					+ ChatColor.WHITE
-					+ ").");
-					e.setCancelled(true);
+					msgs.send("Position &6#2 &fset to (&6" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + "&f).", player);
+					event.setCancelled(true);
 				}
 			}
 		}
