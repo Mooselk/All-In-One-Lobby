@@ -17,20 +17,20 @@ import net.md_5.bungee.api.ChatColor;
 
 public class SelectorGuiEvents implements Listener {
 
-	private ISelectorSettings sf = new SelectorConfig();
-	private FileConfiguration c = sf.getSelectorFile();
+	private ISelectorSettings selectorFile = new SelectorConfig();
+	private FileConfiguration config = selectorFile.getSelectorFile();
 	private final Selector selector = new Selector();
 
 	@EventHandler
 	public void onClick(final InventoryClickEvent event) {
 		final Player player = (Player) event.getWhoClicked();
 		int slot = event.getSlot();
-		ConfigurationSection sec = c.getConfigurationSection("selector." + slot);
+		ConfigurationSection sec = config.getConfigurationSection("selector." + slot);
 		if (sec == null) {
 			return;
 		}
 		if (event.getSlot() == slot) {
-			if (!sec.getBoolean("decoration")) {
+			if (!sec.getBoolean("decoration") && selector.isServerOnline(slot)) {
 				if (!sec.getString("message").equalsIgnoreCase("none")) {
 					player.sendMessage(ChatColor.translateAlternateColorCodes('&', sec.getString("message")));
 				}
