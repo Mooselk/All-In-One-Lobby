@@ -18,7 +18,7 @@ import me.kate.lobby.utils.Logger;
 public class PlayerPortalEvent implements Listener {
 
 	private final CooldownManager cooldownManager = new CooldownManager();
-
+	
 	@EventHandler
 	public void onMove(final PlayerMoveEvent event) {
 		final Player player = event.getPlayer();
