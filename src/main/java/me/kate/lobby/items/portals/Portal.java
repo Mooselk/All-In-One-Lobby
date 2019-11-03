@@ -7,11 +7,14 @@ import org.bukkit.configuration.ConfigurationSection;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.items.portals.utils.Cuboid;
+import me.kate.lobby.utils.replace.IUtils;
+import me.kate.lobby.utils.replace.Utils;
 
 public class Portal {
 
-	public Portal() {
-	}
+	private final IUtils utils = new Utils();
+	
+	public Portal() {}
 	
 	public void load() {
 		if (!Main.PORTALS.isEmpty()) {
@@ -75,14 +78,17 @@ public class Portal {
 		}
 	
 	public void create(Location pos1, Location pos2, String name, String world, String server) {
+		
+		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-1");
+		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-2");
 		PortalsConfig.portalconf.set("portals." + name + ".world", world);
 		PortalsConfig.portalconf.set("portals." + name + ".server", server);
-		PortalsConfig.portalconf.set("portals." + name + ".loc-1.x", pos1.getBlockX());
-		PortalsConfig.portalconf.set("portals." + name + ".loc-1.y", pos1.getBlockY());
-		PortalsConfig.portalconf.set("portals." + name + ".loc-1.z", pos1.getBlockZ());
-		PortalsConfig.portalconf.set("portals." + name + ".loc-2.x", pos2.getBlockX());
-		PortalsConfig.portalconf.set("portals." + name + ".loc-2.y", pos2.getBlockY());
-		PortalsConfig.portalconf.set("portals." + name + ".loc-2.z", pos2.getBlockZ());
+//		PortalsConfig.portalconf.set("portals." + name + ".loc-1.x", pos1.getBlockX());
+//		PortalsConfig.portalconf.set("portals." + name + ".loc-1.y", pos1.getBlockY());
+//		PortalsConfig.portalconf.set("portals." + name + ".loc-1.z", pos1.getBlockZ());
+//		PortalsConfig.portalconf.set("portals." + name + ".loc-2.x", pos2.getBlockX());
+//		PortalsConfig.portalconf.set("portals." + name + ".loc-2.y", pos2.getBlockY());
+//		PortalsConfig.portalconf.set("portals." + name + ".loc-2.z", pos2.getBlockZ());
 		PortalsConfig.save();
 		PortalsConfig.reload();
 		this.reload();
