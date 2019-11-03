@@ -10,7 +10,7 @@ public class Logger {
 	
 	public static void debug(String msg) {
 		if (Main.DEBUG) { 
-			SERVER.getLogger().info(msg);
+			SERVER.getLogger().info("[DEBUG] " + msg);
 		}
 	}
 	
