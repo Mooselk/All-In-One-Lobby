@@ -23,6 +23,7 @@ import me.kate.lobby.items.toggleplayers.Hideable;
 import me.kate.lobby.items.toggleplayers.TogglePlayers;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.ItemBuilder;
+import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
@@ -40,25 +41,30 @@ public class PlayerJoinEvents implements Listener {
 
 	private ConfigurationSection hideSection = hideConf.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hideConf.getConfigurationSection("item.unhide");
-	private boolean npc;
 
+	private boolean build;
+	
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
 			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
 		}
-		if (!npc) {
-			npcb.build(player);
-			npc = true;
+		if (!build) {
+			npcb.build(player, false);
+			npcb.showAll(true, player);
+			npcb.refreshTask();
+			build = true;
+		} else {
+			npcb.showAll(true, player);
 		}
-		npcb.showAll(false, player);
 		if (!playerSettings.sectionExists(player.getUniqueId().toString())) {
 			playerSettings.createSection(player.getUniqueId().toString());
 			playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString()).set("hidden", false);
 			playerSettings.save();
 		}
 		player.teleport(Spawn.toSpawn());
+		Logger.debug("NPCs: " + Main.NPCS);
 	}
 
 	@EventHandler
