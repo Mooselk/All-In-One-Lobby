@@ -17,6 +17,7 @@ import org.bukkit.scheduler.BukkitTask;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
@@ -24,8 +25,8 @@ public class Selector {
 
 	private BukkitTask refreshTimer;
 	
-	private ISelectorSettings selectorFile = new SelectorConfig();
-	private FileConfiguration selectorConf = selectorFile.getSelectorFile();
+	private static ISelectorSettings selectorFile = new SelectorConfig();
+	private static FileConfiguration selectorConf = selectorFile.getSelectorFile();
 	private Inventory inv = Bukkit.createInventory(null, selectorConf.getInt("selector.options.rows") * 9,
 			ChatColor.translateAlternateColorCodes('&', selectorConf.getString("selector.options.name")));
 
@@ -34,7 +35,7 @@ public class Selector {
 	public Selector() {
 		this.update();
 	}
-
+	
 	public void open(Player player) {
 		inv.clear(); this.update();
 		player.openInventory(inv);
@@ -70,8 +71,8 @@ public class Selector {
 						String serverName = section.getString("server.server-id");
 						Map<String, Object> placeholders = null;
 						boolean isOnline;
-						if (Main.SERVER_PLACEHOLDERS.containsKey(serverName)) {
-							placeholders = Main.SERVER_PLACEHOLDERS.get(serverName);
+						if (Main.SELECTOR_PLACEHOLDERS.containsKey(serverName)) {
+							placeholders = Main.SELECTOR_PLACEHOLDERS.get(serverName);
 							isOnline = (boolean) placeholders.get("isOnline");
 						} else {
 							isOnline = false;
@@ -121,5 +122,22 @@ public class Selector {
 				}
 			}
 		}
+	}
+	
+	public boolean isServerOnline(int slot) {
+		boolean isOnline = false;
+		ConfigurationSection sec = selectorConf.getConfigurationSection("selector." + slot);
+		if (sec.getBoolean("server.ping-server")) {
+			String serverName = sec.getString("server.server-id");
+			Map<String, Object> placeholders = null;
+			if (Main.SELECTOR_PLACEHOLDERS.containsKey(serverName)) {
+				placeholders = Main.SELECTOR_PLACEHOLDERS.get(serverName);
+				isOnline = (boolean) placeholders.get("isOnline");
+			} else {
+				isOnline = false;
+			}
+		}
+		Logger.debug("Online?: " + isOnline + " Slot: " + slot);
+		return isOnline;
 	}
 }
