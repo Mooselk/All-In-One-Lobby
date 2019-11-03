@@ -92,6 +92,7 @@ public class SelectorConfig implements ISelectorSettings {
 
 	@Override
 	public FileConfiguration getSelectorFile() {
+		this.load();
 		return selectorConf;
 	}
 }
