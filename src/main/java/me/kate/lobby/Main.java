@@ -38,10 +38,12 @@ import me.kate.lobby.items.portals.events.WandInteractEvent;
 import me.kate.lobby.items.portals.utils.Cuboid;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
-import me.kate.lobby.items.selector.ping.PingServersBackground;
 import me.kate.lobby.items.toggleplayers.events.TogglePlayersEvent;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.api.NPC;
+import me.kate.lobby.threads.PingNPCBackground;
+import me.kate.lobby.threads.PingSelectorBackground;
+import me.kate.lobby.utils.BungeeChannelApi;
 
 public class Main extends JavaPlugin {
 	
@@ -64,17 +66,23 @@ public class Main extends JavaPlugin {
 	private IHidePlayerSettings hideSettings = new HidePlayersConfig();
 	private Portal portals = new Portal();
 	
-	public static final Map<String, Map<String, Object>> SERVER_PLACEHOLDERS = new HashMap<>();
+	public static final Map<String, Map<String, Object>> SELECTOR_PLACEHOLDERS = new HashMap<>();
+	public static final Map<String, Map<String, Object>> NPC_PLACEHOLDERS = new HashMap<>();
 	
 	public static final Map<String, String> NPCINFO = new HashMap<>();
 	public static final ArrayList<NPC> NPCS = new ArrayList<>();
+	public static final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
+	public static final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
 	
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
+	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 	
 	public static final Map<String, Cuboid> PORTALS = new HashMap<>();
 	public static final Map<UUID, Map<Position, Location>> PLAYER_SELECTIONS = new HashMap<>();
 	public static final Map<Position, Location> SELECTIONS = new HashMap<>();
+
+	
 
 	public static Main getInstance() {
 		return instance;
@@ -83,22 +91,25 @@ public class Main extends JavaPlugin {
 	public NPCLib getNPCLib() {
 		return npclib;	
 	}
-
+	
+	public BungeeChannelApi api;
+	
 	@Override
 	public void onEnable() {
 		instance = this;
-		//this.startThread();
-		this.npclib = new NPCLib(this);
-		this.playerSettings.create();
-		this.selectorSettings.create();
-		this.hideSettings.create();
 		PortalsConfig.create();
 		JumpPadConfig.create();
 		NPCConfig.create();
 		Config.createConfig();
+		this.playerSettings.create();
+		this.selectorSettings.create();
+		this.hideSettings.create();
 		this.registerEvents();
 		this.registerChannel();
 		this.registerCommands();
+		this.api = BungeeChannelApi.of(this);
+		this.startThreads();
+		this.npclib = new NPCLib(this);
 		this.portals.load();
 	}
 
@@ -135,7 +146,8 @@ public class Main extends JavaPlugin {
 	}
 	
 	
-	private void startThread() {
-		new PingServersBackground().start();
+	private void startThreads() {
+		new PingSelectorBackground().start();
+		new PingNPCBackground().start();
 	}
 }
