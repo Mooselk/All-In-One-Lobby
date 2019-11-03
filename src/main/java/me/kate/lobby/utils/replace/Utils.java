@@ -2,6 +2,7 @@ package me.kate.lobby.utils.replace;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -100,12 +101,40 @@ public class Utils implements IUtils {
 	}
 	
 	// Test first
-	// @Override
+	@Override
 	public void toConfig(Location location, 
 			FileConfiguration config, 
 			String path) {
-		config.set(path, location.getBlockX());
-		config.set(path, location.getBlockY());
-		config.set(path, location.getBlockZ());
+		config.set(path + ".x", location.getBlockX());
+		config.set(path + ".y", location.getBlockY());
+		config.set(path + ".z", location.getBlockZ());
+	}
+	
+	public void npcToConfig(Location location, FileConfiguration config, String path) {
+		config.set(path + "location.x", location.getBlockX());
+		config.set(path + "location.y", location.getBlockY());
+		config.set(path + "location.z", location.getBlockZ());
+		config.set(path + "location.pitch", location.getPitch());
+		config.set(path + "location.yaw", location.getYaw());
+	}
+	
+	@Override
+	public List<String> replaceHoloText(List<String> list, String players) {
+		List<String> text = null;
+		text = new ArrayList<String>();
+		for (String in : list) {
+			text.add(ChatColor.translateAlternateColorCodes('&', in.replace("%players%", players)));
+		}
+		return text;
+	}
+	
+	public String getValue(Map<String, String> map, String value) {
+		for (Map.Entry<String, String> s : map.entrySet()) {
+			if (s.getValue().equalsIgnoreCase(value)) {
+				String key = s.getKey();
+				return key;
+			}
+		}
+		return null;
 	}
 }

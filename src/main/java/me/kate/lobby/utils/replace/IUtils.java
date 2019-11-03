@@ -3,7 +3,9 @@ package me.kate.lobby.utils.replace;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -17,4 +19,10 @@ public interface IUtils {
 	ArrayList<String> colorParser(List<String> list);
 	
 	String replacePlayer(String in, Player player);
+	
+	List<String> replaceHoloText(List<String> list, String players);
+	
+	void toConfig(Location location, FileConfiguration config, String path);
+	
+	
 }
