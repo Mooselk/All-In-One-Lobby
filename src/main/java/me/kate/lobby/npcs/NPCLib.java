@@ -20,7 +20,7 @@ public final class NPCLib {
     private final Logger logger;
     private final Class<?> npcClass;
 
-    private double autoHideDistance = 50.0;
+    private double autoHideDistance = 35.0;
 
     public NPCLib(JavaPlugin plugin) {
         this.plugin = plugin;
