@@ -21,14 +21,14 @@ public class InteractNPCEvent implements Listener {
 	@EventHandler
 	public void onNPCInteract(NPCInteractEvent event) {
 		final Player player = event.getWhoClicked().getPlayer();
-		String id = Main.NPCINFO.get(event.getNPC().getId());
+		String id = Main.getInstance().NPCINFO.get(event.getNPC().getId());
 		int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 		if (timeLeft == 0) {
 			cooldownManager.startCooldown(player, NPCConfig.getNPCConfig().getInt("cooldown"));
 			for (String npc : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
 				if (id.equalsIgnoreCase(npc)) {
 					ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + npc);
-					String server = section.getString("server");
+					String server = section.getString("server.server-name");
 					String msg = ChatColor.translateAlternateColorCodes('&', section.getString("message"));
 					if (!server.equalsIgnoreCase("none")) {
 						SendToServer.send(player, server);
