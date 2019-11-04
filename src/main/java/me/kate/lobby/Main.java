@@ -43,57 +43,54 @@ import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.threads.PingNPCBackground;
 import me.kate.lobby.threads.PingSelectorBackground;
-import me.kate.lobby.utils.BungeeChannelApi;
 
 public class Main extends JavaPlugin {
-	
-	/* * * * * TO-DO * * * * * 
+
+	/*
+	 * * * * * TO-DO * * * * *
 	 * 
-	 * Fix portal selections (Make them per player)
-	 * Jump pads (WIP)
-	 * NPC move
+	 * Fix portal selections (Make them per player) 
+	 * NPC move 
+	 * NPC Items in config 
+	 * NPC states in config 
 	 * Edit NPCs with commands
 	 * 
-	 * * * * * * * * * * * * */
+	 * * * * * * * * * * * *
+	 */
 
 	public static final boolean DEBUG = true;
-	
+
 	private static Main instance;
 	private NPCLib npclib;
-	
+
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
 	private ISelectorSettings selectorSettings = new SelectorConfig();
 	private IHidePlayerSettings hideSettings = new HidePlayersConfig();
 	private Portal portals = new Portal();
-	
+
 	public static final Map<String, Map<String, Object>> SELECTOR_PLACEHOLDERS = new HashMap<>();
 	public static final Map<String, Map<String, Object>> NPC_PLACEHOLDERS = new HashMap<>();
-	
-	public static final Map<String, String> NPCINFO = new HashMap<>();
-	public static final ArrayList<NPC> NPCS = new ArrayList<>();
-	public static final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
-	public static final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
-	
+
+	public final Map<String, String> NPCINFO = new HashMap<>();
+	public final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
+	public final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
+
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
-	
+
 	public static final Map<String, Cuboid> PORTALS = new HashMap<>();
 	public static final Map<UUID, Map<Position, Location>> PLAYER_SELECTIONS = new HashMap<>();
 	public static final Map<Position, Location> SELECTIONS = new HashMap<>();
 
-	
-
 	public static Main getInstance() {
 		return instance;
 	}
-	
+
 	public NPCLib getNPCLib() {
-		return npclib;	
+		return npclib;
 	}
-	
-	public BungeeChannelApi api;
-	
+
 	@Override
 	public void onEnable() {
 		instance = this;
@@ -107,7 +104,6 @@ public class Main extends JavaPlugin {
 		this.registerEvents();
 		this.registerChannel();
 		this.registerCommands();
-		this.api = BungeeChannelApi.of(this);
 		this.startThreads();
 		this.npclib = new NPCLib(this);
 		this.portals.load();
@@ -140,12 +136,11 @@ public class Main extends JavaPlugin {
 		this.getCommand("npc").setExecutor(new NPCCommand());
 		this.getCommand("portal").setExecutor(new PortalCommand());
 	}
-	
+
 	private void registerChannel() {
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
-	
-	
+
 	private void startThreads() {
 		new PingSelectorBackground().start();
 		new PingNPCBackground().start();

@@ -16,34 +16,34 @@ import me.kate.lobby.utils.replace.Utils;
 public class HoloTextTask {
 
 	private final IUtils utils = new Utils();
-	private NPCBuilder builder = new NPCBuilder();
-	private PlayerCount count = new PlayerCount();
+	private final NPCBuilder builder = new NPCBuilder();
+	private final PlayerCount count = new PlayerCount();
 
 	public void updateText(String serverName, String name) {
-		this.getHoloText();
+		String playerCount = count.getPlayerCount(serverName);
+		getHoloText();
 		try {
-			NPC npc = Main.NPCS_OBJECT.get(name);
-			String idToName = Main.NPCINFO.get(npc.getId());
-			String playerCount = count.getPlayerCount(serverName, PingType.EXTERNAL);
+			NPC npc = Main.getInstance().NPCS_OBJECT.get(name);
+			String idToName = Main.getInstance().NPCINFO.get(npc.getId());
 			if (idToName.equals(name)) {
-				Logger.debug("NPC: " + name + " PlayerCount: " + playerCount);
-				npc.setText(utils.replaceHoloText(Main.HOLOTEXT.get(npc), playerCount));
+				npc.setText(utils.replaceHoloText(Main.getInstance().HOLOTEXT.get(npc), playerCount));
 			}
 		} catch (NullPointerException e) {
 			Logger.severe("One or more NPCs failed to load! " + e.getStackTrace());
 			Logger.severe("Reloading NPCs...");
+			e.printStackTrace();
 			for (Player online : Bukkit.getOnlinePlayers()) {
-				builder.build(online, true);
+				builder.build(online);
 			}
 		}
 	}
 
 	public void getHoloText() {
-		for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
+		for (final String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
 			final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
-			NPC npcs = builder.getNPCById(builder.getValue(Main.NPCINFO, name));
-			if (!Main.HOLOTEXT.containsKey(npcs)) {
-				Main.HOLOTEXT.put(npcs, utils.colorParser(section.getStringList("holotext")));
+			NPC npcs = builder.getNPCById(builder.getValue(Main.getInstance().NPCINFO, name));
+			if (!Main.getInstance().HOLOTEXT.containsKey(npcs)) {
+				Main.getInstance().HOLOTEXT.put(npcs, utils.colorParser(section.getStringList("holotext")));
 			}
 		}
 	}
