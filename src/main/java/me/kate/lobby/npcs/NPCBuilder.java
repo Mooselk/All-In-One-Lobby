@@ -15,6 +15,7 @@ import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
+import me.kate.lobby.npcs.internal.NPCManager;
 import me.kate.lobby.utils.Messages;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
@@ -22,7 +23,7 @@ import me.kate.lobby.utils.replace.Utils;
 public class NPCBuilder {
 
 	private List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
-	
+
 	private final IUtils utils = new Utils();
 	private final Messages msgs = new Messages();
 	private final boolean bool = false;
@@ -54,9 +55,9 @@ public class NPCBuilder {
 		NPCConfig.save();
 		NPCConfig.reload();
 		this.destroyAll(p);
-		this.build(p, false);
+		this.build(p);
 	}
-	
+
 	public void refreshTask() {
 		if (refresh) {
 			BukkitTask task = new BukkitRunnable() {
@@ -64,11 +65,11 @@ public class NPCBuilder {
 				public void run() {
 					refresh();
 				}
-			}.runTaskTimer(Main.getInstance(), 0, delay * 20);
+			}.runTaskTimer(Main.getInstance(), 10, delay * 20);
 			Main.ALTTASKS.put("thistask", task);
 		}
 	}
-	
+
 	public void stopTask() {
 		BukkitTask bukkitTask = Main.ALTTASKS.remove("thistask");
 		if (bukkitTask != null) {
@@ -76,12 +77,7 @@ public class NPCBuilder {
 		}
 	}
 
-	public void build(Player player, boolean rebuild) {
-		if (rebuild) {
-			for (NPC npc : Main.NPCS) {
-				npc.destroy();
-			}
-		}
+	public void build(Player player) {
 		this.npcClear();
 		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
 			for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
@@ -89,8 +85,8 @@ public class NPCBuilder {
 				int skinId = section.getInt("skin");
 				MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
 					NPC npc = Main.getInstance().getNPCLib().createNPC(utils.replaceHoloText(section.getStringList("holotext"), "Loading... "));
-					Location loc = new Location(
-							Bukkit.getWorld("world"), 
+					Main.getInstance().NPCS_OBJECT.put(name, npc); Main.getInstance().NPCINFO.put(npc.getId(), name);
+					Location loc = new Location(Bukkit.getWorld("world"), 
 							section.getDouble("location.x"),
 							section.getDouble("location.y"), 
 							section.getDouble("location.z"));
@@ -98,14 +94,7 @@ public class NPCBuilder {
 					loc.setYaw(section.getInt("location.yaw"));
 					npc.setLocation(loc);
 					npc.setSkin(skin);
-					if (!Main.NPCINFO.containsValue(name)) {
-						Main.NPCS.add(npc);
-						Main.NPCS_OBJECT.put(name, npc);
-						Main.NPCINFO.put(npc.getId(), name);
-					}
 					npc.create();
-					// The SkinFetcher fetches the skin async, you can only show the NPC to the
-					// player sync.
 					Bukkit.getScheduler().runTask(Main.getInstance(), () -> npc.show(player));
 				});
 			}
@@ -116,7 +105,7 @@ public class NPCBuilder {
 		this.destroyAll(player);
 		this.stopTask();
 		NPCConfig.reload();
-		this.build(player, true);
+		this.build(player);
 		new BukkitRunnable() {
 			@Override
 			public void run() {
@@ -139,8 +128,8 @@ public class NPCBuilder {
 	}
 
 	public void destroy(String name) {
-		if (Main.NPCINFO.containsValue(name)) {
-			NPC npcs = getNPCById(getValue(Main.NPCINFO, name));
+		if (Main.getInstance().NPCINFO.containsValue(name)) {
+			NPC npcs = getNPCById(getValue(Main.getInstance().NPCINFO, name));
 			npcs.destroy();
 		}
 	}
@@ -156,18 +145,17 @@ public class NPCBuilder {
 	}
 
 	public NPC getNPCById(String id) {
-		for (int i = 0; i < Main.NPCS.size(); i++) {
-			NPC match = Main.NPCS.get(i);
-			if (match.getId().equals(id)) {
-				return match;
+		for (NPC npc : NPCManager.getAllNPCs()) {
+			if (npc.getId().equals(id)) {
+				return npc;
 			}
 		}
 		return null;
 	}
 
 	public void destroyAll(Player player) {
-		for (int i = 0; i < Main.NPCS.size(); i++) {
-			NPC npc = Main.NPCS.get(i);
+		for (Map.Entry<String, NPC> name : Main.getInstance().NPCS_OBJECT.entrySet()) {
+			NPC npc = name.getValue();
 			npc.destroy();
 		}
 		this.npcClear();
@@ -175,19 +163,17 @@ public class NPCBuilder {
 
 	public void refresh() {
 		for (Player online : Bukkit.getOnlinePlayers()) {
-			for (int i = 0; i < Main.NPCS.size(); i++) {
-				NPC npc = Main.NPCS.get(i);
+			for (NPC npc : NPCManager.getAllNPCs()) {
 				npc.hide(online);
 				npc.show(online);
 			}
 		}
 	}
-	
+
 	public void showAll(boolean update, Player player) {
 		if (update) {
 			for (Player online : Bukkit.getOnlinePlayers()) {
-				for (int i = 0; i < Main.NPCS.size(); i++) {
-					NPC npc = Main.NPCS.get(i);
+				for (NPC npc : NPCManager.getAllNPCs()) {
 					if (!npc.isShown(online)) {
 						npc.show(online);
 					}
@@ -195,8 +181,7 @@ public class NPCBuilder {
 			}
 		}
 		if (!update && player != null) {
-			for (int i = 0; i < Main.NPCS.size(); i++) {
-				NPC npc = Main.NPCS.get(i);
+			for (NPC npc : NPCManager.getAllNPCs()) {
 				if (!npc.isShown(player)) {
 					npc.show(player);
 				}
@@ -205,9 +190,14 @@ public class NPCBuilder {
 	}
 
 	private void npcClear() {
-		if (!Main.NPCS.isEmpty()) { Main.NPCS.clear(); }
-		if (!Main.NPCS_OBJECT.isEmpty()) { Main.NPCS_OBJECT.clear(); }
-		if (!Main.HOLOTEXT.isEmpty()) { Main.HOLOTEXT.clear(); }
-		if (!Main.NPCINFO.isEmpty()) { Main.NPCINFO.clear(); }
+		if (!Main.getInstance().NPCS_OBJECT.isEmpty()) {
+			Main.getInstance().NPCS_OBJECT.clear();
+		}
+		if (!Main.getInstance().HOLOTEXT.isEmpty()) {
+			Main.getInstance().HOLOTEXT.clear();
+		}
+		if (!Main.getInstance().NPCINFO.isEmpty()) {
+			Main.getInstance().NPCINFO.clear();
+		}
 	}
 }
