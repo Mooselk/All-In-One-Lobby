@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.HidePlayersConfig;
@@ -23,7 +24,6 @@ import me.kate.lobby.items.toggleplayers.Hideable;
 import me.kate.lobby.items.toggleplayers.TogglePlayers;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.ItemBuilder;
-import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
@@ -51,12 +51,17 @@ public class PlayerJoinEvents implements Listener {
 			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
 		}
 		if (!build) {
-			npcb.build(player, false);
-			npcb.showAll(true, player);
-			npcb.refreshTask();
+			new BukkitRunnable() {
+				@Override
+				public void run() {
+					npcb.build(player);
+					npcb.refreshTask();
+				}
+
+			}.runTaskLater(Main.getInstance(), 1);
 			build = true;
 		} else {
-			npcb.showAll(true, player);
+			npcb.showAll(false, player);
 		}
 		if (!playerSettings.sectionExists(player.getUniqueId().toString())) {
 			playerSettings.createSection(player.getUniqueId().toString());
@@ -64,7 +69,6 @@ public class PlayerJoinEvents implements Listener {
 			playerSettings.save();
 		}
 		player.teleport(Spawn.toSpawn());
-		Logger.debug("NPCs: " + Main.NPCS);
 	}
 
 	@EventHandler

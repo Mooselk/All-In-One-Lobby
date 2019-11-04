@@ -25,8 +25,6 @@ public class PingSelectorBackground extends Thread {
 					for (final String key : SelectorConfig.getConfigurationSection("selector").getKeys(false)) {
 						final ConfigurationSection section = SelectorConfig.getConfigurationSection("selector." + key);
 						if (!section.getBoolean("decoration") && !key.equals("options")) {
-							System.out.println("Server Selector thread running  - " + key);
-
 							try {
 								Thread.sleep(2000); // default: 2000
 							} catch (InterruptedException e) {

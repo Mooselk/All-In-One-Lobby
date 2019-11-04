@@ -31,7 +31,6 @@ public class PingNPCBackground extends Thread {
 							if (!section.getBoolean("live-player-count", false)) {
 								continue;
 							}
-
 							String ip = section.getString("ip");
 							int port = section.getInt("port");
 
@@ -45,6 +44,7 @@ public class PingNPCBackground extends Thread {
 							}
 							Main.NPC_PLACEHOLDERS.put(serverName, serverInfo);
 							holo.updateText(section.getString("server-name"), key);
+							System.out.println(Main.getInstance().NPCINFO);
 						}
 					}
 				}
