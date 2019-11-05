@@ -14,7 +14,7 @@ import me.kate.lobby.utils.MineStat;
 public class PingNPCBackground extends Thread {
 
 	private HoloTextTask holo = new HoloTextTask();
-
+	
 	@Override
 	public void run() {
 		while (true) {
@@ -24,7 +24,7 @@ public class PingNPCBackground extends Thread {
 						for (final String key : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
 							final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + key + ".server");
 							try {
-								Thread.sleep(4000); // default: 2000
+								Thread.sleep(1000); // default: 2000
 							} catch (InterruptedException e) {
 								e.printStackTrace();
 							}
@@ -41,10 +41,10 @@ public class PingNPCBackground extends Thread {
 							serverInfo.put("isOnline", ms.isServerUp());
 							if (ms.isServerUp()) {
 								serverInfo.put("online", ms.getCurrentPlayers());
+								Main.NPC_PLACEHOLDERS.put(serverName, serverInfo);
+								holo.updateText(section.getString("server-name"), key);
 							}
-							Main.NPC_PLACEHOLDERS.put(serverName, serverInfo);
-							holo.updateText(section.getString("server-name"), key);
-							System.out.println(Main.getInstance().NPCINFO);
+							System.out.println(Main.getRegistry().getNPCInfo());
 						}
 					}
 				}

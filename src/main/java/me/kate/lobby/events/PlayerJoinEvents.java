@@ -10,7 +10,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.HidePlayersConfig;
@@ -37,12 +36,10 @@ public class PlayerJoinEvents implements Listener {
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
 	private final IUtils utils = new Utils();
 
-	private NPCBuilder npcb = new NPCBuilder();
+	private NPCBuilder builder = new NPCBuilder();
 
 	private ConfigurationSection hideSection = hideConf.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hideConf.getConfigurationSection("item.unhide");
-
-	private boolean build;
 	
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
@@ -50,19 +47,9 @@ public class PlayerJoinEvents implements Listener {
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
 			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
 		}
-		if (!build) {
-			new BukkitRunnable() {
-				@Override
-				public void run() {
-					npcb.build(player);
-					npcb.refreshTask();
-				}
+		
+		builder.load(player);
 
-			}.runTaskLater(Main.getInstance(), 1);
-			build = true;
-		} else {
-			npcb.showAll(false, player);
-		}
 		if (!playerSettings.sectionExists(player.getUniqueId().toString())) {
 			playerSettings.createSection(player.getUniqueId().toString());
 			playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString()).set("hidden", false);

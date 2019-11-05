@@ -176,8 +176,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
             shown.add(player.getUniqueId());
 
-            if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location)
-                    <= instance.getAutoHideDistance()) {
+            if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location) <= instance.getAutoHideDistance()) {
                 sendShowPackets(player);
                 sendMetadataPacket(player);
                 sendEquipmentPackets(player);
@@ -188,6 +187,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     private boolean canSeeNPC(Player player) {
+    	// Causes NPE at random
         Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
         return dir.dot(player.getLocation().getDirection()) >= cosFOV;
     }

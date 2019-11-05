@@ -1,6 +1,5 @@
 package me.kate.lobby;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,8 +38,9 @@ import me.kate.lobby.items.portals.utils.Cuboid;
 import me.kate.lobby.items.selector.events.SelectorClickEvent;
 import me.kate.lobby.items.selector.events.SelectorGuiEvents;
 import me.kate.lobby.items.toggleplayers.events.TogglePlayersEvent;
+import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.npcs.NPCLib;
-import me.kate.lobby.npcs.api.NPC;
+import me.kate.lobby.npcs.NPCRegistry;
 import me.kate.lobby.threads.PingNPCBackground;
 import me.kate.lobby.threads.PingSelectorBackground;
 
@@ -62,6 +62,7 @@ public class Main extends JavaPlugin {
 
 	private static Main instance;
 	private NPCLib npclib;
+	private static NPCRegistry registry;
 
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
 	private ISelectorSettings selectorSettings = new SelectorConfig();
@@ -70,10 +71,6 @@ public class Main extends JavaPlugin {
 
 	public static final Map<String, Map<String, Object>> SELECTOR_PLACEHOLDERS = new HashMap<>();
 	public static final Map<String, Map<String, Object>> NPC_PLACEHOLDERS = new HashMap<>();
-
-	public final Map<String, String> NPCINFO = new HashMap<>();
-	public final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
-	public final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
 
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
@@ -90,10 +87,15 @@ public class Main extends JavaPlugin {
 	public NPCLib getNPCLib() {
 		return npclib;
 	}
-
+	
+	public static NPCRegistry getRegistry() {
+		return registry;
+	}
+	
 	@Override
 	public void onEnable() {
 		instance = this;
+		registry = new NPCRegistry();
 		PortalsConfig.create();
 		JumpPadConfig.create();
 		NPCConfig.create();
@@ -104,9 +106,10 @@ public class Main extends JavaPlugin {
 		this.registerEvents();
 		this.registerChannel();
 		this.registerCommands();
-		this.startThreads();
+		// this.startThreads();
 		this.npclib = new NPCLib(this);
 		this.portals.load();
+		this.loadNPCs();
 	}
 
 	@Override
@@ -135,6 +138,11 @@ public class Main extends JavaPlugin {
 		this.getCommand("lobby").setExecutor(new LobbyCommand());
 		this.getCommand("npc").setExecutor(new NPCCommand());
 		this.getCommand("portal").setExecutor(new PortalCommand());
+	}
+	
+	private void loadNPCs() {
+		NPCBuilder builder = new NPCBuilder();
+		builder.build();
 	}
 
 	private void registerChannel() {

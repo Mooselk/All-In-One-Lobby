@@ -8,7 +8,8 @@ import me.kate.lobby.utils.Logger;
 public class PlayerCount {
 
 	public String getPlayerCount(String serverName) {
-		String count = "0";
+		String count = "Loading...";
+		String offlineMSG = "Offline";
 		boolean isOnline = false;
 		Map<String, Object> placeholders = null;
 		if (Main.NPC_PLACEHOLDERS.containsKey(serverName)) {
@@ -19,6 +20,8 @@ public class PlayerCount {
 			Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
 			Logger.debug("  " + Main.NPC_PLACEHOLDERS);
 			return (String) placeholders.get("online");
+		} else {
+			count = offlineMSG;
 		}
 		return count;
 	}
