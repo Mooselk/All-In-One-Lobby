@@ -12,18 +12,19 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.cache.SkinCache;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.internal.NPCManager;
+import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Messages;
 import me.kate.lobby.utils.replace.IUtils;
 import me.kate.lobby.utils.replace.Utils;
 
 public class NPCBuilder {
 
-	private List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
-
+	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
 	private final IUtils utils = new Utils();
 	private final Messages msgs = new Messages();
 	private final boolean bool = false;
@@ -43,7 +44,6 @@ public class NPCBuilder {
 		NPCConfig.getNPCConfig().createSection("npcs." + name + ".server");
 		NPCConfig.getNPCConfig().set("npcs." + name + ".server.server-name", "example");
 		NPCConfig.getNPCConfig().set("npcs." + name + ".server.live-player-count", bool);
-		NPCConfig.getNPCConfig().set("npcs." + name + ".server.external-ping", bool);
 		NPCConfig.getNPCConfig().set("npcs." + name + ".server.ip", "mc.hypixel.net");
 		NPCConfig.getNPCConfig().set("npcs." + name + ".server.port", port);
 		NPCConfig.getNPCConfig().createSection("npcs." + name + ".location");
@@ -55,11 +55,11 @@ public class NPCBuilder {
 		NPCConfig.save();
 		NPCConfig.reload();
 		this.destroyAll(p);
-		this.build(p);
+		this.build();
 	}
 
 	public void refreshTask() {
-		if (refresh) {
+		if (refresh && !Main.ALTTASKS.containsKey("thistask")) {
 			BukkitTask task = new BukkitRunnable() {
 				@Override
 				public void run() {
@@ -77,39 +77,85 @@ public class NPCBuilder {
 		}
 	}
 
-	public void build(Player player) {
-		this.npcClear();
-		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
-			for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
-				final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
-				int skinId = section.getInt("skin");
-				MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
-					NPC npc = Main.getInstance().getNPCLib().createNPC(utils.replaceHoloText(section.getStringList("holotext"), "Loading... "));
-					Main.getInstance().NPCS_OBJECT.put(name, npc); Main.getInstance().NPCINFO.put(npc.getId(), name);
-					Location loc = new Location(Bukkit.getWorld("world"), 
-							section.getDouble("location.x"),
-							section.getDouble("location.y"), 
-							section.getDouble("location.z"));
-					loc.setPitch(section.getInt("location.pitch"));
-					loc.setYaw(section.getInt("location.yaw"));
-					npc.setLocation(loc);
-					npc.setSkin(skin);
-					npc.create();
-					Bukkit.getScheduler().runTask(Main.getInstance(), () -> npc.show(player));
-				});
+	public void load(Player player) {
+		for (Map.Entry<String, NPC> npcs : Main.getRegistry().getNPCObjects().entrySet()) {
+			NPC npc = npcs.getValue();
+			Logger.debug("Showing NPC " + npc);
+			if (!npc.isShown(player)) {
+				npc.show(player);
 			}
 		}
 	}
 
+	private SkinCache cache = new SkinCache();
+
+	public void build() {
+		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
+			for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
+				ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
+				int skinId = section.getInt("skin");
+				NPC npc = Main.getInstance().getNPCLib().createNPC(utils.replaceHoloText(section.getStringList("holotext"), "Offline"));
+				Location loc = new Location(Bukkit.getWorld("world"),
+						section.getDouble("location.x"),
+						section.getDouble("location.y"),
+						section.getDouble("location.z"));
+				loc.setPitch(section.getInt("location.pitch"));
+				loc.setYaw(section.getInt("location.yaw"));
+				npc.setLocation(loc);
+				if (!cache.isCached(skinId)) {
+					MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
+						Logger.debug("Caching new skin '" + skinId + "'");
+						cache.toConfig(skin, skinId);
+						npc.setSkin(skin);
+					});
+				} else {
+					npc.setSkin(cache.getSkin(skinId));
+					Logger.debug("Loaded NPC '" + name + "' from skin cache");
+				}
+				npc.create();
+				Bukkit.getScheduler().runTask(Main.getInstance(), () -> Main.getRegistry().addToRegistry(npc, name));
+			}
+		}
+	}
+
+//	public void build() {
+//		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
+//			for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
+//				ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
+//				int skinId = section.getInt("skin");
+//				MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
+//					NPC npc = Main.getInstance().getNPCLib().createNPC(utils.replaceHoloText(section.getStringList("holotext"), "Offline"));
+//					cache.toConfig(skin, skinId);
+//					Location loc = new Location(Bukkit.getWorld("world"),
+//							section.getDouble("location.x"),
+//							section.getDouble("location.y"),
+//							section.getDouble("location.z"));
+//					loc.setPitch(section.getInt("location.pitch"));
+//					loc.setYaw(section.getInt("location.yaw"));
+//					npc.setLocation(loc);
+//					if (cache.getSkin(skinId) != null) {
+//						npc.setSkin(cache.getSkin(skinId));
+//					} else {
+//						Logger.severe("Skin '" + skinId + "' was null, using alternative method");
+//						npc.setSkin(skin);
+//					}
+//					npc.create();
+//					Bukkit.getScheduler().runTask(Main.getInstance(), () -> Main.getRegistry().addToRegistry(npc, name));
+//				});
+//			}
+//		}
+//	}
+
 	public void reloadNPCs(Player player, NPCBuilder builder, boolean msg) {
 		this.destroyAll(player);
 		this.stopTask();
+		Main.getRegistry().clearRegistry();
 		NPCConfig.reload();
-		this.build(player);
+		this.build();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				builder.showAll(true, null);
+				builder.showAll(true, player);
 				if (msg) {
 					msgs.send("&f[&6NPC&f] Reload complete!", player);
 					refreshTask();
@@ -128,8 +174,8 @@ public class NPCBuilder {
 	}
 
 	public void destroy(String name) {
-		if (Main.getInstance().NPCINFO.containsValue(name)) {
-			NPC npcs = getNPCById(getValue(Main.getInstance().NPCINFO, name));
+		if (Main.getRegistry().getNPCInfo().containsValue(name)) {
+			NPC npcs = getNPCById(getValue(Main.getRegistry().getNPCInfo(), name));
 			npcs.destroy();
 		}
 	}
@@ -154,11 +200,11 @@ public class NPCBuilder {
 	}
 
 	public void destroyAll(Player player) {
-		for (Map.Entry<String, NPC> name : Main.getInstance().NPCS_OBJECT.entrySet()) {
+		for (Map.Entry<String, NPC> name : Main.getRegistry().getNPCObjects().entrySet()) {
 			NPC npc = name.getValue();
 			npc.destroy();
 		}
-		this.npcClear();
+		Main.getRegistry().clearRegistry();
 	}
 
 	public void refresh() {
@@ -186,18 +232,6 @@ public class NPCBuilder {
 					npc.show(player);
 				}
 			}
-		}
-	}
-
-	private void npcClear() {
-		if (!Main.getInstance().NPCS_OBJECT.isEmpty()) {
-			Main.getInstance().NPCS_OBJECT.clear();
-		}
-		if (!Main.getInstance().HOLOTEXT.isEmpty()) {
-			Main.getInstance().HOLOTEXT.clear();
-		}
-		if (!Main.getInstance().NPCINFO.isEmpty()) {
-			Main.getInstance().NPCINFO.clear();
 		}
 	}
 }
