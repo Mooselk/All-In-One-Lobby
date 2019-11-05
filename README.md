@@ -78,7 +78,13 @@ cooldown: 2
     # Message and command
     # Set to none for no command or no message
     message: '&f[&6Lobby&f] Sending you to server &6SkyBlock.'
-    command: server skyblock
+    
+    # Server info
+    server:
+      server-name: skyblock # Bungee server player is sent to onClick
+      live-player-count: true # Disable / Enable server pinging
+      ip: 127.0.0.1 # Servers ip
+      port: 25569 # Servers port
     
     # NPCS location
     location:
