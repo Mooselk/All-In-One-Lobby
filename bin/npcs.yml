@@ -1,4 +1,1 @@
 cooldown: 2
-auto-refresh: # in case NPCs load incorrectly
-  enabled: true # true: enabled refresh timer, false: disables refresh timer
-  delay: 30 # delay in seconds
