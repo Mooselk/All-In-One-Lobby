@@ -1,6 +1,5 @@
 package me.kate.lobby.events;
 
-import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -25,19 +24,25 @@ public class InteractNPCEvent implements Listener {
 		int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 		if (timeLeft == 0) {
 			cooldownManager.startCooldown(player, NPCConfig.getNPCConfig().getInt("cooldown"));
-			for (String npc : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
+			for (final String npc : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
 				if (id.equalsIgnoreCase(npc)) {
-					ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + npc);
+					final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + npc);
 					String server = section.getString("server.server-name");
-					String msg = ChatColor.translateAlternateColorCodes('&', section.getString("message"));
+					sendMessages(player, section);
 					if (!server.equalsIgnoreCase("none")) {
 						SendToServer.send(player, server);
 					}
-					if (!msg.equalsIgnoreCase("none")) {
-						msgs.send(msg, player);
-					}
 				}
 			}
+		}
+	}
+	
+	public void sendMessages(Player player, ConfigurationSection section) {
+		for (String message : section.getStringList("message")) {
+			if (!message.equals("none"))
+				msgs.send(message, player);
+			else
+				break;
 		}
 	}
 }

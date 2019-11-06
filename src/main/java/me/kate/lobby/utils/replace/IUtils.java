@@ -24,5 +24,5 @@ public interface IUtils {
 	
 	void toConfig(Location location, FileConfiguration config, String path);
 	
-	
+	void npcToConfig(Location location, FileConfiguration config, String path, String npcName, int skinId);
 }

@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
+import me.kate.lobby.cache.CacheStorage;
 import me.kate.lobby.commands.LobbyCommand;
 import me.kate.lobby.commands.NPCCommand;
 import me.kate.lobby.commands.PortalCommand;
@@ -49,6 +50,7 @@ public class Main extends JavaPlugin {
 	/*
 	 * * * * * TO-DO * * * * *
 	 * 
+	 * Reload configs
 	 * Fix portal selections (Make them per player) 
 	 * NPC move 
 	 * NPC Items in config 
@@ -96,17 +98,11 @@ public class Main extends JavaPlugin {
 	public void onEnable() {
 		instance = this;
 		registry = new NPCRegistry();
-		PortalsConfig.create();
-		JumpPadConfig.create();
-		NPCConfig.create();
-		Config.createConfig();
-		this.playerSettings.create();
-		this.selectorSettings.create();
-		this.hideSettings.create();
+		this.loadConfigs();
 		this.registerEvents();
 		this.registerChannel();
 		this.registerCommands();
-		// this.startThreads();
+		this.startThreads();
 		this.npclib = new NPCLib(this);
 		this.portals.load();
 		this.loadNPCs();
@@ -138,6 +134,17 @@ public class Main extends JavaPlugin {
 		this.getCommand("lobby").setExecutor(new LobbyCommand());
 		this.getCommand("npc").setExecutor(new NPCCommand());
 		this.getCommand("portal").setExecutor(new PortalCommand());
+	}
+	
+	private void loadConfigs() {
+		PortalsConfig.create();
+		CacheStorage.create();
+		JumpPadConfig.create();
+		NPCConfig.create();
+		Config.createConfig();
+		this.playerSettings.create();
+		this.selectorSettings.create();
+		this.hideSettings.create();
 	}
 	
 	private void loadNPCs() {

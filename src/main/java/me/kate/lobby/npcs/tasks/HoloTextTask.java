@@ -12,8 +12,7 @@ import me.kate.lobby.utils.replace.Utils;
 public class HoloTextTask {
 
 	private final IUtils utils = new Utils();
-	// private NPCBuilder builder = new NPCBuilder();
-	private final PlayerCount count = new PlayerCount();
+	private PlayerCount count = new PlayerCount();
 
 	public void updateText(String serverName, String name) {
 		String playerCount = count.getPlayerCount(serverName);
@@ -25,10 +24,7 @@ public class HoloTextTask {
 				npc.setText(utils.replaceHoloText(Main.getRegistry().getNPCHoloText().get(npc), playerCount));
 			}
 		} catch (NullPointerException e) {
-//			e.printStackTrace();
-//			for (Player online : Bukkit.getOnlinePlayers()) {
-//				builder.build(online, true);
-//			}
+			e.printStackTrace();
 		}
 	}
 

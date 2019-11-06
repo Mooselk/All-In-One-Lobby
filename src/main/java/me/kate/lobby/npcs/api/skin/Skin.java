@@ -39,17 +39,4 @@ public class Skin implements ConfigurationSerializable {
 	            SIGNATURE, this.getSignature()
 	        );
 	}
-	
-	public static ConfigurationSerializable deserialize(Map<String, Object> map) {
-        String value = (String) map.get(VALUE);
-        String signature = (String) map.get(SIGNATURE);
-        if (VALUE == null) {
-            throw new IllegalArgumentException(map.get(VALUE) + " is not a valid skin value");
-        }
-        if (SIGNATURE == null) {
-            throw new IllegalArgumentException(map.get(VALUE) + " is not a valid skin signature");
-        }
-
-        return new Skin(value, signature);
-    }
 }

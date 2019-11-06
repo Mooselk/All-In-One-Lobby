@@ -44,7 +44,6 @@ public class PingNPCBackground extends Thread {
 								Main.NPC_PLACEHOLDERS.put(serverName, serverInfo);
 								holo.updateText(section.getString("server-name"), key);
 							}
-							System.out.println(Main.getRegistry().getNPCInfo());
 						}
 					}
 				}

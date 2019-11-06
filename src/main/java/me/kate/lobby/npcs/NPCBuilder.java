@@ -1,15 +1,14 @@
 package me.kate.lobby.npcs;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.cache.SkinCache;
@@ -24,61 +23,21 @@ import me.kate.lobby.utils.replace.Utils;
 
 public class NPCBuilder {
 
-	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
 	private final IUtils utils = new Utils();
 	private final Messages msgs = new Messages();
-	private final boolean bool = false;
-	private final int port = 25565;
-	private int delay = NPCConfig.getNPCConfig().getInt("auto-refresh.delay");
-	private boolean refresh = NPCConfig.getNPCConfig().getBoolean("auto-refresh.enabled");
-
+	private final NPCRegistry registry = Main.getRegistry();
+	private final FileConfiguration config = NPCConfig.getNPCConfig();
+	private SkinCache cache = new SkinCache();
+	
 	public NPCBuilder() {
 	}
 
-	public void create(int skinId, String name, Location loc, Player p) {
-		NPCConfig.getNPCConfig().createSection("npcs." + name);
-		NPCConfig.getNPCConfig().set("npcs." + name + ".id", name);
-		NPCConfig.getNPCConfig().set("npcs." + name + ".skin", skinId);
-		NPCConfig.getNPCConfig().set("npcs." + name + ".holotext", defaultHoloText);
-		NPCConfig.getNPCConfig().set("npcs." + name + ".message", "Default message!");
-		NPCConfig.getNPCConfig().createSection("npcs." + name + ".server");
-		NPCConfig.getNPCConfig().set("npcs." + name + ".server.server-name", "example");
-		NPCConfig.getNPCConfig().set("npcs." + name + ".server.live-player-count", bool);
-		NPCConfig.getNPCConfig().set("npcs." + name + ".server.ip", "mc.hypixel.net");
-		NPCConfig.getNPCConfig().set("npcs." + name + ".server.port", port);
-		NPCConfig.getNPCConfig().createSection("npcs." + name + ".location");
-		NPCConfig.getNPCConfig().set("npcs." + name + ".location.x", loc.getBlockX());
-		NPCConfig.getNPCConfig().set("npcs." + name + ".location.y", loc.getBlockY());
-		NPCConfig.getNPCConfig().set("npcs." + name + ".location.z", loc.getBlockZ());
-		NPCConfig.getNPCConfig().set("npcs." + name + ".location.yaw", loc.getYaw());
-		NPCConfig.getNPCConfig().set("npcs." + name + ".location.ptich", loc.getPitch());
-		NPCConfig.save();
-		NPCConfig.reload();
-		this.destroyAll(p);
-		this.build();
-	}
-
-	public void refreshTask() {
-		if (refresh && !Main.ALTTASKS.containsKey("thistask")) {
-			BukkitTask task = new BukkitRunnable() {
-				@Override
-				public void run() {
-					refresh();
-				}
-			}.runTaskTimer(Main.getInstance(), 10, delay * 20);
-			Main.ALTTASKS.put("thistask", task);
-		}
-	}
-
-	public void stopTask() {
-		BukkitTask bukkitTask = Main.ALTTASKS.remove("thistask");
-		if (bukkitTask != null) {
-			bukkitTask.cancel();
-		}
+	public void create(int skinId, String name, Location location, Player player) {
+		utils.npcToConfig(location, NPCConfig.getNPCConfig(), "npcs." + name, name, skinId);
 	}
 
 	public void load(Player player) {
-		for (Map.Entry<String, NPC> npcs : Main.getRegistry().getNPCObjects().entrySet()) {
+		for (Map.Entry<String, NPC> npcs : registry.getNPCObjects().entrySet()) {
 			NPC npc = npcs.getValue();
 			Logger.debug("Showing NPC " + npc);
 			if (!npc.isShown(player)) {
@@ -87,14 +46,13 @@ public class NPCBuilder {
 		}
 	}
 
-	private SkinCache cache = new SkinCache();
-
 	public void build() {
-		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
-			for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
-				ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
+		if (config.getConfigurationSection("npcs") != null) {
+			for (final String name : config.getConfigurationSection("npcs").getKeys(false)) {
+				final ConfigurationSection section = config.getConfigurationSection("npcs." + name);
 				int skinId = section.getInt("skin");
-				NPC npc = Main.getInstance().getNPCLib().createNPC(utils.replaceHoloText(section.getStringList("holotext"), "Offline"));
+				NPC npc = Main.getInstance().getNPCLib()
+						.createNPC(utils.replaceHoloText(section.getStringList("holotext"), "0"));
 				Location loc = new Location(Bukkit.getWorld("world"),
 						section.getDouble("location.x"),
 						section.getDouble("location.y"),
@@ -113,43 +71,18 @@ public class NPCBuilder {
 					Logger.debug("Loaded NPC '" + name + "' from skin cache");
 				}
 				npc.create();
-				Bukkit.getScheduler().runTask(Main.getInstance(), () -> Main.getRegistry().addToRegistry(npc, name));
+				Bukkit.getScheduler().runTask(Main.getInstance(), () -> registry.addToRegistry(npc, name));
 			}
 		}
 	}
 
-//	public void build() {
-//		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
-//			for (String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
-//				ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
-//				int skinId = section.getInt("skin");
-//				MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
-//					NPC npc = Main.getInstance().getNPCLib().createNPC(utils.replaceHoloText(section.getStringList("holotext"), "Offline"));
-//					cache.toConfig(skin, skinId);
-//					Location loc = new Location(Bukkit.getWorld("world"),
-//							section.getDouble("location.x"),
-//							section.getDouble("location.y"),
-//							section.getDouble("location.z"));
-//					loc.setPitch(section.getInt("location.pitch"));
-//					loc.setYaw(section.getInt("location.yaw"));
-//					npc.setLocation(loc);
-//					if (cache.getSkin(skinId) != null) {
-//						npc.setSkin(cache.getSkin(skinId));
-//					} else {
-//						Logger.severe("Skin '" + skinId + "' was null, using alternative method");
-//						npc.setSkin(skin);
-//					}
-//					npc.create();
-//					Bukkit.getScheduler().runTask(Main.getInstance(), () -> Main.getRegistry().addToRegistry(npc, name));
-//				});
-//			}
-//		}
-//	}
-
+	public void applyItems() {
+		
+	}
+	
 	public void reloadNPCs(Player player, NPCBuilder builder, boolean msg) {
-		this.destroyAll(player);
-		this.stopTask();
-		Main.getRegistry().clearRegistry();
+		destroyAll(player);
+		registry.clearRegistry();
 		NPCConfig.reload();
 		this.build();
 		new BukkitRunnable() {
@@ -158,7 +91,6 @@ public class NPCBuilder {
 				builder.showAll(true, player);
 				if (msg) {
 					msgs.send("&f[&6NPC&f] Reload complete!", player);
-					refreshTask();
 				}
 			}
 
@@ -175,7 +107,7 @@ public class NPCBuilder {
 
 	public void destroy(String name) {
 		if (Main.getRegistry().getNPCInfo().containsValue(name)) {
-			NPC npcs = getNPCById(getValue(Main.getRegistry().getNPCInfo(), name));
+			NPC npcs = getNPCById(getValue(registry.getNPCInfo(), name));
 			npcs.destroy();
 		}
 	}
@@ -200,20 +132,11 @@ public class NPCBuilder {
 	}
 
 	public void destroyAll(Player player) {
-		for (Map.Entry<String, NPC> name : Main.getRegistry().getNPCObjects().entrySet()) {
+		for (Map.Entry<String, NPC> name : registry.getNPCObjects().entrySet()) {
 			NPC npc = name.getValue();
 			npc.destroy();
 		}
 		Main.getRegistry().clearRegistry();
-	}
-
-	public void refresh() {
-		for (Player online : Bukkit.getOnlinePlayers()) {
-			for (NPC npc : NPCManager.getAllNPCs()) {
-				npc.hide(online);
-				npc.show(online);
-			}
-		}
 	}
 
 	public void showAll(boolean update, Player player) {

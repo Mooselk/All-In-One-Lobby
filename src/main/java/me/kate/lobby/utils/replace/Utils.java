@@ -1,6 +1,7 @@
 package me.kate.lobby.utils.replace;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
+import me.kate.lobby.data.files.NPCConfig;
 
 public class Utils implements IUtils {
 
@@ -110,12 +113,29 @@ public class Utils implements IUtils {
 		config.set(path + ".z", location.getBlockZ());
 	}
 	
-	public void npcToConfig(Location location, FileConfiguration config, String path) {
-		config.set(path + "location.x", location.getBlockX());
-		config.set(path + "location.y", location.getBlockY());
-		config.set(path + "location.z", location.getBlockZ());
-		config.set(path + "location.pitch", location.getPitch());
-		config.set(path + "location.yaw", location.getYaw());
+	private final boolean live = false;
+	private final int port = 25565;
+	private final String ip = "localhost";
+	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
+	private final List<String> defaultMessages = Arrays.asList("&3Default message!", "&9Second line!");
+	
+	@Override
+	public void npcToConfig(Location location, FileConfiguration config, String path, String npcName, int skinId) {
+		config.set(path + ".id", npcName);
+		config.set(path + ".skin", skinId);
+		config.set(path + ".holotext", defaultHoloText);
+		config.set(path + ".messages", defaultMessages);
+		config.set(path + ".server.server-name", "example");
+		config.set(path + ".server.live-player-count", live);
+		config.set(path + ".server.ip", ip);
+		config.set(path + ".server.port", port);
+		config.set(path + ".location.x", location.getBlockX());
+		config.set(path + ".location.y", location.getBlockY());
+		config.set(path + ".location.z", location.getBlockZ());
+		config.set(path + ".location.pitch", location.getPitch());
+		config.set(path + ".location.yaw", location.getYaw());
+		NPCConfig.save();
+		NPCConfig.reload();
 	}
 	
 	@Override
