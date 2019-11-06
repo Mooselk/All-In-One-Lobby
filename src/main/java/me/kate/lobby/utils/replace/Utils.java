@@ -118,6 +118,7 @@ public class Utils implements IUtils {
 	private final String ip = "localhost";
 	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
 	private final List<String> defaultMessages = Arrays.asList("&3Default message!", "&9Second line!");
+	private final List<String> equipmentExample = Arrays.asList("helmet:IRON_HELMET:true", "hand:STONE_SWORD");
 	
 	@Override
 	public void npcToConfig(Location location, FileConfiguration config, String path, String npcName, int skinId) {
@@ -125,6 +126,7 @@ public class Utils implements IUtils {
 		config.set(path + ".skin", skinId);
 		config.set(path + ".holotext", defaultHoloText);
 		config.set(path + ".messages", defaultMessages);
+		config.set(path + ".equipment", equipmentExample);
 		config.set(path + ".server.server-name", "example");
 		config.set(path + ".server.live-player-count", live);
 		config.set(path + ".server.ip", ip);

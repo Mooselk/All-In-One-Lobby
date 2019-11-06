@@ -7,6 +7,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
@@ -15,7 +16,9 @@ import me.kate.lobby.cache.SkinCache;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
+import me.kate.lobby.npcs.api.state.NPCSlot;
 import me.kate.lobby.npcs.internal.NPCManager;
+import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Messages;
 import me.kate.lobby.utils.replace.IUtils;
@@ -29,8 +32,7 @@ public class NPCBuilder {
 	private final FileConfiguration config = NPCConfig.getNPCConfig();
 	private SkinCache cache = new SkinCache();
 	
-	public NPCBuilder() {
-	}
+	public NPCBuilder() {}
 
 	public void create(int skinId, String name, Location location, Player player) {
 		utils.npcToConfig(location, NPCConfig.getNPCConfig(), "npcs." + name, name, skinId);
@@ -70,14 +72,88 @@ public class NPCBuilder {
 					npc.setSkin(cache.getSkin(skinId));
 					Logger.debug("Loaded NPC '" + name + "' from skin cache");
 				}
+				this.applyItems(npc, name);
 				npc.create();
 				Bukkit.getScheduler().runTask(Main.getInstance(), () -> registry.addToRegistry(npc, name));
 			}
 		}
 	}
 
-	public void applyItems() {
-		
+	public void applyItems(NPC npc, String name) {
+		for (String items : config.getStringList("npcs." + name + ".equipment")) {
+			if (items.startsWith("helmet:")) {
+				if (items.endsWith(":true")) {
+					String material = items.replace("helmet:", "");
+					material = material.replace(":true", "");
+					npc.setItem(NPCSlot.HELMET, new ItemBuilder(
+							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+				} else {
+					String material = items.replace("helmet:", "");
+					npc.setItem(NPCSlot.HELMET, new ItemBuilder(
+							Material.getMaterial(material)).toItemStack());
+				}
+			}
+			if (items.startsWith("chestplate:")) {
+				if (items.endsWith(":true")) {
+					String material = items.replace("chestplate:", "");
+					material = material.replace(":true", "");
+					npc.setItem(NPCSlot.CHESTPLATE, new ItemBuilder(
+							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+				} else {
+					String material = items.replace("chestplate:", "");
+					npc.setItem(NPCSlot.CHESTPLATE, new ItemBuilder(
+							Material.getMaterial(material)).toItemStack());
+				}
+			}
+			if (items.startsWith("leggings:")) {
+				if (items.endsWith(":true")) {
+					String material = items.replace("leggings:", "");
+					material = material.replace(":true", "");
+					npc.setItem(NPCSlot.LEGGINGS, new ItemBuilder(
+							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+				} else {
+					String material = items.replace("leggings:", "");
+					npc.setItem(NPCSlot.LEGGINGS, new ItemBuilder(
+							Material.getMaterial(material)).toItemStack());
+				}
+			}
+			if (items.startsWith("boots:")) {
+				if (items.endsWith(":true")) {
+					String material = items.replace("boots:", "");
+					material = material.replace(":true", "");
+					npc.setItem(NPCSlot.BOOTS, new ItemBuilder(
+							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+				} else {
+					String material = items.replace("boots:", "");
+					npc.setItem(NPCSlot.BOOTS, new ItemBuilder(
+							Material.getMaterial(material)).toItemStack());
+				}
+			}
+			if (items.startsWith("hand:")) {
+				if (items.endsWith(":true")) {
+					String material = items.replace("hand:", "");
+					material = material.replace(":true", "");
+					npc.setItem(NPCSlot.MAINHAND, new ItemBuilder(
+							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+				} else {
+					String material = items.replace("hand:", "");
+					npc.setItem(NPCSlot.MAINHAND, new ItemBuilder(
+							Material.getMaterial(material)).toItemStack());
+				}
+			}
+			if (items.startsWith("offhand:")) {
+				if (items.endsWith(":true")) {
+					String material = items.replace("offhand:", "");
+					material = material.replace(":true", "");
+					npc.setItem(NPCSlot.OFFHAND, new ItemBuilder(
+							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+				} else {
+					String material = items.replace("offhand:", "");
+					npc.setItem(NPCSlot.OFFHAND, new ItemBuilder(
+							Material.getMaterial(material)).toItemStack());
+				}
+			}
+		}
 	}
 	
 	public void reloadNPCs(Player player, NPCBuilder builder, boolean msg) {
@@ -136,7 +212,7 @@ public class NPCBuilder {
 			NPC npc = name.getValue();
 			npc.destroy();
 		}
-		Main.getRegistry().clearRegistry();
+		registry.clearRegistry();
 	}
 
 	public void showAll(boolean update, Player player) {
