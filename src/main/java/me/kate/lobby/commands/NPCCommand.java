@@ -13,7 +13,6 @@ import me.kate.lobby.utils.Messages;
 public class NPCCommand implements CommandExecutor {
 
 	private final NPCBuilder npcb = new NPCBuilder();
-
 	private final Messages msgs = new Messages();
 
 	@Override

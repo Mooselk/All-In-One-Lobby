@@ -53,7 +53,6 @@ public class Main extends JavaPlugin {
 	 * Reload configs
 	 * Fix portal selections (Make them per player) 
 	 * NPC move 
-	 * NPC Items in config 
 	 * NPC states in config 
 	 * Edit NPCs with commands
 	 * 
