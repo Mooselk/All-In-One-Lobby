@@ -9,7 +9,7 @@ public class PlayerCount {
 
 	public String getPlayerCount(String serverName) {
 		String count = "Loading...";
-		String offlineMSG = "Offline";
+		String offlineMSG = "0";
 		boolean isOnline = false;
 		Map<String, Object> placeholders = null;
 		if (Main.NPC_PLACEHOLDERS.containsKey(serverName)) {
