@@ -2,19 +2,18 @@ package me.kate.lobby.cache;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.npcs.api.skin.Skin;
 import me.kate.lobby.utils.Logger;
 
 public class SkinCache {
 
-	private final FileConfiguration config = Main.getInstance().getConfig();
+	private final FileConfiguration config = CacheStorage.getSkinStorage();
 
 	public void toConfig(Skin skin, int skinId) {
 		if (config.getConfigurationSection(String.valueOf(skinId)) == null) {
 			config.set(String.valueOf(skinId), skin.serialize());
-			Main.getInstance().saveConfig();
-			Main.getInstance().reloadConfig();
+			CacheStorage.save();
+			CacheStorage.reload();
 		}
 	}
 	
