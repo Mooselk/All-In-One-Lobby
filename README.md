@@ -77,7 +77,17 @@ cooldown: 2
     
     # Message and command
     # Set to none for no command or no message
-    message: '&f[&6Lobby&f] Sending you to server &6SkyBlock.'
+    message:
+    - '&f[&6Lobby&f] Sending you to server &6SkyBlock.'
+    - 'Optional extra line'
+    
+    # NPC equipment
+    # Format: region:item:enchanted
+    # Regions: helmet, chestplate, leggings, boots, hand, (1.9+) offhand
+    equipment:
+     - 'helmet:IRON_HELMET:true'
+     - 'boots:DIAMOND_BOOTS:true'
+     - 'hand:TNT'
     
     # Server info
     server:
@@ -119,7 +129,7 @@ cooldown: 2
 
 # Server Selector
 
-[Full Server-selector config example](https://github.com/Mooselk/All-In-One-Lobby/blob/master/src/selector.yml)
+[Full Server-selector config example](https://github.com/Mooselk/All-In-One-Lobby/blob/master/src/selector.yml) - 
 [Example menu](https://github.com/Mooselk/All-In-One-Lobby/blob/master/Menu-example.png)
 
 ### Config
