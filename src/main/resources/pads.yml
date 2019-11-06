@@ -8,3 +8,5 @@ settings:
   top-block: STONE_PLATE
   bottom-block: REDSTONE_BLOCK
   sound: BAT_TAKEOFF
+  pitch1: 3f
+  pitch2: 0.1f

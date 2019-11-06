@@ -20,8 +20,11 @@ public class JumpPadInteractEvent implements Listener {
 	private boolean enable_sound = JumpPadConfig.getPadConfig().getBoolean("jumppad.sound");
 	private double power = JumpPadConfig.getPadConfig().getDouble("settings.power");
 	private double height = JumpPadConfig.getPadConfig().getDouble("settings.height");
+	
+	private String pitch1 = JumpPadConfig.getPadConfig().getString("settings.pitch1");
+	private String pitch2 = JumpPadConfig.getPadConfig().getString("settings.pitch2");
 
-	private JumpPad pad = new JumpPad(power, height, top, bottom, sound);
+	private JumpPad pad = new JumpPad(power, height, top, bottom, sound, pitch1, pitch2);
 
 	@EventHandler
 	public void onTrigger(PlayerInteractEvent event) {
@@ -34,7 +37,7 @@ public class JumpPadInteractEvent implements Listener {
 					&& pad.validJumpPad(location)) {
 				if (enable_sound) {
 					player.playSound(player.getLocation(), 
-							Sound.valueOf(pad.getSound()), 1.0f, 1.0f);
+							Sound.valueOf(pad.getSound()), Float.valueOf(pad.getPitch1()), Float.valueOf(pad.getPitch2()));
 				}
 				pad.launchIdiot(player);
 			}

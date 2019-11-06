@@ -13,13 +13,17 @@ public class JumpPad {
 	private String topBlock;
 	private String bottomBlock;
 	private String sound;
+	private String pitch1;
+	private String pitch2;
 	
-	public JumpPad(double power, double height, String top, String bottom, String sound) {
+	public JumpPad(double power, double height, String top, String bottom, String sound, String pitch1, String pitch2) {
 		this.height = height;
 		this.power = power;
 		this.topBlock = top;
 		this.bottomBlock = bottom;
 		this.sound = sound;
+		this.pitch1 = pitch1;
+		this.pitch2 = pitch2;
 	}
 
 	public void launchIdiot(final Player player) {
@@ -47,5 +51,13 @@ public class JumpPad {
 	
 	public String getSound() {
 		return sound;
+	}
+	
+	public String getPitch1() {
+		return pitch1;
+	}
+	
+	public String getPitch2() {
+		return pitch2;
 	}
 }
