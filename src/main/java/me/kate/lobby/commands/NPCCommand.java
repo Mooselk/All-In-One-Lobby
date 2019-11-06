@@ -32,7 +32,7 @@ public class NPCCommand implements CommandExecutor {
 					}
 				}
 				if (args[0].equalsIgnoreCase("create")) {
-					if (p.hasPermission("lobby.npc.delete")) {
+					if (p.hasPermission("lobby.npc.create")) {
 						if (args.length < 3) {
 							msgs.send("&6Usage: &f/npc create <npc_name> <skin_id>", p);
 						} else {
@@ -41,6 +41,7 @@ public class NPCCommand implements CommandExecutor {
 									+ " X: "+ (int) p.getLocation().getX()
 									+ ", Y: " + (int) p.getLocation().getY() 
 									+ ", Z: " + (int) p.getLocation().getZ(), p);
+							npcb.reloadNPCs(p, npcb, false);
 						}
 					} else {
 						msgs.noPermission(p);
