@@ -38,7 +38,7 @@ public class InteractNPCEvent implements Listener {
 	}
 	
 	public void sendMessages(Player player, ConfigurationSection section) {
-		for (String message : section.getStringList("message")) {
+		for (String message : section.getStringList("messages")) {
 			if (!message.equals("none"))
 				msgs.send(message, player);
 			else
