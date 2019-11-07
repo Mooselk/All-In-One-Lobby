@@ -86,7 +86,8 @@ public class NPCBuilder {
 					String material = items.replace("helmet:", "");
 					material = material.replace(":true", "");
 					npc.setItem(NPCSlot.HELMET, new ItemBuilder(
-							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+							Material.getMaterial(material))
+							.addEnchant(Enchantment.DURABILITY, 1).toItemStack());
 				} else {
 					String material = items.replace("helmet:", "");
 					npc.setItem(NPCSlot.HELMET, new ItemBuilder(
@@ -98,7 +99,8 @@ public class NPCBuilder {
 					String material = items.replace("chestplate:", "");
 					material = material.replace(":true", "");
 					npc.setItem(NPCSlot.CHESTPLATE, new ItemBuilder(
-							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+							Material.getMaterial(material))
+							.addEnchant(Enchantment.DURABILITY, 1).toItemStack());
 				} else {
 					String material = items.replace("chestplate:", "");
 					npc.setItem(NPCSlot.CHESTPLATE, new ItemBuilder(
@@ -110,7 +112,8 @@ public class NPCBuilder {
 					String material = items.replace("leggings:", "");
 					material = material.replace(":true", "");
 					npc.setItem(NPCSlot.LEGGINGS, new ItemBuilder(
-							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+							Material.getMaterial(material))
+							.addEnchant(Enchantment.DURABILITY, 1).toItemStack());
 				} else {
 					String material = items.replace("leggings:", "");
 					npc.setItem(NPCSlot.LEGGINGS, new ItemBuilder(
@@ -122,7 +125,8 @@ public class NPCBuilder {
 					String material = items.replace("boots:", "");
 					material = material.replace(":true", "");
 					npc.setItem(NPCSlot.BOOTS, new ItemBuilder(
-							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+							Material.getMaterial(material))
+							.addEnchant(Enchantment.DURABILITY, 1).toItemStack());
 				} else {
 					String material = items.replace("boots:", "");
 					npc.setItem(NPCSlot.BOOTS, new ItemBuilder(
@@ -134,7 +138,8 @@ public class NPCBuilder {
 					String material = items.replace("hand:", "");
 					material = material.replace(":true", "");
 					npc.setItem(NPCSlot.MAINHAND, new ItemBuilder(
-							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+							Material.getMaterial(material))
+							.addEnchant(Enchantment.DURABILITY, 1).toItemStack());
 				} else {
 					String material = items.replace("hand:", "");
 					npc.setItem(NPCSlot.MAINHAND, new ItemBuilder(
@@ -146,7 +151,8 @@ public class NPCBuilder {
 					String material = items.replace("offhand:", "");
 					material = material.replace(":true", "");
 					npc.setItem(NPCSlot.OFFHAND, new ItemBuilder(
-							Material.getMaterial(material)).addEnchant(Enchantment.DURABILITY, 1).toItemStack());
+							Material.getMaterial(material))
+							.addEnchant(Enchantment.DURABILITY, 1).toItemStack());
 				} else {
 					String material = items.replace("offhand:", "");
 					npc.setItem(NPCSlot.OFFHAND, new ItemBuilder(
@@ -156,15 +162,15 @@ public class NPCBuilder {
 		}
 	}
 	
-	public void reloadNPCs(Player player, NPCBuilder builder, boolean msg) {
+	public void reloadNPCs(Player player, boolean msg) {
 		destroyAll(player);
 		registry.clearRegistry();
 		NPCConfig.reload();
-		this.build();
+		build();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				builder.showAll(true, player);
+				showAll(true, player);
 				if (msg) {
 					msgs.send("&f[&6NPC&f] Reload complete!", player);
 				}
@@ -172,13 +178,18 @@ public class NPCBuilder {
 
 		}.runTaskLater(Main.getInstance(), 20);
 	}
+	
+	public void setSkin() {
+		
+	}
 
-	public void move(NPC npc) {
-		// TO-DO
-		// npc.destroy();
-		// Update location in npcs.yml
-		// Rebuild NPC
-		// this.build(player);
+	public void move(Location location, String name, Player player) {
+		config.set("npcs." + name + ".location", null);
+		utils.toConfig(location, config, "npcs." + name + ".location");
+		NPCConfig.save();
+		NPCConfig.reload();
+		reloadNPCs(player, false);
+		msgs.send("Moved NPC " + name, player);
 	}
 
 	public void destroy(String name) {

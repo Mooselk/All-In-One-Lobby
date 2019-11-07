@@ -54,6 +54,7 @@ public class PlayerJoinEvents implements Listener {
 			playerSettings.createSection(player.getUniqueId().toString());
 			playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString()).set("hidden", false);
 			playerSettings.save();
+			playerSettings.reload();
 		}
 		player.teleport(Spawn.toSpawn());
 	}
@@ -70,15 +71,15 @@ public class PlayerJoinEvents implements Listener {
 		}
 	}
 
-	private ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")), 1)
+	private final ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")), 1)
 			.setName(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name")))
 			.toItemStack();
 	
-	private ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
+	private final ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
 			.setName(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name")))
 			.toItemStack();
 	
-	private ItemStack selector = new ItemBuilder(
+	private final ItemStack selector = new ItemBuilder(
 			Material.getMaterial(selectorConf.getConfigurationSection("selector.options").getString("material")))
 					.setName(ChatColor.translateAlternateColorCodes('&', selectorConf.getConfigurationSection("selector.options").getString("item-name")))
 					.setLore(utils.colorParser(selectorConf.getConfigurationSection("selector.options").getStringList("lore")))
@@ -87,7 +88,7 @@ public class PlayerJoinEvents implements Listener {
 	@EventHandler
 	public void giveItemsOnJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
-		ConfigurationSection hSection = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+		final ConfigurationSection hSection = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
 		if (!hSection.getBoolean("hidden")) {
 			player.getInventory().setItem(2, hide);
 		}

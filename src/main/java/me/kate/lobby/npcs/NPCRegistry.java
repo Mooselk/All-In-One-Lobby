@@ -12,6 +12,7 @@ public class NPCRegistry {
 	private final Map<String, String> NPCINFO = new HashMap<>();
 	private final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
 	private final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
+	private final NPCBuilder builder = new NPCBuilder();
 	
 	public void addToRegistry(NPC npc, String name) {
 		Logger.debug("Adding NPC: " + npc + " with name " + name + " to NPCRegistry");
@@ -35,5 +36,15 @@ public class NPCRegistry {
 	
 	public Map<NPC, ArrayList<String>> getNPCHoloText() {
 		return HOLOTEXT;
+	}
+	
+	public void remove(String name) {
+		if (NPCS_OBJECT.containsKey(name)) {
+			NPCS_OBJECT.remove(name);
+		}
+		
+		if (NPCINFO.containsValue(name)) {
+			NPCINFO.remove(builder.getValue(NPCINFO, name));
+		}
 	}
 }
