@@ -8,7 +8,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.utils.Messages;
+import me.kate.lobby.Messages;
 
 public class BlockRelatedEvent implements Listener {
 

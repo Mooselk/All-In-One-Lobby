@@ -9,9 +9,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.Messages;
 import me.kate.lobby.items.portals.Position;
 import me.kate.lobby.items.portals.utils.PortalWand;
-import me.kate.lobby.utils.Messages;
 
 public class WandInteractEvent implements Listener {
 

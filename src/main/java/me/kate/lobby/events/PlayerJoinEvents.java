@@ -22,9 +22,9 @@ import me.kate.lobby.items.Spawn;
 import me.kate.lobby.items.toggleplayers.Hideable;
 import me.kate.lobby.items.toggleplayers.TogglePlayers;
 import me.kate.lobby.npcs.NPCBuilder;
+import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.Utils;
 
 public class PlayerJoinEvents implements Listener {
 

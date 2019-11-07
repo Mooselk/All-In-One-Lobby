@@ -1,4 +1,4 @@
-package me.kate.lobby.utils;
+package me.kate.lobby.ping;
 
 import org.bukkit.Server;
 import org.bukkit.entity.Player;

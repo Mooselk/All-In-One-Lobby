@@ -7,9 +7,9 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.Utils;
 
 public class PortalWand {
 	

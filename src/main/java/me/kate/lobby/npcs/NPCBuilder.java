@@ -12,17 +12,17 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.Messages;
 import me.kate.lobby.cache.SkinCache;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.api.state.NPCSlot;
 import me.kate.lobby.npcs.internal.NPCManager;
+import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Logger;
-import me.kate.lobby.utils.Messages;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.Utils;
 
 public class NPCBuilder {
 

@@ -6,11 +6,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.items.portals.utils.SendToServer;
 import me.kate.lobby.managers.CooldownManager;
 import me.kate.lobby.npcs.api.events.NPCInteractEvent;
-import me.kate.lobby.utils.Messages;
 
 public class InteractNPCEvent implements Listener {
 

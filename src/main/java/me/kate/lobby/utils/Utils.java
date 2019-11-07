@@ -1,4 +1,4 @@
-package me.kate.lobby.utils.replace;
+package me.kate.lobby.utils;
 
 import java.util.ArrayList;
 import java.util.Arrays;

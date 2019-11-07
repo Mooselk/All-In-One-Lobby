@@ -17,9 +17,9 @@ import org.bukkit.scheduler.BukkitTask;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Logger;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.Utils;
 
 public class Selector {
 

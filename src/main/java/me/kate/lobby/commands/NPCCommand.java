@@ -7,10 +7,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.Logger;
-import me.kate.lobby.utils.Messages;
 
 public class NPCCommand implements CommandExecutor {
 

@@ -6,7 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.utils.Messages;
+import me.kate.lobby.Messages;
 
 public class Spawn {
 

@@ -42,6 +42,7 @@ import me.kate.lobby.items.toggleplayers.events.TogglePlayersEvent;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.NPCRegistry;
+import me.kate.lobby.ping.Bungee;
 import me.kate.lobby.threads.PingNPCBackground;
 import me.kate.lobby.threads.PingSelectorBackground;
 
@@ -147,12 +148,13 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void loadNPCs() {
-		NPCBuilder builder = new NPCBuilder();
+		final NPCBuilder builder = new NPCBuilder();
 		builder.build();
 	}
 
 	private void registerChannel() {
 		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+		this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new Bungee());
 	}
 
 	private void startThreads() {

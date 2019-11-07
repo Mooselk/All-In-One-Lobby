@@ -6,8 +6,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.IUtils;
+import me.kate.lobby.utils.Utils;
 
 public class PlayerLeaveEvents implements Listener {
 	

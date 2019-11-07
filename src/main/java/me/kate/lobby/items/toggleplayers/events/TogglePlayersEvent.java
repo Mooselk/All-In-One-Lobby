@@ -10,6 +10,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
+import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.HidePlayersConfig;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
@@ -17,10 +18,9 @@ import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.items.toggleplayers.Hideable;
 import me.kate.lobby.items.toggleplayers.TogglePlayers;
 import me.kate.lobby.managers.CooldownManager;
+import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
-import me.kate.lobby.utils.Messages;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 public class TogglePlayersEvent implements Listener {

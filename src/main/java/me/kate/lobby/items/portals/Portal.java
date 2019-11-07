@@ -7,8 +7,8 @@ import org.bukkit.configuration.ConfigurationSection;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.items.portals.utils.Cuboid;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.IUtils;
+import me.kate.lobby.utils.Utils;
 
 public class Portal {
 

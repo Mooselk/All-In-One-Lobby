@@ -7,11 +7,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.items.portals.Portal;
 import me.kate.lobby.items.portals.Position;
 import me.kate.lobby.items.portals.utils.PortalWand;
-import me.kate.lobby.utils.Messages;
 
 public class PortalCommand implements CommandExecutor {
 

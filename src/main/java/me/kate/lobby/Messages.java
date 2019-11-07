@@ -1,4 +1,4 @@
-package me.kate.lobby.utils;
+package me.kate.lobby;
 
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;

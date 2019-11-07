@@ -9,7 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
-import me.kate.lobby.utils.MineStat;
+import me.kate.lobby.ping.MineStat;
 
 public class PingSelectorBackground extends Thread {
 

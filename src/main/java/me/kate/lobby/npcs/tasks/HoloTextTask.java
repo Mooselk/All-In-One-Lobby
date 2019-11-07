@@ -6,8 +6,8 @@ import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.PlayerCount;
 import me.kate.lobby.npcs.api.NPC;
-import me.kate.lobby.utils.replace.IUtils;
-import me.kate.lobby.utils.replace.Utils;
+import me.kate.lobby.utils.IUtils;
+import me.kate.lobby.utils.Utils;
 
 public class HoloTextTask {
 

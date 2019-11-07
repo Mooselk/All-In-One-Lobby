@@ -22,7 +22,7 @@
  * @author Lloyd Dilley, Arne Sacnussem
  */
 
-package me.kate.lobby.utils;
+package me.kate.lobby.ping;
 
 import java.io.*;
 import java.net.*;

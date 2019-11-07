@@ -9,7 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.tasks.HoloTextTask;
-import me.kate.lobby.utils.MineStat;
+import me.kate.lobby.ping.MineStat;
 
 public class PingNPCBackground extends Thread {
 
