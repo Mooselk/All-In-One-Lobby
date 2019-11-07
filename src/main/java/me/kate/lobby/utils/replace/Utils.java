@@ -105,12 +105,12 @@ public class Utils implements IUtils {
 	
 	// Test first
 	@Override
-	public void toConfig(Location location, 
-			FileConfiguration config, 
-			String path) {
+	public void toConfig(Location location, FileConfiguration config, String path) {
 		config.set(path + ".x", location.getBlockX());
 		config.set(path + ".y", location.getBlockY());
 		config.set(path + ".z", location.getBlockZ());
+		config.set(path + ".pitch", location.getPitch());
+		config.set(path + ".yaw", location.getYaw());
 	}
 	
 	private final boolean live = false;
