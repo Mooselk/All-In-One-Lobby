@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Messages;
-import me.kate.lobby.items.Spawn;
+import me.kate.lobby.modules.Spawn;
 
 public class LobbyCommand implements CommandExecutor {
 

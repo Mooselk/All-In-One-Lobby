@@ -30,15 +30,15 @@ import me.kate.lobby.events.world.MobSpawnEvent;
 import me.kate.lobby.events.world.PlantGrowthEvent;
 import me.kate.lobby.events.world.TouchVoidEvent;
 import me.kate.lobby.events.world.WeatherBlockEvent;
-import me.kate.lobby.items.pads.JumpPadInteractEvent;
-import me.kate.lobby.items.portals.Portal;
-import me.kate.lobby.items.portals.Position;
-import me.kate.lobby.items.portals.events.PlayerPortalEvent;
-import me.kate.lobby.items.portals.events.WandInteractEvent;
-import me.kate.lobby.items.portals.utils.Cuboid;
-import me.kate.lobby.items.selector.events.SelectorClickEvent;
-import me.kate.lobby.items.selector.events.SelectorGuiEvents;
-import me.kate.lobby.items.toggleplayers.events.TogglePlayersEvent;
+import me.kate.lobby.modules.jumppads.JumpPadInteractEvent;
+import me.kate.lobby.modules.portals.Portal;
+import me.kate.lobby.modules.portals.Position;
+import me.kate.lobby.modules.portals.events.PlayerPortalEvent;
+import me.kate.lobby.modules.portals.events.WandInteractEvent;
+import me.kate.lobby.modules.portals.utils.Cuboid;
+import me.kate.lobby.modules.selector.events.SelectorClickEvent;
+import me.kate.lobby.modules.selector.events.SelectorGuiEvents;
+import me.kate.lobby.modules.toggleplayers.events.TogglePlayersEvent;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.NPCRegistry;
@@ -53,8 +53,7 @@ public class Main extends JavaPlugin {
 	 * 
 	 * Reload configs
 	 * Fix portal selections (Make them per player) 
-	 * NPC move 
-	 * NPC states in config 
+	 * NPC setskin
 	 * Edit NPCs with commands
 	 * 
 	 * * * * * * * * * * * *

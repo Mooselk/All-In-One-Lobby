@@ -1,4 +1,4 @@
-package me.kate.lobby.items.pads;
+package me.kate.lobby.modules.jumppads;
 
 import org.bukkit.Location;
 import org.bukkit.Material;

@@ -1,4 +1,4 @@
-package me.kate.lobby.items.selector.events;
+package me.kate.lobby.modules.selector.events;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
-import me.kate.lobby.items.selector.Selector;
+import me.kate.lobby.modules.selector.Selector;
 
 public class SelectorClickEvent implements Listener {
 

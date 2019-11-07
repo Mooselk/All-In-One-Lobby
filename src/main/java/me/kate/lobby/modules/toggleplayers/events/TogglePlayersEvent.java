@@ -1,4 +1,4 @@
-package me.kate.lobby.items.toggleplayers.events;
+package me.kate.lobby.modules.toggleplayers.events;
 
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
@@ -15,9 +15,9 @@ import me.kate.lobby.data.files.HidePlayersConfig;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
-import me.kate.lobby.items.toggleplayers.Hideable;
-import me.kate.lobby.items.toggleplayers.TogglePlayers;
 import me.kate.lobby.managers.CooldownManager;
+import me.kate.lobby.modules.toggleplayers.Hideable;
+import me.kate.lobby.modules.toggleplayers.TogglePlayers;
 import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Utils;

@@ -10,7 +10,7 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.items.Spawn;
+import me.kate.lobby.modules.Spawn;
 
 public class TouchVoidEvent implements Listener {
 

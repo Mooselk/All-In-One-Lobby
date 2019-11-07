@@ -1,4 +1,4 @@
-package me.kate.lobby.items.portals.events;
+package me.kate.lobby.modules.portals.events;
 
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
-import me.kate.lobby.items.portals.Position;
-import me.kate.lobby.items.portals.utils.PortalWand;
+import me.kate.lobby.modules.portals.Position;
+import me.kate.lobby.modules.portals.utils.PortalWand;
 
 public class WandInteractEvent implements Listener {
 

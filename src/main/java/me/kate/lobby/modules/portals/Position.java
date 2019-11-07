@@ -1,4 +1,4 @@
-package me.kate.lobby.items.portals;
+package me.kate.lobby.modules.portals;
 
 public enum Position {
 	

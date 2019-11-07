@@ -1,4 +1,4 @@
-package me.kate.lobby.items.portals.events;
+package me.kate.lobby.modules.portals.events;
 
 import java.util.Map;
 
@@ -10,9 +10,9 @@ import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
-import me.kate.lobby.items.portals.utils.Cuboid;
-import me.kate.lobby.items.portals.utils.SendToServer;
 import me.kate.lobby.managers.CooldownManager;
+import me.kate.lobby.modules.portals.utils.Cuboid;
+import me.kate.lobby.modules.portals.utils.SendToServer;
 import me.kate.lobby.utils.Logger;
 
 public class PlayerPortalEvent implements Listener {

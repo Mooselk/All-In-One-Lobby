@@ -1,4 +1,4 @@
-package me.kate.lobby.items.selector.events;
+package me.kate.lobby.modules.selector.events;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -11,8 +11,8 @@ import org.bukkit.event.inventory.InventoryType;
 
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
-import me.kate.lobby.items.portals.utils.SendToServer;
-import me.kate.lobby.items.selector.Selector;
+import me.kate.lobby.modules.portals.utils.SendToServer;
+import me.kate.lobby.modules.selector.Selector;
 import net.md_5.bungee.api.ChatColor;
 
 public class SelectorGuiEvents implements Listener {

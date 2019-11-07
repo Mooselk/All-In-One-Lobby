@@ -1,4 +1,4 @@
-package me.kate.lobby.items;
+package me.kate.lobby.modules;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

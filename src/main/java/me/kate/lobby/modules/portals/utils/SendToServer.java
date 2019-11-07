@@ -1,4 +1,4 @@
-package me.kate.lobby.items.portals.utils;
+package me.kate.lobby.modules.portals.utils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;

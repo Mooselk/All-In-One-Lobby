@@ -1,18 +1,20 @@
-package me.kate.lobby.items.portals;
+package me.kate.lobby.modules.portals;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.FileConfiguration;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
-import me.kate.lobby.items.portals.utils.Cuboid;
+import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Utils;
 
 public class Portal {
 
 	private final IUtils utils = new Utils();
+	private FileConfiguration config = PortalsConfig.portalconf;
 	
 	public Portal() {}
 	
@@ -81,8 +83,8 @@ public class Portal {
 		
 		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-1");
 		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-2");
-		PortalsConfig.portalconf.set("portals." + name + ".world", world);
-		PortalsConfig.portalconf.set("portals." + name + ".server", server);
+		config.set("portals." + name + ".world", world);
+		config.set("portals." + name + ".server", server);
 //		PortalsConfig.portalconf.set("portals." + name + ".loc-1.x", pos1.getBlockX());
 //		PortalsConfig.portalconf.set("portals." + name + ".loc-1.y", pos1.getBlockY());
 //		PortalsConfig.portalconf.set("portals." + name + ".loc-1.z", pos1.getBlockZ());
@@ -98,7 +100,7 @@ public class Portal {
 	}
 	
 	public void delete(String name) {
-		PortalsConfig.portalconf.set("portals." + name, null);
+		config.set("portals." + name, null);
 		PortalsConfig.save();
 		PortalsConfig.reload();
 		this.reloadAll();

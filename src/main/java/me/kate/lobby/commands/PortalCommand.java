@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.PortalsConfig;
-import me.kate.lobby.items.portals.Portal;
-import me.kate.lobby.items.portals.Position;
-import me.kate.lobby.items.portals.utils.PortalWand;
+import me.kate.lobby.modules.portals.Portal;
+import me.kate.lobby.modules.portals.Position;
+import me.kate.lobby.modules.portals.utils.PortalWand;
 
 public class PortalCommand implements CommandExecutor {
 

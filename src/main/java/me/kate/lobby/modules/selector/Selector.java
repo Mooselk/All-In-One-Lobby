@@ -1,4 +1,4 @@
-package me.kate.lobby.items.selector;
+package me.kate.lobby.modules.selector;
 
 import java.util.List;
 import java.util.Map;

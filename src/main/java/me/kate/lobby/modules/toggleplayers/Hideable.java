@@ -1,4 +1,4 @@
-package me.kate.lobby.items.toggleplayers;
+package me.kate.lobby.modules.toggleplayers;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
