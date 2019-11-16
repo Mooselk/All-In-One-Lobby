@@ -24,12 +24,11 @@ public class NPCConfig {
 		if (!npcfile.exists()) {
 			npcfile.getParentFile().mkdirs();
 			Main.getInstance().saveResource("npcs.yml", false);
-			Bukkit.getLogger().info("[Lobby] Creating npcs...");
+			Bukkit.getLogger().info("[Lobby] Creating npcs.yml...");
 		}
 		npcconf = new YamlConfiguration();
 		try {
 			npcconf.load(npcfile);
-			Bukkit.getLogger().info("[Lobby] Loading npcs file...");
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to create npcs.yml!");
 			e.printStackTrace();

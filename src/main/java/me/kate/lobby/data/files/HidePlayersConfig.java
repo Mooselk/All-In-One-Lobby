@@ -25,7 +25,7 @@ public class HidePlayersConfig implements IHidePlayerSettings {
 			Main.getInstance().saveResource("hideplayers.yml", false);
 			try {
 				hideSettings.createNewFile();
-				Bukkit.getLogger().info("[Lobby] Creating hideplayers...");
+				Bukkit.getLogger().info("[Lobby] Creating hideplayers.yml...");
 			} catch (IOException e) {
 				Bukkit.getLogger().severe("[Lobby] Failed to create hideplayers.yml!");
 				e.printStackTrace();
@@ -34,7 +34,6 @@ public class HidePlayersConfig implements IHidePlayerSettings {
 		hideSettingsConf = new YamlConfiguration();
 		try {
 			hideSettingsConf.load(hideSettings);
-			Bukkit.getLogger().info("[Lobby] Loading playerdata file...");
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to load hideplayers.yml!");
 			e.printStackTrace();

@@ -24,12 +24,11 @@ public class JumpPadConfig {
 		if (!jumpPadFile.exists()) {
 			jumpPadFile.getParentFile().mkdirs();
 			Main.getInstance().saveResource("pads.yml", false);
-			Logger.info("[Lobby] Creating jumppads...");
+			Logger.info("[Lobby] Creating pads.yml...");
 		}
 		jumpPadConf = new YamlConfiguration();
 		try {
 			jumpPadConf.load(jumpPadFile);
-			Logger.info("[Lobby] Loading pads file...");
 		} catch (IOException | InvalidConfigurationException e) {
 			Logger.severe("[Lobby] Failed to create pads.yml!");
 			e.printStackTrace();

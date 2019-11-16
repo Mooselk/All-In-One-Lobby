@@ -38,7 +38,6 @@ public class SelectorConfig implements ISelectorSettings {
 		selectorConf = new YamlConfiguration();
 		try {
 			selectorConf.load(selector);
-			Bukkit.getLogger().info("[Lobby] Loading selector file...");
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
 			e.printStackTrace();

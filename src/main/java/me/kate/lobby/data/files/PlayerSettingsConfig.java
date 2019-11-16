@@ -26,7 +26,7 @@ public class PlayerSettingsConfig implements IPlayerSettings {
 			playerSettings.getParentFile().mkdirs();
 			try {
 				playerSettings.createNewFile();
-				Bukkit.getLogger().info("[Lobby] Creating playersettings...");
+				Bukkit.getLogger().info("[Lobby] Creating playersettings.yml...");
 			} catch (IOException e) {
 				Bukkit.getLogger().severe("[Lobby] Failed to create playersettings.yml!");
 				e.printStackTrace();
@@ -35,7 +35,6 @@ public class PlayerSettingsConfig implements IPlayerSettings {
 		playerSettingsConf = new YamlConfiguration();
 		try {
 			playerSettingsConf.load(playerSettings);
-			Bukkit.getLogger().info("[Lobby] Loading playerdata file...");
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to load playersettings.yml!");
 			e.printStackTrace();

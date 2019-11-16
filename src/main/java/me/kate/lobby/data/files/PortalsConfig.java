@@ -25,12 +25,11 @@ public class PortalsConfig {
 		if (!portalfile.exists()) {
 			portalfile.getParentFile().mkdirs();
 			Main.getInstance().saveResource("portals.yml", false);
-			Bukkit.getLogger().info("[Lobby] Creating portals...");
+			Bukkit.getLogger().info("[Lobby] Creating portals.yml...");
 		}
 		portalconf = new YamlConfiguration();
 		try {
 			portalconf.load(portalfile);
-			Bukkit.getLogger().info("[Lobby] Loading portals file...");
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to create portals.yml!");
 			e.printStackTrace();
