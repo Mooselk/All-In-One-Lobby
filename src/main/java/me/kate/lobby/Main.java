@@ -38,13 +38,25 @@ import me.kate.lobby.modules.portals.events.WandInteractEvent;
 import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.modules.selector.events.SelectorClickEvent;
 import me.kate.lobby.modules.selector.events.SelectorGuiEvents;
+import me.kate.lobby.modules.tablist.TabList;
 import me.kate.lobby.modules.toggleplayers.events.TogglePlayersEvent;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.NPCRegistry;
+import me.kate.lobby.npcs.nms.v1_10_R1.TabList_v1_10_R1;
+import me.kate.lobby.npcs.nms.v1_11_R1.TabList_v1_11_R1;
+import me.kate.lobby.npcs.nms.v1_12_R1.TabList_v1_12_R1;
+import me.kate.lobby.npcs.nms.v1_13_R1.TabList_v1_13_R1;
+import me.kate.lobby.npcs.nms.v1_13_R2.TabList_v1_13_R2;
+import me.kate.lobby.npcs.nms.v1_14_R1.TabList_v1_14_R1;
+import me.kate.lobby.npcs.nms.v1_8_R2.TabList_v1_8_R2;
+import me.kate.lobby.npcs.nms.v1_8_R3.TabList_v1_8_R3;
+import me.kate.lobby.npcs.nms.v1_9_R1.TabList_v1_9_R1;
+import me.kate.lobby.npcs.nms.v1_9_R2.TabList_v1_9_R2;
 import me.kate.lobby.ping.Bungee;
 import me.kate.lobby.threads.PingNPCBackground;
 import me.kate.lobby.threads.PingSelectorBackground;
+import me.kate.lobby.utils.Logger;
 
 public class Main extends JavaPlugin {
 
@@ -63,6 +75,7 @@ public class Main extends JavaPlugin {
 
 	private static Main instance;
 	private NPCLib npclib;
+	private static TabList tablist;
 	private static NPCRegistry registry;
 
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
@@ -84,6 +97,10 @@ public class Main extends JavaPlugin {
 	public static Main getInstance() {
 		return instance;
 	}
+	
+	public static TabList getTabList() {
+		return tablist;
+	}
 
 	public NPCLib getNPCLib() {
 		return npclib;
@@ -95,6 +112,11 @@ public class Main extends JavaPlugin {
 	
 	@Override
 	public void onEnable() {
+		String version = getServer()
+				.getClass()
+				.getPackage()
+				.getName()
+				.split("\\.")[3];
 		instance = this;
 		registry = new NPCRegistry();
 		this.loadConfigs();
@@ -105,6 +127,11 @@ public class Main extends JavaPlugin {
 		this.npclib = new NPCLib(this);
 		this.portals.load();
 		this.loadNPCs();
+		if (setupTablist()) {
+			Logger.info("[Lobby] Loaded TabList for version " + version);
+		} else {
+			Logger.severe("[Lobby] Failed to load tablist for " + version + " unsupported version.");
+		}
 	}
 
 	@Override
@@ -159,5 +186,25 @@ public class Main extends JavaPlugin {
 	private void startThreads() {
 		new PingSelectorBackground().start();
 		new PingNPCBackground().start();
+	}
+	
+	private boolean setupTablist() {
+		String versionName;
+		try {
+			versionName = this.getServer().getClass().getPackage().getName().split("\\.")[3];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            return false;
+        }
+		if (versionName.equals("v1_8_R2")) { tablist = new TabList_v1_8_R2(); }
+		if (versionName.equals("v1_8_R3")) { tablist = new TabList_v1_8_R3(); }
+		if (versionName.equals("v1_9_R1")) { tablist = new TabList_v1_9_R1(); }
+		if (versionName.equals("v1_9_R2")) { tablist = new TabList_v1_9_R2(); }
+		if (versionName.equals("v1_10_R1")) { tablist = new TabList_v1_10_R1(); }
+		if (versionName.equals("v1_11_R1")) { tablist = new TabList_v1_11_R1(); }
+		if (versionName.equals("v1_12_R1")) { tablist = new TabList_v1_12_R1(); }
+		if (versionName.equals("v1_13_R1")) { tablist = new TabList_v1_13_R1(); }
+		if (versionName.equals("v1_13_R2")) { tablist = new TabList_v1_13_R2(); }
+		if (versionName.equals("v1_14_R1")) { tablist = new TabList_v1_14_R1(); }
+		return tablist !=null;
 	}
 }

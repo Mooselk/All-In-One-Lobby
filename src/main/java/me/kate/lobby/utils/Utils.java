@@ -44,10 +44,7 @@ public class Utils implements IUtils {
 
 	@Override
 	public List<String> replaceLore(List<String> lore, int max, int online, int ping, boolean noPing) {
-		ArrayList<String> mlore = new ArrayList<String>();
-		if (!mlore.isEmpty()) {
-			mlore.clear();
-		}
+		ArrayList<String> mlore = null; mlore = new ArrayList<String>();
 		for (String l : lore) {
 			String out = l;
 			if (!noPing) {
@@ -148,6 +145,17 @@ public class Utils implements IUtils {
 			text.add(ChatColor.translateAlternateColorCodes('&', in.replace("%players%", players)));
 		}
 		return text;
+	}
+	
+	@Override
+	public String replaceTab(List<String> lines, Player player) {
+		List<String> text = null;
+		text = new ArrayList<String>();
+		for (String in : lines) {
+			text.add(in.replace("%player%", player.getName()));
+		}
+		String out = String.join("\n&r", text);	
+		return ChatColor.translateAlternateColorCodes('&', out);
 	}
 	
 	public String getValue(Map<String, String> map, String value) {

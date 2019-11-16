@@ -1,5 +1,7 @@
 package me.kate.lobby.events;
 
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -35,9 +37,12 @@ public class PlayerJoinEvents implements Listener {
 	private FileConfiguration hideConf = hideFile.getHideSettings();
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
 	private final IUtils utils = new Utils();
-
+	private FileConfiguration config = Main.getInstance().getConfig();
 	private NPCBuilder builder = new NPCBuilder();
 
+	private List<String> header = config.getStringList("tablist.header");
+	private List<String> footer = config.getStringList("tablist.footer");
+	
 	private ConfigurationSection hideSection = hideConf.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hideConf.getConfigurationSection("item.unhide");
 	
@@ -46,6 +51,10 @@ public class PlayerJoinEvents implements Listener {
 		final Player player = (Player) event.getPlayer();
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
 			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
+		}
+		
+		if (config.getBoolean("tablist.enabled")) {
+			Main.getTabList().sendHeaderFooter(player, utils.replaceTab(header, player), utils.replaceTab(footer, player));
 		}
 		
 		builder.load(player);
