@@ -43,6 +43,17 @@ options:
     disable-block-place: true
     block-place-msg: "&f[&6Lobby&f]You're not allowed to do that here!"
     place-bypass-permission: "lobby.placeblocks"
+    
+tablist:
+  enabled: true
+  header:
+    - "header"
+    - "second line"
+    - "%player%"
+  footer:
+    - "footer"
+    - "second line"
+    - "third line"
 ```
 
 ### Commands
