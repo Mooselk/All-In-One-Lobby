@@ -27,7 +27,7 @@ public class Messages {
 	}
 
 	public void lobbyHelpReload(Player player) {
-		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Lobby&f] Reloadable configs: lobby, selector, playerhider"));
+		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Lobby&f] Reloadable configs: config, selector, playerhider"));
 	}
 	
 	public void npcHelp(Player player) {
