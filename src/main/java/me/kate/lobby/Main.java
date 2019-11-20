@@ -22,14 +22,14 @@ import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
-import me.kate.lobby.events.InteractNPCEvent;
-import me.kate.lobby.events.PlayerJoinEvents;
-import me.kate.lobby.events.PlayerLeaveEvents;
-import me.kate.lobby.events.world.BlockRelatedEvent;
-import me.kate.lobby.events.world.MobSpawnEvent;
-import me.kate.lobby.events.world.PlantGrowthEvent;
-import me.kate.lobby.events.world.TouchVoidEvent;
-import me.kate.lobby.events.world.WeatherBlockEvent;
+import me.kate.lobby.listeners.InteractNPCEvent;
+import me.kate.lobby.listeners.PlayerJoinEvents;
+import me.kate.lobby.listeners.PlayerLeaveEvents;
+import me.kate.lobby.listeners.world.BlockRelatedEvent;
+import me.kate.lobby.listeners.world.MobSpawnEvent;
+import me.kate.lobby.listeners.world.PlantGrowthEvent;
+import me.kate.lobby.listeners.world.TouchVoidEvent;
+import me.kate.lobby.listeners.world.WeatherBlockEvent;
 import me.kate.lobby.modules.jumppads.JumpPadInteractEvent;
 import me.kate.lobby.modules.portals.Portal;
 import me.kate.lobby.modules.portals.Position;
@@ -53,7 +53,6 @@ import me.kate.lobby.npcs.nms.v1_8_R2.TabList_v1_8_R2;
 import me.kate.lobby.npcs.nms.v1_8_R3.TabList_v1_8_R3;
 import me.kate.lobby.npcs.nms.v1_9_R1.TabList_v1_9_R1;
 import me.kate.lobby.npcs.nms.v1_9_R2.TabList_v1_9_R2;
-import me.kate.lobby.ping.Bungee;
 import me.kate.lobby.threads.PingNPCBackground;
 import me.kate.lobby.threads.PingSelectorBackground;
 import me.kate.lobby.utils.Logger;
@@ -63,10 +62,10 @@ public class Main extends JavaPlugin {
 	/*
 	 * * * * * TO-DO * * * * *
 	 * 
-	 * Reload configs
 	 * Fix portal selections (Make them per player) 
 	 * NPC setskin
 	 * Edit NPCs with commands
+	 * Fix persisting tablist (Shows on other servers)
 	 * 
 	 * * * * * * * * * * * *
 	 */
@@ -87,7 +86,7 @@ public class Main extends JavaPlugin {
 	public static final Map<String, Map<String, Object>> NPC_PLACEHOLDERS = new HashMap<>();
 
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
-	public static final Map<UUID, BukkitTask> TASKS = new HashMap<>();
+	public final Map<UUID, BukkitTask> TASKS = new HashMap<>();
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
 	public static final Map<String, Cuboid> PORTALS = new HashMap<>();
@@ -110,6 +109,10 @@ public class Main extends JavaPlugin {
 		return registry;
 	}
 	
+	public Map<UUID, BukkitTask> getTasks() {
+		return TASKS;
+	}
+	
 	@Override
 	public void onEnable() {
 		String version = getServer()
@@ -121,12 +124,12 @@ public class Main extends JavaPlugin {
 		registry = new NPCRegistry();
 		this.loadConfigs();
 		this.registerEvents();
-		this.registerChannel();
 		this.registerCommands();
 		this.startThreads();
 		this.npclib = new NPCLib(this);
 		this.portals.load();
 		this.loadNPCs();
+		this.registerChannel();
 		if (setupTablist()) {
 			Logger.info("[Lobby] Loaded TabList for version " + version);
 		} else {
@@ -178,14 +181,13 @@ public class Main extends JavaPlugin {
 		builder.build();
 	}
 
-	private void registerChannel() {
-		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
-		this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new Bungee());
-	}
-
 	private void startThreads() {
 		new PingSelectorBackground().start();
 		new PingNPCBackground().start();
+	}
+	
+	private void registerChannel() {
+		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
 	
 	private boolean setupTablist() {

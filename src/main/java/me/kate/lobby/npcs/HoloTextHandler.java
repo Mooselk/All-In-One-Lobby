@@ -1,18 +1,17 @@
-package me.kate.lobby.npcs.tasks;
+package me.kate.lobby.npcs;
 
 import org.bukkit.configuration.ConfigurationSection;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCConfig;
-import me.kate.lobby.npcs.PlayerCount;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Utils;
 
-public class HoloTextTask {
-
+public class HoloTextHandler {
+	
+	private final PlayerCount count = new PlayerCount();
 	private final IUtils utils = new Utils();
-	private PlayerCount count = new PlayerCount();
 
 	public void updateText(String serverName, String name) {
 		String playerCount = count.getPlayerCount(serverName);
@@ -28,7 +27,7 @@ public class HoloTextTask {
 		}
 	}
 
-	public void getHoloText() {
+	private void getHoloText() {
 		for (final String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
 			final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
 			NPC npcs = Main.getRegistry().getNPCObjects().get(name);

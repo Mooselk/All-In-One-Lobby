@@ -1,4 +1,4 @@
-package me.kate.lobby.events.world;
+package me.kate.lobby.listeners.world;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;

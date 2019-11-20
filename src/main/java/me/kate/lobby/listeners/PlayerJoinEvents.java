@@ -1,6 +1,4 @@
-package me.kate.lobby.events;
-
-import java.util.List;
+package me.kate.lobby.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -37,11 +35,7 @@ public class PlayerJoinEvents implements Listener {
 	private FileConfiguration hideConf = hideFile.getHideSettings();
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
 	private final IUtils utils = new Utils();
-	private FileConfiguration config = Main.getInstance().getConfig();
 	private NPCBuilder builder = new NPCBuilder();
-
-	private List<String> header = config.getStringList("tablist.header");
-	private List<String> footer = config.getStringList("tablist.footer");
 	
 	private ConfigurationSection hideSection = hideConf.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hideConf.getConfigurationSection("item.unhide");
@@ -53,8 +47,8 @@ public class PlayerJoinEvents implements Listener {
 			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
 		}
 		
-		if (config.getBoolean("tablist.enabled")) {
-			Main.getTabList().sendHeaderFooter(player, utils.replaceTab(header, player), utils.replaceTab(footer, player));
+		if (Main.getInstance().getConfig().getBoolean("tablist.enabled")) {
+			Main.getTabList().sendHeaderFooter(player);
 		}
 		
 		builder.load(player);
@@ -74,8 +68,10 @@ public class PlayerJoinEvents implements Listener {
 		ConfigurationSection hSection;
 		for (final Player player : Bukkit.getOnlinePlayers()) {
 			hSection = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
-			if (hSection.getBoolean("hidden")) {
-				player.hidePlayer(login);
+			if (hSection != null) {
+				if (hSection.getBoolean("hidden")) {
+					player.hidePlayer(login);
+				}
 			}
 		}
 	}

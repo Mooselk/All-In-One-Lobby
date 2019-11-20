@@ -1,4 +1,4 @@
-package me.kate.lobby.events;
+package me.kate.lobby.listeners;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
