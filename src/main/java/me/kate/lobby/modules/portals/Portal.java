@@ -19,9 +19,7 @@ public class Portal {
 	public Portal() {}
 	
 	public void load() {
-		if (!Main.PORTALS.isEmpty()) {
-			Main.PORTALS.clear();
-		}
+		if (!Main.PORTALS.isEmpty()) { Main.PORTALS.clear(); }
 		if (PortalsConfig.getPortalConfig().getConfigurationSection("portals") != null) {
 			for (String key : PortalsConfig.getPortalConfig().getConfigurationSection("portals").getKeys(false)) {
 				final ConfigurationSection section = PortalsConfig.getPortalConfig().getConfigurationSection("portals." + key);
@@ -80,23 +78,14 @@ public class Portal {
 		}
 	
 	public void create(Location pos1, Location pos2, String name, String world, String server) {
-		
 		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-1");
 		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-2");
 		config.set("portals." + name + ".world", world);
 		config.set("portals." + name + ".server", server);
-//		PortalsConfig.portalconf.set("portals." + name + ".loc-1.x", pos1.getBlockX());
-//		PortalsConfig.portalconf.set("portals." + name + ".loc-1.y", pos1.getBlockY());
-//		PortalsConfig.portalconf.set("portals." + name + ".loc-1.z", pos1.getBlockZ());
-//		PortalsConfig.portalconf.set("portals." + name + ".loc-2.x", pos2.getBlockX());
-//		PortalsConfig.portalconf.set("portals." + name + ".loc-2.y", pos2.getBlockY());
-//		PortalsConfig.portalconf.set("portals." + name + ".loc-2.z", pos2.getBlockZ());
 		PortalsConfig.save();
 		PortalsConfig.reload();
 		this.reload();
-		if (!Main.SELECTIONS.isEmpty()) {
-			Main.SELECTIONS.clear();
-		}
+		if (!Main.SELECTIONS.isEmpty()) { Main.SELECTIONS.clear(); }
 	}
 	
 	public void delete(String name) {

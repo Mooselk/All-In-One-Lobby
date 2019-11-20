@@ -24,27 +24,22 @@ import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Utils;
 
-public class NPCBuilder {
+public class NPCBuilder extends NPCRegistry {
 
 	private final IUtils utils = new Utils();
 	private final Messages msgs = new Messages();
-	private final NPCRegistry registry = Main.getRegistry();
 	private final FileConfiguration config = NPCConfig.getNPCConfig();
 	private SkinCache cache = new SkinCache();
-	
-	public NPCBuilder() {}
 
 	public void create(int skinId, String name, Location location, Player player) {
 		utils.npcToConfig(location, NPCConfig.getNPCConfig(), "npcs." + name, name, skinId);
 	}
 
 	public void load(Player player) {
-		for (Map.Entry<String, NPC> npcs : registry.getNPCObjects().entrySet()) {
+		for (Map.Entry<String, NPC> npcs : getNPCObjects().entrySet()) {
 			NPC npc = npcs.getValue();
 			Logger.debug("Showing NPC " + npc);
-			if (!npc.isShown(player)) {
-				npc.show(player);
-			}
+			if (!npc.isShown(player)) { npc.show(player); }
 		}
 	}
 
@@ -74,7 +69,7 @@ public class NPCBuilder {
 				}
 				this.applyItems(npc, name);
 				npc.create();
-				Bukkit.getScheduler().runTask(Main.getInstance(), () -> registry.addToRegistry(npc, name));
+				Bukkit.getScheduler().runTask(Main.getInstance(), () -> addToRegistry(npc, name));
 			}
 		}
 	}
@@ -164,19 +159,16 @@ public class NPCBuilder {
 	
 	public void reloadNPCs(Player player, boolean msg) {
 		destroyAll(player);
-		registry.clearRegistry();
+		clearRegistry();
 		NPCConfig.reload();
 		build();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				showAll(true, player);
-				if (msg) {
-					msgs.send("&f[&6NPC&f] Reload complete!", player);
-				}
+				if (msg) { msgs.send("&f[&6NPC&f] Reload complete!", player); }
 			}
-
-		}.runTaskLater(Main.getInstance(), 20);
+		}.runTaskLater(Main.getInstance(), 1);
 	}
 	
 	public void setSkin() {
@@ -194,53 +186,30 @@ public class NPCBuilder {
 
 	public void destroy(String name) {
 		if (Main.getRegistry().getNPCInfo().containsValue(name)) {
-			NPC npcs = getNPCById(getValue(registry.getNPCInfo(), name));
+			NPC npcs = getNPCById(getValue(getNPCInfo(), name));
 			npcs.destroy();
 		}
 	}
 
-	public String getValue(Map<String, String> map, String value) {
-		for (Map.Entry<String, String> s : map.entrySet()) {
-			if (s.getValue().equalsIgnoreCase(value)) {
-				String key = s.getKey();
-				return key;
-			}
-		}
-		return null;
-	}
-
-	public NPC getNPCById(String id) {
-		for (NPC npc : NPCManager.getAllNPCs()) {
-			if (npc.getId().equals(id)) {
-				return npc;
-			}
-		}
-		return null;
-	}
-
 	public void destroyAll(Player player) {
-		for (Map.Entry<String, NPC> name : registry.getNPCObjects().entrySet()) {
+		for (Map.Entry<String, NPC> name : getNPCObjects().entrySet()) {
 			NPC npc = name.getValue();
 			npc.destroy();
 		}
-		registry.clearRegistry();
+		clearRegistry();
 	}
 
 	public void showAll(boolean update, Player player) {
 		if (update) {
 			for (Player online : Bukkit.getOnlinePlayers()) {
 				for (NPC npc : NPCManager.getAllNPCs()) {
-					if (!npc.isShown(online)) {
-						npc.show(online);
-					}
+					if (!npc.isShown(online)) { npc.show(online); }
 				}
 			}
 		}
 		if (!update && player != null) {
 			for (NPC npc : NPCManager.getAllNPCs()) {
-				if (!npc.isShown(player)) {
-					npc.show(player);
-				}
+				if (!npc.isShown(player)) { npc.show(player); }
 			}
 		}
 	}

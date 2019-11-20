@@ -22,7 +22,7 @@ public class WandInteractEvent implements Listener {
 		final Player player = event.getPlayer();
 		if (player.hasPermission("lobby.portal.create") || player.isOp()) {
 			final ItemStack wand = PortalWand.WAND;
-			if (event.getItem() == null) {return;}
+			if (event.getItem() == null) { return; }
 			if (event.getItem().equals(wand)) {
 				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 					Location pos1 = event.getClickedBlock().getLocation();

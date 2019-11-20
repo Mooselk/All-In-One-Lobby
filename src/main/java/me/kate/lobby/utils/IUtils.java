@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public interface IUtils {
+	
 	List<String> replaceLore(List<String> lore, int max, int online, int ping, boolean noPing);
 
 	String replace(String in, ConfigurationSection section, int max, int online, int ping);
@@ -27,4 +28,5 @@ public interface IUtils {
 	void npcToConfig(Location location, FileConfiguration config, String path, String npcName, int skinId);
 	
 	String replaceTab(List<String> lines, Player player);
+	
 }

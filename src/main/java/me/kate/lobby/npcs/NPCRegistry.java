@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import me.kate.lobby.npcs.api.NPC;
+import me.kate.lobby.npcs.internal.NPCManager;
 import me.kate.lobby.utils.Logger;
 
 public class NPCRegistry {
 	
-	private final Map<String, String> NPCINFO = new HashMap<>();
-	private final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
-	private final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
-	private final NPCBuilder builder = new NPCBuilder();
+	private static final Map<String, String> NPCINFO = new HashMap<>();
+	private static final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
+	private static final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
 	
 	public void addToRegistry(NPC npc, String name) {
 		Logger.debug("Adding NPC: " + npc + " with name " + name + " to NPCRegistry");
@@ -44,7 +44,24 @@ public class NPCRegistry {
 		}
 		
 		if (NPCINFO.containsValue(name)) {
-			NPCINFO.remove(builder.getValue(NPCINFO, name));
+			NPCINFO.remove(getValue(NPCINFO, name));
 		}
+	}
+	
+	public String getValue(Map<String, String> map, String value) {
+		for (Map.Entry<String, String> s : map.entrySet()) {
+			if (s.getValue().equalsIgnoreCase(value)) {
+				String key = s.getKey();
+				return key;
+			}
+		}
+		return null;
+	}
+
+	public NPC getNPCById(String id) {
+		for (NPC npc : NPCManager.getAllNPCs()) {
+			if (npc.getId().equals(id)) { return npc; }
+		}
+		return null;
 	}
 }

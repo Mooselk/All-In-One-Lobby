@@ -39,8 +39,7 @@ public final class NPCLib {
         this.npcClass = npcClass;
 
         if (npcClass == null) {
-            logger.severe("Failed to initiate. Your server's version ("
-                    + versionName + ") is not supported");
+            logger.severe("Failed to initiate. Your server's version (" + versionName + ") is not supported");
             return;
         }
 
