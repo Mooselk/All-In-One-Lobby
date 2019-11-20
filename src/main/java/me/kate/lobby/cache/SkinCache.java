@@ -18,10 +18,7 @@ public class SkinCache {
 	}
 	
 	public boolean isCached(int skinId) {
-		if (config.contains(String.valueOf(skinId))) {
-			return true;
-		}
-		return false;		
+		return config.contains(String.valueOf(skinId));		
 	}
 
 	public Skin getSkin(int skinId) {
@@ -33,7 +30,7 @@ public class SkinCache {
 			return new Skin(value, signature);
 		} else {
 			Logger.severe("Couldn't load skin '" + skinId + "'");
-			Logger.severe("	- Skin was not found or failed to cache");
+			Logger.severe("	- Skin was not found or failed to cache!");
 		}
 		return null;
 	}
