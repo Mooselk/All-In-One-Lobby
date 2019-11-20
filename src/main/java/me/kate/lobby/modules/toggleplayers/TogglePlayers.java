@@ -28,7 +28,7 @@ public class TogglePlayers implements Hideable {
 		}
 		section = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
 		playerSettings.save();
-		section.set("hidden", true);
+		section.set("hidden", false);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class TogglePlayers implements Hideable {
 		}
 		section = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
 		playerSettings.save();
-		section.set("hidden", false);
+		section.set("hidden", true);
 	}
 
 	@Override
