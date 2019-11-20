@@ -1,7 +1,6 @@
 package me.kate.lobby.modules.selector.events;
 
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -15,22 +14,20 @@ import me.kate.lobby.modules.portals.utils.SendToServer;
 import me.kate.lobby.modules.selector.Selector;
 import net.md_5.bungee.api.ChatColor;
 
-public class SelectorGuiEvents implements Listener {
+public class SelectorGuiEvents extends Selector implements Listener {
 
 	private ISelectorSettings selectorFile = new SelectorConfig();
-	private FileConfiguration config = selectorFile.getSelectorFile();
-	private final Selector selector = new Selector();
 
 	@EventHandler
 	public void onClick(final InventoryClickEvent event) {
 		final Player player = (Player) event.getWhoClicked();
 		int slot = event.getSlot();
-		ConfigurationSection sec = config.getConfigurationSection("selector." + slot);
+		ConfigurationSection sec = selectorFile.getSelectorFile().getConfigurationSection("selector." + slot);
 		if (sec == null) {
 			return;
 		}
 		if (event.getSlot() == slot) {
-			if (!sec.getBoolean("decoration") && selector.isServerOnline(slot)) {
+			if (!sec.getBoolean("decoration") && isServerOnline(slot)) {
 				if (!sec.getString("message").equalsIgnoreCase("none")) {
 					player.sendMessage(ChatColor.translateAlternateColorCodes('&', sec.getString("message")));
 				}
@@ -38,9 +35,9 @@ public class SelectorGuiEvents implements Listener {
 						&& (!sec.getString("connect").equalsIgnoreCase("menuclose"))) {
 					SendToServer.send(player, sec.getString("connect"));
 				} else {
-					selector.close(player);
+					close(player);
 				}
-				selector.close(player);
+				close(player);
 			}
 			if (!event.getInventory().getType().equals(InventoryType.PLAYER)) {
 				event.setCancelled(true);
@@ -51,6 +48,6 @@ public class SelectorGuiEvents implements Listener {
 	@EventHandler
 	public void closeInventory(final InventoryCloseEvent event) {
 		final Player player = (Player) event.getPlayer();
-		selector.onClose(player);
+		onClose(player);
 	}
 }

@@ -15,7 +15,7 @@ public class SelectorConfig implements ISelectorSettings {
 	
 	private static File selector;
 	private static FileConfiguration selectorConf;
-	private boolean failed;
+	private boolean success;
 	
 	
 	public SelectorConfig() {
@@ -69,24 +69,25 @@ public class SelectorConfig implements ISelectorSettings {
 	}
 	
 	@Override
-	public void reload() {
+	public boolean reload() {
 		selector = null;
 		selectorConf = null;
 		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
 		selectorConf = new YamlConfiguration();
 		try {
 			selectorConf.load(selector);
-			failed = false;
+			success = true;
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
-			failed = true;
+			success = false;
 			e.printStackTrace();
 		}
+		return success;
 	}
 	
 	@Override
 	public boolean reloadFailed() {
-		return failed;
+		return success;
 	}
 
 	@Override

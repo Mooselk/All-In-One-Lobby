@@ -13,6 +13,7 @@ public class Config {
 
 	private static File conf;
 	private static FileConfiguration config;
+	private static boolean success;
 
 	public static void createConfig() {
 		conf = new File(Main.getInstance().getDataFolder(), "config.yml");
@@ -26,5 +27,20 @@ public class Config {
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static boolean reload() {
+		conf = null;
+		config = null;
+		conf = new File(Main.getInstance().getDataFolder(), "config.yml");
+		config = new YamlConfiguration();
+		try {
+			config.load(conf);
+			success = true;
+		} catch (IOException | InvalidConfigurationException e) {
+			e.printStackTrace();
+			success = false;
+		}
+		return success;
 	}
 }

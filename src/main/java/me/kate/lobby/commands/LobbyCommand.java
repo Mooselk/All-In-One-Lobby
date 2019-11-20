@@ -6,12 +6,20 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
+import me.kate.lobby.data.Config;
+import me.kate.lobby.data.files.HidePlayersConfig;
+import me.kate.lobby.data.files.SelectorConfig;
+import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
+import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.modules.Spawn;
 
 public class LobbyCommand implements CommandExecutor {
 
 	private final Messages msgs = new Messages();
+	private ISelectorSettings selector = new SelectorConfig();
+	private IHidePlayerSettings hider = new HidePlayersConfig();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -53,13 +61,21 @@ public class LobbyCommand implements CommandExecutor {
 						if (args.length > 1) {
 							switch (args[1]) {
 							case "playerhider":
-								msgs.send("playerhider", player);
+								if (hider.reload())
+									msgs.send("Successfully reloaded playerhider", player);
+								else msgs.send("Failed to reload playerhider", player);
 								break;
 							case "selector":
-								msgs.send("selector", player);
+								if (selector.reload())
+									msgs.send("Successfully reloaded selector", player);
+								else msgs.send("Failed to reload selector", player);
 								break;
-							case "lobby":
-								msgs.send("lobby", player);
+							case "config":
+								if (Config.reload()) {
+									Main.getInstance().reloadConfig();
+									Main.getTabList().update();
+									msgs.send("Successfully reloaded config", player);
+								} else msgs.send("Failed to reload config", player);
 								break;
 							default:
 							}
@@ -72,16 +88,4 @@ public class LobbyCommand implements CommandExecutor {
 		}
 		return false;
 	}
-	
-//	private void reload(String conf) {
-//		if (conf.equalsIgnoreCase("selector")) {
-//			
-//		}
-//		if (conf.equalsIgnoreCase("playerhider")) {
-//			
-//		}
-//		if (conf.equalsIgnoreCase("lobby")) {
-//			
-//		}
-//	}
 }

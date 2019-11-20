@@ -7,7 +7,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -25,10 +24,9 @@ public class Selector {
 
 	private BukkitTask refreshTimer;
 	
-	private static ISelectorSettings selectorFile = new SelectorConfig();
-	private static FileConfiguration selectorConf = selectorFile.getSelectorFile();
-	private Inventory inv = Bukkit.createInventory(null, selectorConf.getInt("selector.options.rows") * 9,
-			ChatColor.translateAlternateColorCodes('&', selectorConf.getString("selector.options.name")));
+	private ISelectorSettings selectorFile = new SelectorConfig();
+	private Inventory inv = Bukkit.createInventory(null, selectorFile.getSelectorFile().getInt("selector.options.rows") * 9,
+			ChatColor.translateAlternateColorCodes('&', selectorFile.getSelectorFile().getString("selector.options.name")));
 
 	private final IUtils utils = new Utils();
 
@@ -42,29 +40,25 @@ public class Selector {
 		refreshTimer = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
 			this.update();
 		}, 1 * 20, 1 * 20);
-		Main.TASKS.put(player.getUniqueId(), refreshTimer);
+		Main.getInstance().getTasks().put(player.getUniqueId(), refreshTimer);
 	}
 
 	public void close(Player player) {
-		BukkitTask bukkitTask = Main.TASKS.remove(player.getUniqueId());
-		if (bukkitTask != null) {
-			bukkitTask.cancel();
-		}
+		BukkitTask bukkitTask = Main.getInstance().getTasks().remove(player.getUniqueId());
+		if (bukkitTask != null) { bukkitTask.cancel(); }
 		player.closeInventory();
 	}
 
 	public void onClose(Player player) {
-		BukkitTask bukkitTask = Main.TASKS.remove(player.getUniqueId());
-		if (bukkitTask != null) {
-			bukkitTask.cancel();
-		}
+		BukkitTask bukkitTask = Main.getInstance().getTasks().remove(player.getUniqueId());
+		if (bukkitTask != null) { bukkitTask.cancel(); }
 	}
 
 	public void update() {
-		for (final String key : selectorConf.getConfigurationSection("selector").getKeys(false)) {
+		for (final String key : selectorFile.getSelectorFile().getConfigurationSection("selector").getKeys(false)) {
 			final ItemStack i = new ItemStack(Material.AIR);
 			if (!key.equals("options")) {
-				final ConfigurationSection section = selectorConf.getConfigurationSection("selector." + key);
+				final ConfigurationSection section = selectorFile.getSelectorFile().getConfigurationSection("selector." + key);
 				if (!section.getBoolean("decoration")) {
 					List<String> lore = null;
 					if (section.getBoolean("server.ping-server")) {
@@ -126,7 +120,7 @@ public class Selector {
 	
 	public boolean isServerOnline(int slot) {
 		boolean isOnline = false;
-		ConfigurationSection sec = selectorConf.getConfigurationSection("selector." + slot);
+		ConfigurationSection sec = selectorFile.getSelectorFile().getConfigurationSection("selector." + slot);
 		if (sec.getBoolean("server.ping-server")) {
 			String serverName = sec.getString("server.server-id");
 			Map<String, Object> placeholders = null;

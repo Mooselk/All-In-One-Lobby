@@ -16,6 +16,7 @@ public class HidePlayersConfig implements IHidePlayerSettings {
 
 	private static File hideSettings;
 	private static FileConfiguration hideSettingsConf;
+	private boolean success;
 
 	@Override
 	public void create() {
@@ -65,13 +66,20 @@ public class HidePlayersConfig implements IHidePlayerSettings {
 	}
 
 	@Override
-	public void reload() {
+	public boolean reload() {
+		hideSettings = null;
+		hideSettingsConf = null;
+		hideSettings = new File(Main.getInstance().getDataFolder(), "hideplayers.yml");
+		hideSettingsConf = new YamlConfiguration();
 		try {
 			hideSettingsConf.load(hideSettings);
+			success = true;
 		} catch (InvalidConfigurationException | IOException e) {
 			Bukkit.getLogger().severe("[Lobby] Error updating hideplayers.yml!");
+			success = false;
 			e.printStackTrace();
 		}
+		return success;
 	}
 
 	@Override

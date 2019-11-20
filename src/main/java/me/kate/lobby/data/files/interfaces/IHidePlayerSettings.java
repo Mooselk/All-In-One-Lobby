@@ -12,7 +12,7 @@ public interface IHidePlayerSettings {
 	
 	void save();
 
-	void reload();
+	boolean reload();
 
 	String getHideMessage();
 

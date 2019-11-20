@@ -10,7 +10,7 @@ public interface ISelectorSettings {
 	
 	void save();
 	
-	void reload();
+	boolean reload();
 	
 	boolean reloadFailed();
 	

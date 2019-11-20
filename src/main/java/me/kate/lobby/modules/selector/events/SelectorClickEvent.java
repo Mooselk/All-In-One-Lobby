@@ -1,7 +1,6 @@
 package me.kate.lobby.modules.selector.events;
 
 import org.bukkit.Material;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,17 +11,16 @@ import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
 import me.kate.lobby.modules.selector.Selector;
 
-public class SelectorClickEvent implements Listener {
+public class SelectorClickEvent extends Selector implements Listener {
 
-	private ISelectorSettings selectorFile = new SelectorConfig();
-	private FileConfiguration config = selectorFile.getSelectorFile();
+	private ISelectorSettings selector = new SelectorConfig();
 	
 	@EventHandler
 	public void onPlayerInteractEvent(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
-		if (player.getItemInHand().getType().equals(Material.getMaterial(config.getConfigurationSection("selector.options").getString("material")))) {
-			final Selector compass = new Selector();
-			compass.open(player);
+		if (player.getItemInHand().getType().equals(
+				Material.getMaterial(selector.getSelectorFile().getConfigurationSection("selector.options").getString("material")))) {
+			open(player);
 		}
 	}
 	
