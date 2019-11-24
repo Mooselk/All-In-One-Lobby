@@ -53,8 +53,7 @@ import me.kate.lobby.npcs.nms.v1_8_R2.TabList_v1_8_R2;
 import me.kate.lobby.npcs.nms.v1_8_R3.TabList_v1_8_R3;
 import me.kate.lobby.npcs.nms.v1_9_R1.TabList_v1_9_R1;
 import me.kate.lobby.npcs.nms.v1_9_R2.TabList_v1_9_R2;
-import me.kate.lobby.threads.PingNPCBackground;
-import me.kate.lobby.threads.PingSelectorBackground;
+import me.kate.lobby.servers.Servers;
 import me.kate.lobby.utils.Logger;
 
 public class Main extends JavaPlugin {
@@ -84,6 +83,7 @@ public class Main extends JavaPlugin {
 
 	public static final Map<String, Map<String, Object>> SELECTOR_PLACEHOLDERS = new HashMap<>();
 	public static final Map<String, Map<String, Object>> NPC_PLACEHOLDERS = new HashMap<>();
+	public static final Map<String, Map<String, Object>> PLACEHOLDERS = new HashMap<>();
 
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public final Map<UUID, BukkitTask> TASKS = new HashMap<>();
@@ -125,11 +125,12 @@ public class Main extends JavaPlugin {
 		this.loadConfigs();
 		this.registerEvents();
 		this.registerCommands();
-		this.startThreads();
+		// this.startThreads();
 		this.npclib = new NPCLib(this);
 		this.portals.load();
 		this.loadNPCs();
 		this.registerChannel();
+		this.setupServers();
 		if (setupTablist()) {
 			Logger.info("[Lobby] Loaded TabList for version " + version);
 		} else {
@@ -181,9 +182,11 @@ public class Main extends JavaPlugin {
 		builder.build();
 	}
 
-	private void startThreads() {
-		new PingSelectorBackground().start();
-		new PingNPCBackground().start();
+	private void setupServers() {
+		final Servers servers = new Servers();
+		servers.loadServers();
+		servers.getCountAsync();
+		servers.startNPCTask();
 	}
 	
 	private void registerChannel() {

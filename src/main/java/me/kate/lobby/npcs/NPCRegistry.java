@@ -12,6 +12,7 @@ public class NPCRegistry {
 	
 	private static final Map<String, String> NPCINFO = new HashMap<>();
 	private static final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
+	private static final Map<String, String> SERVER_ASSOCIATION = new HashMap<>();
 	private static final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
 	
 	public void addToRegistry(NPC npc, String name) {
@@ -21,6 +22,7 @@ public class NPCRegistry {
 	}
 	
 	public void clearRegistry() {
+		if (!SERVER_ASSOCIATION.isEmpty()) { SERVER_ASSOCIATION.clear(); }
 		if (!NPCS_OBJECT.isEmpty()) { NPCS_OBJECT.clear(); }
 		if (!HOLOTEXT.isEmpty()) { HOLOTEXT.clear(); }
 		if (!NPCINFO.isEmpty()) { NPCINFO.clear(); }
@@ -32,6 +34,10 @@ public class NPCRegistry {
 	
 	public Map<String, String> getNPCInfo() {
 		return NPCINFO;
+	}
+	
+	public Map<String, String> getAssociation() {
+		return SERVER_ASSOCIATION;
 	}
 	
 	public Map<NPC, ArrayList<String>> getNPCHoloText() {
