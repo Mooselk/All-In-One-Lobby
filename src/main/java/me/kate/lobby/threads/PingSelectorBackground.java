@@ -40,7 +40,7 @@ public class PingSelectorBackground extends Thread {
 						if (ms.isServerUp()) {
 							serverInfo.put("online", ms.getCurrentPlayers());
 							serverInfo.put("max", ms.getMaximumPlayers());
-							serverInfo.put("ping", ms.getLatency());
+							// serverInfo.put("ping", ms.getLatency());
 						}
 						Main.SELECTOR_PLACEHOLDERS.put(serverName, serverInfo);
 					}
