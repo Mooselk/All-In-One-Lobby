@@ -8,7 +8,6 @@ import java.util.Map;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -43,20 +42,15 @@ public class Utils implements IUtils {
 	}
 
 	@Override
-	public List<String> replaceLore(List<String> lore, int max, int online, int ping, boolean noPing) {
+	public List<String> replaceLore(List<String> lore, int max, int online) {
 		ArrayList<String> mlore = null; mlore = new ArrayList<String>();
 		for (String l : lore) {
 			String out = l;
-			if (!noPing) {
-				if (l.contains("%online%")) {
-					out = out.replaceAll("%online%", String.valueOf(online));
-				}
-				if (l.contains("%max%")) {
-					out = out.replaceAll("%max%", String.valueOf(max));
-				}
-				if (l.contains("%ping%")) {
-					out = out.replaceAll("%ping%", String.valueOf(ping) + "ms");
-				}
+			if (l.contains("%online%")) {
+				out = out.replaceAll("%online%", String.valueOf(online));
+			}
+			if (l.contains("%max%")) {
+				out = out.replaceAll("%max%", String.valueOf(max));
 			}
 			mlore.add(ChatColor.translateAlternateColorCodes('&', out));
 		}
@@ -64,7 +58,7 @@ public class Utils implements IUtils {
 	}
 
 	@Override
-	public String replace(String in, ConfigurationSection section, int max, int online, int ping) {
+	public String replace(String in, int max, int online, int ping) {
 		String out = in;
 		if (max != 0 || online != 0 || ping != 0) {
 			if (in.contains("%online%")) {
@@ -87,7 +81,7 @@ public class Utils implements IUtils {
 				out = out.replaceAll("%ping%", "Offline");
 			}
 		}
-		return out;
+		return ChatColor.translateAlternateColorCodes('&', out);
 	}
 	
 	@Override
