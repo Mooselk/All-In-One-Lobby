@@ -29,7 +29,7 @@ public class NPCBuilder extends NPCRegistry {
 	private final IUtils utils = new Utils();
 	private final Messages msgs = new Messages();
 	private final FileConfiguration config = NPCConfig.getNPCConfig();
-	private SkinCache cache = new SkinCache();
+	private SkinCache skinCache = new SkinCache();
 
 	public void create(int skinId, String name, Location location, Player player) {
 		utils.npcToConfig(location, NPCConfig.getNPCConfig(), "npcs." + name, name, skinId);
@@ -57,14 +57,14 @@ public class NPCBuilder extends NPCRegistry {
 				loc.setPitch(section.getInt("location.pitch"));
 				loc.setYaw(section.getInt("location.yaw"));
 				npc.setLocation(loc);
-				if (!cache.isCached(skinId)) {
+				if (!skinCache.isCached(skinId)) {
 					MineSkinFetcher.fetchSkinFromIdAsync(skinId, skin -> {
 						Logger.debug("Caching new skin '" + skinId + "'");
-						cache.toConfig(skin, skinId);
+						skinCache.toConfig(skin, skinId);
 						npc.setSkin(skin);
 					});
 				} else {
-					npc.setSkin(cache.getSkin(skinId));
+					npc.setSkin(skinCache.getSkin(skinId));
 					Logger.debug("Loaded NPC '" + name + "' from skin cache");
 				}
 				this.applyItems(npc, name);
