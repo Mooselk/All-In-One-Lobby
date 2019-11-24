@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +30,7 @@ public class TogglePlayersEvent implements Listener {
 	private IHidePlayerSettings hideSettings = new HidePlayersConfig();
 	private final CooldownManager cooldownManager = new CooldownManager();
 	private final Messages msgs = new Messages();
-	
+
 	private final IUtils utils = new Utils();
 
 	private IHidePlayerSettings hideFile = new HidePlayersConfig();
@@ -45,69 +46,68 @@ public class TogglePlayersEvent implements Listener {
 	private long lastMessage;
 	private long lastEnableMessage;
 
-	private ItemStack hide = new ItemBuilder(Material.getMaterial(
-			hideSection.getString("material")), 1)
-			.setName(ChatColor.translateAlternateColorCodes('&', 
-			hideSection.getString("name")))
-			.toItemStack();
-	private ItemStack unhide = new ItemBuilder(Material.getMaterial(
-			unhideSection.getString("material")))
-			.setName(ChatColor.translateAlternateColorCodes('&', 
-			unhideSection.getString("name")))
-			.toItemStack();
-	private ItemStack selector = new ItemBuilder(Material.getMaterial(
-			selectorConf.getConfigurationSection("selector.options").getString("material")))
-			.setName(ChatColor.translateAlternateColorCodes('&', selectorConf.getConfigurationSection("selector.options").getString("item-name")))
-			.setLore(utils.colorParser(selectorConf.getConfigurationSection("selector.options").getStringList("lore")))
-			.toItemStack();
+	private ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")), 1)
+			.setName(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name"))).toItemStack();
+	private ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
+			.setName(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name"))).toItemStack();
+	private ItemStack selector = new ItemBuilder(
+			Material.getMaterial(selectorConf.getConfigurationSection("selector.options").getString("material")))
+					.setName(ChatColor.translateAlternateColorCodes('&',
+							selectorConf.getConfigurationSection("selector.options").getString("item-name")))
+					.setLore(utils.colorParser(
+							selectorConf.getConfigurationSection("selector.options").getStringList("lore")))
+					.toItemStack();
 
 	@EventHandler
 	public void onInteract(final PlayerInteractEvent e) {
 		final Player p = e.getPlayer();
 		ConfigurationSection hSection = null;
-
-		if (p.getItemInHand().getType().equals(Material.getMaterial(hideSection.getString("material")))) {
-			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
-			long now = System.currentTimeMillis();
-			if (timeLeft == 0) {
-				cooldownManager.startCooldown(p, hideFile.getCooldownLength());
-				playerToggle.hide(p, hSection);
-				p.getInventory().setItem(2, unhide);
-				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
-					lastMessage = now;
-					msgs.send(hideSettings.getHideMessage(), p);
+		if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			if (p.getItemInHand().getType().equals(Material.getMaterial(hideSection.getString("material")))) {
+				int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
+				long now = System.currentTimeMillis();
+				if (timeLeft == 0) {
+					cooldownManager.startCooldown(p, hideFile.getCooldownLength());
+					playerToggle.hide(p, hSection);
+					p.getInventory().setItem(2, unhide);
+					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
+						lastMessage = now;
+						msgs.send(hideSettings.getHideMessage(), p);
+					}
+				} else {
+					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
+						lastMessage = now;
+						msgs.send(hideSettings.getCooldownMessage(timeLeft), p);
+					}
 				}
-			} else {
-				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
-					lastMessage = now;
-					msgs.send(hideSettings.getCooldownMessage(timeLeft), p);
-				}
+				e.setCancelled(true);
 			}
-			e.setCancelled(true);
 		}
 
-		if (p.getItemInHand().getType().equals(Material.getMaterial(unhideSection.getString("material")))) {
-			int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
-			if (timeLeft == 0) {
-				cooldownManager.startCooldown(p, hideFile.getCooldownLength());
-				playerToggle.unhide(p, hSection);
-				p.getInventory().setItem(2, hide);
-				long nowEnable = System.currentTimeMillis();
-				if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
-					lastEnableMessage = nowEnable;
-					msgs.send(hideSettings.getUnhideMessage(), p);
+		if (e.getAction().equals(Action.RIGHT_CLICK_AIR) || e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			if (p.getItemInHand().getType().equals(Material.getMaterial(unhideSection.getString("material")))) {
+				int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
+				if (timeLeft == 0) {
+					cooldownManager.startCooldown(p, hideFile.getCooldownLength());
+					playerToggle.unhide(p, hSection);
+					p.getInventory().setItem(2, hide);
+					long nowEnable = System.currentTimeMillis();
+					if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
+						lastEnableMessage = nowEnable;
+						msgs.send(hideSettings.getUnhideMessage(), p);
+					}
+				} else {
+					long now = System.currentTimeMillis();
+					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
+						lastMessage = now;
+						msgs.send(hideSettings.getCooldownMessage(timeLeft), p);
+					}
 				}
-			} else {
-				long now = System.currentTimeMillis();
-				if ((now - lastMessage) > MESSAGE_THRESHOLD) {
-					lastMessage = now;
-					msgs.send(hideSettings.getCooldownMessage(timeLeft), p);
-				}
+				e.setCancelled(true);
 			}
-			e.setCancelled(true);
 		}
 	}
-	
+
 	@EventHandler
 	public void onClick(final InventoryClickEvent e) {
 		ItemStack i = e.getCurrentItem();
