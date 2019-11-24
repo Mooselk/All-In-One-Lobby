@@ -9,6 +9,7 @@ import org.bukkit.Color;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
@@ -102,6 +103,16 @@ public class ItemBuilder {
 	 */
 	public ItemBuilder addUnsafeEnchantment(Enchantment ench, int level) {
 		is.addUnsafeEnchantment(ench, level);
+		return this;
+	}
+	
+	public ItemBuilder setEnchanted(boolean bool) {
+		ItemMeta im = is.getItemMeta();
+		if (bool) {
+			im.addEnchant(Enchantment.DURABILITY, 1, true);
+			im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+			is.setItemMeta(im);
+		}
 		return this;
 	}
 
