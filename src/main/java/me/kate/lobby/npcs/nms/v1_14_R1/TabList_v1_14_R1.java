@@ -41,12 +41,12 @@ public class TabList_v1_14_R1 implements TabList {
         
         try {
         	
-            Field headerField = packet.getClass().getDeclaredField("a");
+            Field headerField = packet.getClass().getDeclaredField("header");
             headerField.setAccessible(true);
             headerField.set(packet, tabHeader);
             headerField.setAccessible(false);
             
-            Field footerField = packet.getClass().getDeclaredField("b");
+            Field footerField = packet.getClass().getDeclaredField("footer");
             footerField.setAccessible(true);
             footerField.set(packet, tabFooter);
             footerField.setAccessible(false);
