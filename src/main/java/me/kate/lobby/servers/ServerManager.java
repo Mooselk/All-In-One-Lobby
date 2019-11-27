@@ -10,24 +10,24 @@ import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.ping.MineStat;
 
 public class ServerManager {
-	
+
 	private Map<String, MineStat> serverInfo = new HashMap<>();
-	
+
 	/**
-	 * Get entire map
+	 * @returns serverInfo map
 	 */
 	public Map<String, MineStat> getServerInfo() {
 		return serverInfo;
 	}
-	
+
 	/**
-	 * Puts server name and
-	 * MineStat object into a map
-	 * from configuration
+	 * Puts server name and MineStat object into a map from configuration
 	 */
-	
+
 	public void loadServers() {
-		if (!serverInfo.isEmpty()) { this.clearServers(); }
+		if (!serverInfo.isEmpty()) {
+			this.clearServers();
+		}
 		for (String key : Main.getInstance()
 				.getConfig()
 				.getConfigurationSection("servers.")
@@ -42,20 +42,21 @@ public class ServerManager {
 		}
 		this.loadNPCAssosiation();
 	}
+
+	/**
+	 * For each NPC in the NPC config If live-player-count is true add the server
+	 * associated with said NPC, used later to update text
+	 */
 	
 	public void loadNPCAssosiation() {
-		if (!Main.getRegistry().getAssociation().isEmpty()) { 
-			Main.getRegistry().getAssociation().clear(); }
-		if (NPCConfig
-				.getNPCConfig()
-				.getConfigurationSection("npcs") != null) {
-			for (final String name : NPCConfig
-					.getNPCConfig()
+		if (!Main.getRegistry().getAssociation().isEmpty()) {
+			Main.getRegistry().getAssociation().clear();
+		}
+		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
+			for (final String name : NPCConfig.getNPCConfig()
 					.getConfigurationSection("npcs")
 					.getKeys(false)) {
-				final ConfigurationSection section = NPCConfig
-						.getNPCConfig()
-						.getConfigurationSection("npcs." + name + ".server");
+				final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name + ".server");
 				if (section.getBoolean("live-player-count")) {
 					String serverName = section.getString("server-name");
 					String npcName = name;
@@ -64,19 +65,17 @@ public class ServerManager {
 			}
 		}
 	}
-	
+
 	/**
 	 * Clear map
 	 */
 	public void clearServers() {
 		serverInfo.clear();
 	}
-	
+
 	/**
-	 * Get specific server
-	 * returns MineStat object
+	 * Gets specific server @returns MineStat object
 	 */
-	
 	public MineStat getServer(String server) {
 		return serverInfo.get(server);
 	}
