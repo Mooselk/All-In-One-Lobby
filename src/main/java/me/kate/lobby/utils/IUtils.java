@@ -6,15 +6,12 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 public interface IUtils {
 	
 	List<String> replaceLore(List<String> lore, int max, int online);
 
 	String replace(String in, int max, int online, int ping);
-
-	ItemStack itemStackBuilder(String mat, ItemStack item, String displayName, List<String> lore, boolean enchanted, int type);
 	
 	ArrayList<String> colorParser(List<String> list);
 	

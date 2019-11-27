@@ -7,33 +7,13 @@ import java.util.Map;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import me.kate.lobby.data.files.NPCConfig;
 
 public class Utils implements IUtils {
 
-	@Override
-	public ItemStack itemStackBuilder(String mat, ItemStack item, String displayName, List<String> lore,
-			boolean enchanted, int data) {
-		item = new ItemStack(Material.getMaterial(mat), 1, (short) data);
-		ItemMeta im = (ItemMeta) item.getItemMeta();
-		im.setDisplayName(ChatColor.translateAlternateColorCodes('&', displayName));
-		if (enchanted) {
-			im.addEnchant(Enchantment.DURABILITY, 1, true);
-			im.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		}
-		im.setLore(lore);
-		item.setItemMeta(im);
-		return item;
-	}
-	
 	@Override
 	public String replacePlayer(String in, Player player) {
 		String out = in.replaceAll("%player%", player.getName());

@@ -5,7 +5,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 
 import me.kate.lobby.data.files.SelectorConfig;
@@ -43,11 +42,5 @@ public class SelectorGuiEvents extends Selector implements Listener {
 				event.setCancelled(true);
 			}
 		}
-	}
-
-	@EventHandler
-	public void closeInventory(final InventoryCloseEvent event) {
-		final Player player = (Player) event.getPlayer();
-		onClose(player);
 	}
 }

@@ -12,8 +12,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
-
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.interfaces.ISelectorSettings;
@@ -24,9 +22,6 @@ import me.kate.lobby.utils.Utils;
 
 public class Selector {
 
-	private static final int DELAY = 3;
-	
-	private BukkitTask refreshTimer;
 
 	private final ISelectorSettings selectorFile = new SelectorConfig();
 	private Inventory inv = Bukkit.createInventory(null,
@@ -37,36 +32,22 @@ public class Selector {
 	private Map <Integer, ItemStack> itemsOffline = new HashMap<>();
 	private Map <Integer, ItemStack> itemsDeco = new HashMap<>();
 	private final IUtils utils = new Utils();
+	private int instances = 1;
 
 	public Selector() {
+		Logger.severe("Created new instance of Selector (" + instances + ")");
 		this.loadOnline();
 		this.loadOffline();
 		this.loadDeco();
-		this.update();
 	}
 
 	public void open(Player player) {
 		this.update();
 		player.openInventory(inv);
-		refreshTimer = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
-			this.update();
-		}, DELAY * 20, DELAY * 20);
-		Main.getInstance().getTasks().put(player.getUniqueId(), refreshTimer);
 	}
 
 	public void close(Player player) {
-		BukkitTask bukkitTask = Main.getInstance().getTasks().remove(player.getUniqueId());
-		if (bukkitTask != null) {
-			bukkitTask.cancel();
-		}
 		player.closeInventory();
-	}
-
-	public void onClose(Player player) {
-		BukkitTask bukkitTask = Main.getInstance().getTasks().remove(player.getUniqueId());
-		if (bukkitTask != null) {
-			bukkitTask.cancel();
-		}
 	}
 	
 	public void loadDeco() {
@@ -146,26 +127,19 @@ public class Selector {
 					.getConfigurationSection("selector." + slot);
 			List<String> lore = section.getStringList("online.lore");
 			ItemMeta meta = itemstack.getItemMeta();
-			
 			if (section.getBoolean("server.ping-server")) {
-				
 				String serverName = section.getString("server.server-id");
-				
 				Map<String, Object> placeholders = null;
 				boolean isOnline = false;
-				
 				if (Main.PLACEHOLDERS.containsKey(serverName)) {
 					placeholders = Main.PLACEHOLDERS.get(serverName);
 					isOnline = (boolean) placeholders.get("isOnline");
 				}
-				
 				if (isOnline) {
 					String onlineplayers = (String) placeholders.get("online");
 					String maxplayers = (String) placeholders.get("max");
-					
 					int online = Integer.valueOf(onlineplayers);
 					int max = Integer.valueOf(maxplayers);
-					
 					meta.setLore(utils.replaceLore(lore, max, online));
 					meta.setDisplayName(utils.replace(section.getString("online.name"), 0, 0, 0));
 					itemstack.setItemMeta(meta);
