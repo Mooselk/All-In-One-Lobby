@@ -19,6 +19,7 @@ import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.api.state.NPCSlot;
 import me.kate.lobby.npcs.internal.NPCManager;
+import me.kate.lobby.servers.ServerManager;
 import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Logger;
@@ -30,6 +31,7 @@ public class NPCBuilder extends NPCRegistry {
 	private final Messages msgs = new Messages();
 	private final FileConfiguration config = NPCConfig.getNPCConfig();
 	private SkinCache skinCache = new SkinCache();
+	private final ServerManager servers = new ServerManager();
 
 	public void create(int skinId, String name, Location location, Player player) {
 		utils.npcToConfig(location, NPCConfig.getNPCConfig(), "npcs." + name, name, skinId);
@@ -161,6 +163,7 @@ public class NPCBuilder extends NPCRegistry {
 		destroyAll(player);
 		clearRegistry();
 		NPCConfig.reload();
+		servers.loadServers();
 		build();
 		new BukkitRunnable() {
 			@Override
@@ -168,7 +171,7 @@ public class NPCBuilder extends NPCRegistry {
 				showAll(true, player);
 				if (msg) { msgs.send("&f[&6NPC&f] Reload complete!", player); }
 			}
-		}.runTaskLater(Main.getInstance(), 1);
+		}.runTaskLater(Main.getInstance(), 2);
 	}
 	
 	public void setSkin() {
