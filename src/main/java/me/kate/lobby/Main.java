@@ -69,7 +69,7 @@ public class Main extends JavaPlugin {
 	 * * * * * * * * * * * *
 	 */
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	private static Main instance;
 	private NPCLib npclib;
@@ -81,8 +81,6 @@ public class Main extends JavaPlugin {
 	private IHidePlayerSettings hideSettings = new HidePlayersConfig();
 	private Portal portals = new Portal();
 
-	public static final Map<String, Map<String, Object>> SELECTOR_PLACEHOLDERS = new HashMap<>();
-	public static final Map<String, Map<String, Object>> NPC_PLACEHOLDERS = new HashMap<>();
 	public static final Map<String, Map<String, Object>> PLACEHOLDERS = new HashMap<>();
 
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
@@ -125,16 +123,17 @@ public class Main extends JavaPlugin {
 		this.loadConfigs();
 		this.registerEvents();
 		this.registerCommands();
-		// this.startThreads();
 		this.npclib = new NPCLib(this);
 		this.portals.load();
 		this.loadNPCs();
 		this.registerChannel();
 		this.setupServers();
-		if (setupTablist()) {
-			Logger.info("[Lobby] Loaded TabList for version " + version);
-		} else {
-			Logger.severe("[Lobby] Failed to load tablist for " + version + " unsupported version.");
+		if (this.getConfig().getBoolean("tablist.enabled")) {
+			if (setupTablist()) {
+				Logger.info("[Lobby] Loaded TabList for version " + version);
+			} else {
+				Logger.severe("[Lobby] Failed to load tablist for " + version + " unsupported version.");
+			}
 		}
 	}
 
