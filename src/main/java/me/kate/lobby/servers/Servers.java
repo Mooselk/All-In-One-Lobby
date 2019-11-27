@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.HoloTextHandler;
 import me.kate.lobby.ping.MineStat;
 
@@ -16,9 +17,9 @@ public class Servers extends ServerManager {
 	private final String taskUUID = "820c06aa-0e8a-11ea-8d71-362b9e155667";
 	private HoloTextHandler holotext = new HoloTextHandler();
 	private Map<String, String> countMap = new HashMap<>();
-	
+
 	private static final int DELAY = 3;
-	
+
 	public void getCountAsync() {
 		new Thread(() -> {
 			while (true) {
@@ -36,13 +37,17 @@ public class Servers extends ServerManager {
 								serverInfo.put("max", minestat.getMaximumPlayers());
 								serverInfo.put("online", minestat.getCurrentPlayers());
 								Main.PLACEHOLDERS.put(server, serverInfo);
-								System.out.println("PLACEHOLDERS does not contain " + server + ", adding.");
+								if (Main.DEBUG) {
+									System.out.println("PLACEHOLDERS does not contain " + server + ", adding.");
+								}
 								sleep();
 							} else continue;
 						} else {
 							String playerCount = countMap.get(server);
 							if (playerCount.equals(minestat.getCurrentPlayers())) {
-								System.out.println("Player count remains the same, skipping. (" + server + ": "+ playerCount + ")");
+								if (Main.DEBUG) {
+									System.out.println("Player count remains the same, skipping. (" + server + ": " + playerCount + ")");
+								}
 								continue;
 							} else {
 								countMap.remove(server);
@@ -51,7 +56,9 @@ public class Servers extends ServerManager {
 								serverInfo.put("max", minestat.getMaximumPlayers());
 								Main.PLACEHOLDERS.put(server, serverInfo);
 								countMap.put(server, minestat.getCurrentPlayers());
-								System.out.println("Updating player count.(" + server + ": " + playerCount +")");
+								if (Main.DEBUG) {
+									System.out.println("Updating player count.(" + server + ": " + playerCount + ")");
+								}
 								sleep();
 							}
 						}
@@ -69,26 +76,32 @@ public class Servers extends ServerManager {
 			}
 		}).start();
 	}
-	
+
 	public void sleep() {
 		try {
-			System.out.println("Sleeping...");
+			if (Main.DEBUG) {
+				System.out.println("Sleeping...");
+			}
 			Thread.sleep(1000);
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
 		}
 	}
-	
+
 	public Map<String, String> getCountMap() {
 		return countMap;
 	}
-	
+
 	public void startNPCTask() {
 		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(Main.getInstance(), () -> {
-			for (Map.Entry<String, MineStat> str : getServerInfo().entrySet()) {
-				String server = str.getKey();
-				String name = Main.getRegistry().getAssociation().get(server);
-				holotext.updateText(server, name);
+			if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
+				for (Map.Entry<String, MineStat> str : getServerInfo().entrySet()) {
+					String server = str.getKey();
+					String name = Main.getRegistry().getAssociation().get(server);
+					// Check if name is not equal to null
+					// in case there are more servers than NPCS
+					if (name != null) { holotext.updateText(server, name); }
+				}
 			}
 		}, DELAY * 20, DELAY * 20);
 		Main.getInstance().getTasks().put(UUID.fromString(taskUUID), refreshTimer);
@@ -96,6 +109,8 @@ public class Servers extends ServerManager {
 
 	public void stopNPCTask() {
 		BukkitTask bukkitTask = Main.getInstance().getTasks().remove(UUID.fromString(taskUUID));
-		if (bukkitTask != null) { bukkitTask.cancel(); }
+		if (bukkitTask != null) {
+			bukkitTask.cancel();
+		}
 	}
 }
