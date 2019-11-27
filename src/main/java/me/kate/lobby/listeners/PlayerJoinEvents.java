@@ -93,13 +93,17 @@ public class PlayerJoinEvents implements Listener {
 	@EventHandler
 	public void giveItemsOnJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
-		final ConfigurationSection hSection = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
-		if (!hSection.getBoolean("hidden")) {
+		final ConfigurationSection hSection = HidePlayersConfig.hideSettingsConf.getConfigurationSection(player.getUniqueId().toString());
+		if (hSection != null) {
+			if (!hSection.getBoolean("hidden")) {
+				player.getInventory().setItem(2, hide);
+			}
+			if (hSection.getBoolean("hidden")) {
+				player.getInventory().setItem(2, unhide);
+				playerToggle.setHidden(true, player);
+			}
+		} else {
 			player.getInventory().setItem(2, hide);
-		}
-		if (hSection.getBoolean("hidden")) {
-			player.getInventory().setItem(2, unhide);
-			playerToggle.setHidden(true, player);
 		}
 		if (selectorConf.getConfigurationSection("selector.options").getBoolean("enabled")) {
 			ConfigurationSection section = selectorConf.getConfigurationSection("selector.options");
