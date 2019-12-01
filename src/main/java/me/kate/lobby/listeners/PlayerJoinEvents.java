@@ -4,12 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.HidePlayersConfig;
@@ -26,32 +26,33 @@ import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Utils;
 
-public class PlayerJoinEvents implements Listener {
+public class PlayerJoinEvents extends NPCBuilder implements Listener {
 
-	private ISelectorSettings selectorFile = new SelectorConfig();
-	private IHidePlayerSettings hideFile = new HidePlayersConfig();
+	private ISelectorSettings selectorConfig = new SelectorConfig();
+	private IHidePlayerSettings playerToggleConfig = new HidePlayersConfig();
 	private Hideable playerToggle = new TogglePlayers();
-	private FileConfiguration selectorConf = selectorFile.getSelectorFile();
-	private FileConfiguration hideConf = hideFile.getHideSettings();
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
-	private final IUtils utils = new Utils();
-	private NPCBuilder builder = new NPCBuilder();
 	
-	private ConfigurationSection hideSection = hideConf.getConfigurationSection("item.hide");
-	private ConfigurationSection unhideSection = hideConf.getConfigurationSection("item.unhide");
+	private final IUtils utils = new Utils();
+	
+	private ConfigurationSection togglePlayersHide = playerToggleConfig.getHideSettings().getConfigurationSection("item.hide");
+	private ConfigurationSection togglePlayersUnhide = playerToggleConfig.getHideSettings().getConfigurationSection("item.unhide");
+	
+	public PlayerJoinEvents(JavaPlugin plugin) {
+		super(plugin);
+	}
 	
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
+		
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
 			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
 		}
 		
 		if (Main.getInstance().getConfig().getBoolean("tablist.enabled")) {
-			Main.getTabList().sendHeaderFooter(player);
+			Main.getInstance().getTabList().sendHeaderFooter(player);
 		}
-		
-		builder.load(player);
 
 		if (!playerSettings.sectionExists(player.getUniqueId().toString())) {
 			playerSettings.createSection(player.getUniqueId().toString());
@@ -59,40 +60,44 @@ public class PlayerJoinEvents implements Listener {
 			playerSettings.save();
 			playerSettings.reload();
 		}
+		
 		player.teleport(Spawn.toSpawn());
+		
+		final Player login = (Player) event.getPlayer();
+		ConfigurationSection hSection;
+		for (final Player players : Bukkit.getOnlinePlayers()) {
+			hSection = playerSettings.getPlayerSettings().getConfigurationSection(players.getUniqueId().toString());
+			if (hSection != null) {
+				if (hSection.getBoolean("hidden")) {
+					players.hidePlayer(login);
+				}
+			}
+		}
+		giveItems(player);
+		loadNPCsFor(player);
 	}
 
 	@EventHandler
 	public void hideOnJoin(final PlayerJoinEvent event) {
-		final Player login = (Player) event.getPlayer();
-		ConfigurationSection hSection;
-		for (final Player player : Bukkit.getOnlinePlayers()) {
-			hSection = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
-			if (hSection != null) {
-				if (hSection.getBoolean("hidden")) {
-					player.hidePlayer(login);
-				}
-			}
-		}
+		
 	}
 
-	private final ItemStack hide = new ItemBuilder(Material.getMaterial(hideSection.getString("material")), 1)
-			.setName(ChatColor.translateAlternateColorCodes('&', hideSection.getString("name")))
+	private final ItemStack hide = new ItemBuilder(Material.getMaterial(togglePlayersHide.getString("material")), 1)
+			.setName(ChatColor.translateAlternateColorCodes('&', togglePlayersHide.getString("name")))
 			.toItemStack();
 	
-	private final ItemStack unhide = new ItemBuilder(Material.getMaterial(unhideSection.getString("material")))
-			.setName(ChatColor.translateAlternateColorCodes('&', unhideSection.getString("name")))
+	private final ItemStack unhide = new ItemBuilder(Material.getMaterial(togglePlayersUnhide.getString("material")))
+			.setName(ChatColor.translateAlternateColorCodes('&', togglePlayersUnhide.getString("name")))
 			.toItemStack();
 	
 	private final ItemStack selector = new ItemBuilder(
-			Material.getMaterial(selectorConf.getConfigurationSection("selector.options").getString("material")))
-					.setName(ChatColor.translateAlternateColorCodes('&', selectorConf.getConfigurationSection("selector.options").getString("item-name")))
-					.setLore(utils.colorParser(selectorConf.getConfigurationSection("selector.options").getStringList("lore")))
+			Material.getMaterial(selectorConfig.getSelectorFile().getConfigurationSection("selector.options").getString("material")))
+					.setName(utils.color(selectorConfig.getSelectorFile().getConfigurationSection("selector.options").getString("item-name")))
+					.setLore(utils.colorParser(selectorConfig.getSelectorFile().getConfigurationSection("selector.options").getStringList("lore")))
 					.toItemStack();
 
-	@EventHandler
-	public void giveItemsOnJoin(final PlayerJoinEvent event) {
-		final Player player = (Player) event.getPlayer();
+	
+	private void giveItems(final Player player) {
 		final ConfigurationSection hSection = HidePlayersConfig.hideSettingsConf.getConfigurationSection(player.getUniqueId().toString());
 		if (hSection != null) {
 			if (!hSection.getBoolean("hidden")) {
@@ -105,8 +110,8 @@ public class PlayerJoinEvents implements Listener {
 		} else {
 			player.getInventory().setItem(2, hide);
 		}
-		if (selectorConf.getConfigurationSection("selector.options").getBoolean("enabled")) {
-			ConfigurationSection section = selectorConf.getConfigurationSection("selector.options");
+		if (selectorConfig.getSelectorFile().getConfigurationSection("selector.options").getBoolean("enabled")) {
+			ConfigurationSection section = selectorConfig.getSelectorFile().getConfigurationSection("selector.options");
 			if (!player.getInventory().contains(Material.getMaterial(section.getString("material")), 1)) {
 				player.getInventory().setItem(section.getInt("slot"), selector);
 			}

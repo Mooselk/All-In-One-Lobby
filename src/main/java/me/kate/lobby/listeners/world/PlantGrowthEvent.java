@@ -4,21 +4,26 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
-
-import me.kate.lobby.Main;
+import org.bukkit.plugin.java.JavaPlugin;
 
 public class PlantGrowthEvent implements Listener {
+	
+	private JavaPlugin plugin;
 
+	public PlantGrowthEvent(JavaPlugin plugin) {
+		this.plugin = plugin;
+	}
+	
 	@EventHandler
 	public void onGrow(final BlockGrowEvent event) {
-		if (Main.getInstance().getConfig().getConfigurationSection("options").getBoolean("disable-plantGrowth")) {
+		if (plugin.getConfig().getConfigurationSection("options").getBoolean("disable-plantGrowth")) {
 			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onVineGrow(final BlockSpreadEvent event) {
-		if (Main.getInstance().getConfig().getConfigurationSection("options").getBoolean("disable-plantGrowth")) {
+		if (plugin.getConfig().getConfigurationSection("options").getBoolean("disable-plantGrowth")) {
 			event.setCancelled(true);
 		}
 	}

@@ -22,10 +22,10 @@ public class HoloTextHandler {
 		String playerCount = getPlayerCount(serverName);
 		getHoloText();
 		try {
-			NPC npc = Main.getRegistry().getNPCObjects().get(name);
-			String idToName = Main.getRegistry().getNPCInfo().get(npc.getId());
+			NPC npc = Main.getInstance().getRegistry().getNPCObjects().get(name);
+			String idToName = Main.getInstance().getRegistry().getNPCInfo().get(npc.getId());
 			if (idToName.equals(name)) {
-				npc.setText(replaceHoloText(Main.getRegistry().getNPCHoloText().get(npc), playerCount));
+				npc.setText(replaceHoloText(Main.getInstance().getRegistry().getNPCHoloText().get(npc), playerCount));
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
@@ -35,9 +35,9 @@ public class HoloTextHandler {
 	private void getHoloText() {
 		for (final String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
 			final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
-			NPC npcs = Main.getRegistry().getNPCObjects().get(name);
-			if (!Main.getRegistry().getNPCHoloText().containsKey(npcs)) {
-				Main.getRegistry().getNPCHoloText().put(npcs, utils.colorParser(section.getStringList("holotext")));
+			NPC npcs = Main.getInstance().getRegistry().getNPCObjects().get(name);
+			if (!Main.getInstance().getRegistry().getNPCHoloText().containsKey(npcs)) {
+				Main.getInstance().getRegistry().getNPCHoloText().put(npcs, utils.colorParser(section.getStringList("holotext")));
 			}
 		}
 	}
@@ -54,8 +54,8 @@ public class HoloTextHandler {
 	
 	
 	public String getPlayerCount(String serverName) {
-		String count = "Loading...";
-		String offline = "0";
+		final String count = "Loading...";
+		final String offline = "0";
 		boolean isOnline = false;
 		Map<String, Object> placeholders = null;
 		if (Main.PLACEHOLDERS.containsKey(serverName)) {

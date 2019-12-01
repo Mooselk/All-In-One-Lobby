@@ -20,7 +20,7 @@ public class InteractNPCEvent implements Listener {
 	@EventHandler
 	public void onNPCInteract(NPCInteractEvent event) {
 		final Player player = event.getWhoClicked().getPlayer();
-		String id = Main.getRegistry().getNPCInfo().get(event.getNPC().getId());
+		String id = Main.getInstance().getRegistry().getNPCInfo().get(event.getNPC().getId());
 		int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 		if (timeLeft == 0) {
 			cooldownManager.startCooldown(player, NPCConfig.getNPCConfig().getInt("cooldown"));

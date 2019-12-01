@@ -73,8 +73,8 @@ public class Main extends JavaPlugin {
 
 	private static Main instance;
 	private NPCLib npclib;
-	private static TabList tablist;
-	private static NPCRegistry registry;
+	private TabList tablist;
+	private NPCRegistry registry;
 
 	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
 	private ISelectorSettings selectorSettings = new SelectorConfig();
@@ -84,7 +84,7 @@ public class Main extends JavaPlugin {
 	public static final Map<String, Map<String, Object>> PLACEHOLDERS = new HashMap<>();
 
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
-	public final Map<UUID, BukkitTask> TASKS = new HashMap<>();
+	public final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
 	public static final Map<String, Cuboid> PORTALS = new HashMap<>();
@@ -95,7 +95,7 @@ public class Main extends JavaPlugin {
 		return instance;
 	}
 	
-	public static TabList getTabList() {
+	public TabList getTabList() {
 		return tablist;
 	}
 
@@ -103,12 +103,12 @@ public class Main extends JavaPlugin {
 		return npclib;
 	}
 	
-	public static NPCRegistry getRegistry() {
+	public NPCRegistry getRegistry() {
 		return registry;
 	}
 	
 	public Map<UUID, BukkitTask> getTasks() {
-		return TASKS;
+		return tasks;
 	}
 	
 	@Override
@@ -143,25 +143,25 @@ public class Main extends JavaPlugin {
 	}
 
 	private void registerEvents() {
-		this.getServer().getPluginManager().registerEvents(new PlayerJoinEvents(), this);
-		this.getServer().getPluginManager().registerEvents(new TouchVoidEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new BlockRelatedEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new MobSpawnEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerJoinEvents(this), this);
+		this.getServer().getPluginManager().registerEvents(new TouchVoidEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new BlockRelatedEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new MobSpawnEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorGuiEvents(), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorClickEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new TogglePlayersEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerPortalEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerLeaveEvents(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerLeaveEvents(this), this);
 		this.getServer().getPluginManager().registerEvents(new WandInteractEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new WeatherBlockEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new WeatherBlockEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new PlantGrowthEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new PlantGrowthEvent(this), this);
 	}
 
 	private void registerCommands() {
-		this.getCommand("lobby").setExecutor(new LobbyCommand());
-		this.getCommand("npc").setExecutor(new NPCCommand());
+		this.getCommand("lobby").setExecutor(new LobbyCommand(this));
+		this.getCommand("npc").setExecutor(new NPCCommand(this));
 		this.getCommand("portal").setExecutor(new PortalCommand());
 	}
 	
@@ -170,19 +170,19 @@ public class Main extends JavaPlugin {
 		CacheStorage.create();
 		JumpPadConfig.create();
 		NPCConfig.create();
-		Config.createConfig();
-		this.playerSettings.create();
-		this.selectorSettings.create();
-		this.hideSettings.create();
+		Config.create();
+		playerSettings.create();
+		selectorSettings.create();
+		hideSettings.create();
 	}
 	
 	private void loadNPCs() {
-		final NPCBuilder builder = new NPCBuilder();
-		builder.build();
+		final NPCBuilder builder = new NPCBuilder(this);
+		builder.buildNPC();
 	}
 
 	private void setupServers() {
-		final Servers servers = new Servers();
+		final Servers servers = new Servers(this);
 		servers.loadServers();
 		servers.getCountAsync();
 		servers.startNPCTask();

@@ -7,15 +7,21 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.modules.Spawn;
 
 public class TouchVoidEvent implements Listener {
 
 	private int timer;
 
+	private JavaPlugin plugin;
+
+	public TouchVoidEvent(JavaPlugin plugin) {
+		this.plugin = plugin;
+	}
+	
 	@EventHandler
 	public void onVoidTouch(final EntityDamageEvent event) {
 		if (event.getEntity() instanceof Player) {
@@ -45,7 +51,7 @@ public class TouchVoidEvent implements Listener {
 					}
 					player.getWorld().spigot().playEffect(player.getLocation(), Effect.CLOUD, 0, 0, 1.0f, 2.0f, 1.0f, 0.0f, 6, 2);
 				}
-			}.runTaskTimer(Main.getInstance(), 1, 1);
+			}.runTaskTimer(plugin, 1, 1);
 		}
 	}
 

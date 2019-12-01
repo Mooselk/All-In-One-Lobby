@@ -5,17 +5,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.NPCBuilder;
-import me.kate.lobby.utils.Logger;
 
-public class NPCCommand implements CommandExecutor {
+public class NPCCommand extends NPCBuilder implements CommandExecutor {
 
-	private final NPCBuilder builder = new NPCBuilder();
 	private final Messages msgs = new Messages();
+	
+	public NPCCommand(JavaPlugin plugin) {
+		super(plugin);
+	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -32,10 +34,6 @@ public class NPCCommand implements CommandExecutor {
 						msgs.noPermission(player);
 					}
 				}
-				if (args[0].equalsIgnoreCase("print")) {
-					Logger.info("NPCS_OBJECT: " + Main.getRegistry().getNPCObjects());
-					Logger.info("NPCSINFOT: " + Main.getRegistry().getNPCInfo());
-				}
 				if (args[0].equalsIgnoreCase("create")) {
 					if (player.hasPermission("lobby.npc.create")) {
 						if (args.length < 3) {
@@ -46,7 +44,7 @@ public class NPCCommand implements CommandExecutor {
 									+ " X: "+ (int) player.getLocation().getX()
 									+ ", Y: " + (int) player.getLocation().getY() 
 									+ ", Z: " + (int) player.getLocation().getZ(), player);
-							builder.reloadNPCs(player, false);
+							reloadNPCs(player, false);
 						}
 					} else {
 						msgs.noPermission(player);
@@ -58,7 +56,7 @@ public class NPCCommand implements CommandExecutor {
 						if (args.length < 2) {
 							msgs.send("&6Usage: &f/npc move <npc_name>", player);
 						} else {
-							builder.move(player.getLocation(), args[1], player);
+							move(player.getLocation(), args[1], player);
 						}
 						
 					} else {
@@ -77,8 +75,8 @@ public class NPCCommand implements CommandExecutor {
 								NPCConfig.getNPCConfig().set("npcs." + args[1], null);
 								NPCConfig.save();
 								NPCConfig.reload();
-								builder.destroy(args[1]);
-								builder.reloadNPCs(player, false);
+								destroy(args[1]);
+								reloadNPCs(player, false);
 							} else {
 								msgs.send("&f[&6NPC&f] Error deleting NPC '" + args[1] + "'. NPC does not exist!", player);
 							}
@@ -91,7 +89,7 @@ public class NPCCommand implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("reload")) {
 				if (player.hasPermission("lobby.npc.reload")) {
 					msgs.send("&f[&6NPC&f] Reloading NPCs...", player);
-					builder.reloadNPCs(player, true);
+					reloadNPCs(player, true);
 				} else {
 					msgs.noPermission(player);
 				}
@@ -102,6 +100,6 @@ public class NPCCommand implements CommandExecutor {
 	}
 
 	private void npcToConfig(String id, String skin, Location loc, Player p) {
-		builder.create(Integer.valueOf(skin), id, loc, p);
+		create(Integer.valueOf(skin), id, loc, p);
 	}
 }

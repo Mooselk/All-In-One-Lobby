@@ -49,8 +49,8 @@ public class ServerManager {
 	 */
 	
 	public void loadNPCAssosiation() {
-		if (!Main.getRegistry().getAssociation().isEmpty()) {
-			Main.getRegistry().getAssociation().clear();
+		if (!Main.getInstance().getRegistry().getAssociation().isEmpty()) {
+			Main.getInstance().getRegistry().getAssociation().clear();
 		}
 		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
 			for (final String name : NPCConfig.getNPCConfig()
@@ -60,7 +60,7 @@ public class ServerManager {
 				if (section.getBoolean("live-player-count")) {
 					String serverName = section.getString("server-name");
 					String npcName = name;
-					Main.getRegistry().getAssociation().put(serverName, npcName);
+					Main.getInstance().getRegistry().getAssociation().put(serverName, npcName);
 				}
 			}
 		}

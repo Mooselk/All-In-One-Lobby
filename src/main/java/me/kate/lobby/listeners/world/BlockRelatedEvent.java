@@ -6,14 +6,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 
 public class BlockRelatedEvent implements Listener {
 
-	private FileConfiguration config = Main.getInstance().getConfig();
+	private JavaPlugin plugin;
+	
+	private FileConfiguration config = plugin.getConfig();
 	private final Messages msgs = new Messages();
+	
+	public BlockRelatedEvent(JavaPlugin plugin) {
+		this.plugin = plugin;
+	}
 
 	@EventHandler
 	public void onBlockBreak(final BlockBreakEvent event) {

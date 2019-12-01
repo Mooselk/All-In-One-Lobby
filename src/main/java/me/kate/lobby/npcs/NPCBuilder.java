@@ -9,6 +9,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.Main;
@@ -29,15 +30,22 @@ public class NPCBuilder extends NPCRegistry {
 
 	private final IUtils utils = new Utils();
 	private final Messages msgs = new Messages();
-	private final FileConfiguration config = NPCConfig.getNPCConfig();
+	
+	private FileConfiguration config = NPCConfig.getNPCConfig();
 	private SkinCache skinCache = new SkinCache();
-	private final ServerManager servers = new ServerManager();
+	private ServerManager servers = new ServerManager();
 
+	private JavaPlugin plugin;
+	
+	public NPCBuilder(JavaPlugin plugin) {
+		this.plugin = plugin;
+	}
+	
 	public void create(int skinId, String name, Location location, Player player) {
 		utils.npcToConfig(location, NPCConfig.getNPCConfig(), "npcs." + name, name, skinId);
 	}
 
-	public void load(Player player) {
+	public void loadNPCsFor(Player player) {
 		for (Map.Entry<String, NPC> npcs : getNPCObjects().entrySet()) {
 			NPC npc = npcs.getValue();
 			Logger.debug("Showing NPC " + npc);
@@ -45,7 +53,7 @@ public class NPCBuilder extends NPCRegistry {
 		}
 	}
 
-	public void build() {
+	public void buildNPC() {
 		if (config.getConfigurationSection("npcs") != null) {
 			for (final String name : config.getConfigurationSection("npcs").getKeys(false)) {
 				final ConfigurationSection section = config.getConfigurationSection("npcs." + name);
@@ -69,9 +77,9 @@ public class NPCBuilder extends NPCRegistry {
 					npc.setSkin(skinCache.getSkin(skinId));
 					Logger.debug("Loaded NPC '" + name + "' from skin cache");
 				}
-				this.applyItems(npc, name);
+				applyItems(npc, name);
 				npc.create();
-				Bukkit.getScheduler().runTask(Main.getInstance(), () -> addToRegistry(npc, name));
+				Bukkit.getScheduler().runTask(plugin, () -> addToRegistry(npc, name));
 			}
 		}
 	}
@@ -164,14 +172,14 @@ public class NPCBuilder extends NPCRegistry {
 		clearRegistry();
 		NPCConfig.reload();
 		servers.loadServers();
-		build();
+		buildNPC();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
 				showAll(true, player);
 				if (msg) { msgs.send("&f[&6NPC&f] Reload complete!", player); }
 			}
-		}.runTaskLater(Main.getInstance(), 2);
+		}.runTaskLater(plugin, 3);
 	}
 	
 	public void setSkin() {
@@ -188,7 +196,7 @@ public class NPCBuilder extends NPCRegistry {
 	}
 
 	public void destroy(String name) {
-		if (Main.getRegistry().getNPCInfo().containsValue(name)) {
+		if (Main.getInstance().getRegistry().getNPCInfo().containsValue(name)) {
 			NPC npcs = getNPCById(getValue(getNPCInfo(), name));
 			npcs.destroy();
 		}
