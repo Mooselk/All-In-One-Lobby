@@ -15,7 +15,7 @@ import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
 public class HidePlayersConfig implements IHidePlayerSettings {
 
 	private static File hideSettings;
-	private static FileConfiguration hideSettingsConf;
+	public static FileConfiguration hideSettingsConf;
 	private boolean success;
 
 	@Override

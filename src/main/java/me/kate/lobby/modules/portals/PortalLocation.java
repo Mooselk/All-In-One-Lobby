@@ -18,10 +18,6 @@ public class PortalLocation {
 		this.position = position;
 	}
 	
-//	public void test() {
-//		Logger.debug(this.toPortal());
-//	}
-	
 	public Location toLocation(String string) {
 		if (string == null || string.trim() == "") {
 	        return null;

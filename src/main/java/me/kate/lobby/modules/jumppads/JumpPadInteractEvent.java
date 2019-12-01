@@ -27,7 +27,7 @@ public class JumpPadInteractEvent implements Listener {
 	private JumpPad pad = new JumpPad(power, height, top, bottom, sound, pitch1, pitch2);
 
 	@EventHandler
-	public void onTrigger(PlayerInteractEvent event) {
+	public void onTrigger(final PlayerInteractEvent event) {
 		if (event.getAction().equals(Action.PHYSICAL)) {
 			final Player player = event.getPlayer();
 			final Block block = event.getClickedBlock();

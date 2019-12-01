@@ -15,7 +15,7 @@ public class Config {
 	private static FileConfiguration config;
 	private static boolean success;
 
-	public static void createConfig() {
+	public static void create() {
 		conf = new File(Main.getInstance().getDataFolder(), "config.yml");
 		if (!conf.exists()) {
 			conf.getParentFile().mkdirs();

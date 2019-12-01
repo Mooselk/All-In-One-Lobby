@@ -65,6 +65,11 @@ public class Utils implements IUtils {
 	}
 	
 	@Override
+	public String color(String color) {
+		return ChatColor.translateAlternateColorCodes('&', color);
+	}
+	
+	@Override
 	public ArrayList<String> colorParser(List<String> list) {
 		ArrayList<String> newList = null;
 		newList = new ArrayList<String>();

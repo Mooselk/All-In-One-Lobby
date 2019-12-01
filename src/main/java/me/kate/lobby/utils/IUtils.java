@@ -13,6 +13,8 @@ public interface IUtils {
 
 	String replace(String in, int max, int online, int ping);
 	
+	String color(String color);
+	
 	ArrayList<String> colorParser(List<String> list);
 	
 	String replacePlayer(String in, Player player);
