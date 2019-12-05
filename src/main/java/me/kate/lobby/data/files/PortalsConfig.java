@@ -16,7 +16,6 @@ public class PortalsConfig {
 	public static FileConfiguration portalconf;
 	
 	public static FileConfiguration getPortalConfig() {
-		forceLoad();
 		return portalconf;
 	}
 
