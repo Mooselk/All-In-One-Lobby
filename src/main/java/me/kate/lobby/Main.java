@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import org.bukkit.Location;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -32,7 +31,6 @@ import me.kate.lobby.listeners.world.TouchVoidEvent;
 import me.kate.lobby.listeners.world.WeatherBlockEvent;
 import me.kate.lobby.modules.jumppads.JumpPadInteractEvent;
 import me.kate.lobby.modules.portals.Portal;
-import me.kate.lobby.modules.portals.Position;
 import me.kate.lobby.modules.portals.events.PlayerPortalEvent;
 import me.kate.lobby.modules.portals.events.WandInteractEvent;
 import me.kate.lobby.modules.portals.utils.Cuboid;
@@ -80,7 +78,7 @@ public class Main extends JavaPlugin {
 	private ISelectorSettings selectorSettings = new SelectorConfig();
 	private IHidePlayerSettings hideSettings = new HidePlayersConfig();
 	private Portal portals = new Portal();
-
+	
 	public static final Map<String, Map<String, Object>> PLACEHOLDERS = new HashMap<>();
 
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
@@ -88,8 +86,6 @@ public class Main extends JavaPlugin {
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
 	public static final Map<String, Cuboid> PORTALS = new HashMap<>();
-	public static final Map<UUID, Map<Position, Location>> PLAYER_SELECTIONS = new HashMap<>();
-	public static final Map<Position, Location> SELECTIONS = new HashMap<>();
 
 	public static Main getInstance() {
 		return instance;
