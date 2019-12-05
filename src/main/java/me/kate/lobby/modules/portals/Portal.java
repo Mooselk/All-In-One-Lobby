@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
@@ -11,12 +12,10 @@ import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Utils;
 
-public class Portal {
+public class Portal extends Selections {
 
 	private final IUtils utils = new Utils();
 	private FileConfiguration config = PortalsConfig.portalconf;
-	
-	public Portal() {}
 	
 	public void load() {
 		if (!Main.PORTALS.isEmpty()) { Main.PORTALS.clear(); }
@@ -77,15 +76,16 @@ public class Portal {
 			}
 		}
 	
-	public void create(Location pos1, Location pos2, String name, String world, String server) {
-		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-1");
-		utils.toConfig(pos1, PortalsConfig.portalconf, "portals." + name + ".loc-2");
-		config.set("portals." + name + ".world", world);
-		config.set("portals." + name + ".server", server);
+	public void create(Location pos1, Location pos2, String name, String world, String server, Player player) {
+		utils.toConfig(pos1, PortalsConfig.getPortalConfig(), "portals." + name + ".loc-1");
+		utils.toConfig(pos1, PortalsConfig.getPortalConfig(), "portals." + name + ".loc-2");
+		
+		PortalsConfig.getPortalConfig().set("portals." + name + ".world", world);
+		PortalsConfig.getPortalConfig().set("portals." + name + ".server", server);
 		PortalsConfig.save();
 		PortalsConfig.reload();
 		this.reload();
-		if (!Main.SELECTIONS.isEmpty()) { Main.SELECTIONS.clear(); }
+		super.clearSelection(player);
 	}
 	
 	public void delete(String name) {

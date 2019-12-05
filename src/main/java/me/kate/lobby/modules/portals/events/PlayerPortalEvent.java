@@ -26,6 +26,7 @@ public class PlayerPortalEvent implements Listener {
 		Location from = event.getFrom();
 		if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
 			if (this.isInCuboid(player)) {
+				// send message
 			}
 		}
 	}

@@ -1,14 +1,11 @@
 package me.kate.lobby.modules.portals;
 
-import java.util.Map;
-import java.util.UUID;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
-public class PortalLocation {
+public class PortalLocation extends Selections {
 	
 	private Location location;
 	private Position position;
@@ -25,31 +22,30 @@ public class PortalLocation {
 	    final String[] parts = string.split(":");
 	    if (parts.length == 4) {
 	        final World w = Bukkit.getServer().getWorld(parts[0]);
-	        final int x = Integer.parseInt(parts[1]);
-	        final int y = Integer.parseInt(parts[2]);
-	        final int z = Integer.parseInt(parts[3]);
+	        final int x = (int) Double.parseDouble(parts[1]);
+	        final int y = (int) Double.parseDouble(parts[2]);
+	        final int z = (int) Double.parseDouble(parts[3]);
 	        return new Location(w, x, y, z);
 	    }
 	    return null;
 	}
 	
 	public String toPortal() {
-		World world = this.location.getWorld();
-		double x = this.location.getX();
-		double y = this.location.getY();
-		double z = this.location.getZ();
+		final World world = this.location.getWorld();
+		final double x = this.location.getX();
+		final double y = this.location.getY();
+		final double z = this.location.getZ();
 		return this.position 
+				+ ":" + world.getName()
 				+ ":" + String.valueOf(x) 
 				+ ":" + String.valueOf(y) 
-				+ ":" + String.valueOf(z) 
-				+ ":" + world;
+				+ ":" + String.valueOf(z);
 	}
 	
-	public Location fromPortal(Map <UUID, String> map, Player player, String position) {
-		String portalString = map.get(player.getUniqueId());
-		if (portalString.startsWith(Position.valueOf(position) + ":")) {
-			portalString.replace(position + ":", "");
-			return this.toLocation(portalString);
+	public Location fromPortal(String portalString, Player player, String position) {
+		if (portalString.startsWith(position + ":")) {
+			String trimmedPortal = portalString.replace(position + ":", "");
+			return toLocation(trimmedPortal);
 		}
 		return null;
 	}

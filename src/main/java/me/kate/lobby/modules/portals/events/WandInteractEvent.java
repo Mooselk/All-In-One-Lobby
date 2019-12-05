@@ -8,12 +8,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
+import me.kate.lobby.modules.portals.PortalLocation;
 import me.kate.lobby.modules.portals.Position;
+import me.kate.lobby.modules.portals.Selections;
 import me.kate.lobby.modules.portals.utils.PortalWand;
 
-public class WandInteractEvent implements Listener {
+public class WandInteractEvent extends Selections implements Listener {
 
 	private final Messages msgs = new Messages();
 
@@ -24,25 +25,21 @@ public class WandInteractEvent implements Listener {
 			final ItemStack wand = PortalWand.WAND;
 			if (event.getItem() == null) { return; }
 			if (event.getItem().equals(wand)) {
+				
 				if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 					Location pos1 = event.getClickedBlock().getLocation();
-					if (Main.SELECTIONS.containsKey(Position.POS1)) {
-						Main.SELECTIONS.remove(Position.POS1);
-						Main.SELECTIONS.put(Position.POS1, pos1);
-					} else {
-						Main.SELECTIONS.put(Position.POS1, pos1);
-					}
+
+					select(player, Position.POS1, new PortalLocation(pos1, Position.POS1).toPortal());
+					
 					msgs.send("Position &6#1 &fset to (&6" + pos1.getBlockX() + ", " + pos1.getBlockY() + ", " + pos1.getBlockZ() + "&f).", player);
 					event.setCancelled(true);
 				}
+				
 				if (event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					Location pos2 = event.getClickedBlock().getLocation();
-					if (Main.SELECTIONS.containsKey(Position.POS2)) {
-						Main.SELECTIONS.remove(Position.POS2);
-						Main.SELECTIONS.put(Position.POS2, pos2);
-					} else {
-						Main.SELECTIONS.put(Position.POS2, pos2);
-					}
+					
+					select(player, Position.POS2, new PortalLocation(pos2, Position.POS2).toPortal());
+					
 					msgs.send("Position &6#2 &fset to (&6" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + "&f).", player);
 					event.setCancelled(true);
 				}
