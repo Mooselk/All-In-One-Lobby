@@ -6,7 +6,6 @@ spawn:
   z: 0.5
   yaw: 180
   pitch: 0
-  world: world
 
 options:
   # the world the lobby is in
@@ -25,7 +24,7 @@ options:
   
   # Disables mob natural mob spawing in specified world
   # mobs can still be spawned using eggs or with commands
-  disable-mobSpawing: true
+  disable-mobSpawning: true
   
   custom-joinmsg: '&f[&6+&f] %player%'
   custom-leavemsg: '&f[&6-&f] %player%'
@@ -43,8 +42,9 @@ options:
     block-place-msg: "&f[&6Lobby&f]You're not allowed to do that here!"
     place-bypass-permission: "lobby.placeblocks"
 
+# Tablist settings
 tablist:
-  enabled: false
+  enabled: true
   header:
     - "header"
     - "second line"
@@ -53,6 +53,8 @@ tablist:
     - "footer"
     - "second line"
     - "third line"
+
+# list of servers for NPCs and server selector
 servers:
   hypixel:
     ip: play.hypixel.net
