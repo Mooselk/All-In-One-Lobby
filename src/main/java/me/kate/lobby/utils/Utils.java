@@ -10,10 +10,13 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 
 public class Utils implements IUtils {
 
+	private final Config npcConfig = new NPCConfig();
+	
 	@Override
 	public String replacePlayer(String in, Player player) {
 		String out = in.replaceAll("%player%", player.getName());
@@ -112,8 +115,8 @@ public class Utils implements IUtils {
 		config.set(path + ".location.z", location.getBlockZ());
 		config.set(path + ".location.pitch", location.getPitch());
 		config.set(path + ".location.yaw", location.getYaw());
-		NPCConfig.save();
-		NPCConfig.reload();
+		npcConfig.save();
+		npcConfig.reload();
 	}
 	
 	@Override

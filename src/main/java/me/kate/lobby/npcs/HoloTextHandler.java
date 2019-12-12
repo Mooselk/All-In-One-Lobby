@@ -8,6 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.utils.IUtils;
@@ -18,6 +19,8 @@ public class HoloTextHandler {
 	
 	private final IUtils utils = new Utils();
 
+	private Config npcConfig = new NPCConfig();
+	
 	public void updateText(String serverName, String name) {
 		String playerCount = getPlayerCount(serverName);
 		getHoloText();
@@ -33,8 +36,8 @@ public class HoloTextHandler {
 	}
 
 	private void getHoloText() {
-		for (final String name : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
-			final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name);
+		for (final String name : npcConfig.getConfig().getConfigurationSection("npcs").getKeys(false)) {
+			final ConfigurationSection section = npcConfig.getConfig().getConfigurationSection("npcs." + name);
 			NPC npcs = Main.getInstance().getRegistry().getNPCObjects().get(name);
 			if (!Main.getInstance().getRegistry().getNPCHoloText().containsKey(npcs)) {
 				Main.getInstance().getRegistry().getNPCHoloText().put(npcs, utils.colorParser(section.getStringList("holotext")));
@@ -58,17 +61,17 @@ public class HoloTextHandler {
 		final String offline = "0";
 		boolean isOnline = false;
 		Map<String, Object> placeholders = null;
-		if (Main.PLACEHOLDERS.containsKey(serverName)) {
-			placeholders = Main.PLACEHOLDERS.get(serverName);
+		if (Main.getInstance().getPlaceholders().containsKey(serverName)) {
+			placeholders = Main.getInstance().getPlaceholders().get(serverName);
 			isOnline = (boolean) placeholders.get("isOnline");
 		}
 		if (isOnline) {
 			Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
-			Logger.debug("  " + Main.PLACEHOLDERS);
+			Logger.debug("  " + Main.getInstance().getPlaceholders());
 			return (String) placeholders.get("online");
 		} 
 		if (!isOnline) {
-			Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
+			// Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
 			return offline;
 		}
 		return count;

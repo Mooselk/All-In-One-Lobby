@@ -4,12 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PlayerSettingsConfig;
-import me.kate.lobby.data.files.interfaces.IPlayerSettings;
 
 public class TogglePlayers implements Hideable {
 
-	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
+	private Config playerSettings = new PlayerSettingsConfig();
 	
 	private boolean hidden;
 
@@ -26,7 +26,7 @@ public class TogglePlayers implements Hideable {
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			player.hidePlayer(online);
 		}
-		section = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+		section = playerSettings.getConfig().getConfigurationSection(player.getUniqueId().toString());
 		playerSettings.save();
 		section.set("hidden", false);
 	}
@@ -37,7 +37,7 @@ public class TogglePlayers implements Hideable {
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			player.showPlayer(online);
 		}
-		section = playerSettings.getPlayerSettings().getConfigurationSection(player.getUniqueId().toString());
+		section = playerSettings.getConfig().getConfigurationSection(player.getUniqueId().toString());
 		playerSettings.save();
 		section.set("hidden", true);
 	}

@@ -1,32 +1,31 @@
 package me.kate.lobby.cache;
 
-import org.bukkit.configuration.file.FileConfiguration;
-
+import me.kate.lobby.data.Config;
 import me.kate.lobby.npcs.api.skin.Skin;
 import me.kate.lobby.utils.Logger;
 
 public class SkinCache {
 
-	private final FileConfiguration config = CacheStorage.getSkinStorage();
+	private Config cacheStorage = new CacheStorage();
 
 	public void toConfig(Skin skin, int skinId) {
-		if (config.getConfigurationSection(String.valueOf(skinId)) == null) {
-			config.set(String.valueOf(skinId), skin.serialize());
-			CacheStorage.save();
-			CacheStorage.reload();
+		if (cacheStorage.getConfig().getConfigurationSection(String.valueOf(skinId)) == null) {
+			cacheStorage.getConfig().set(String.valueOf(skinId), skin.serialize());
+			cacheStorage.save();
+			cacheStorage.reload();
 		}
 	}
 	
 	public boolean isCached(int skinId) {
-		return config.contains(String.valueOf(skinId));		
+		return cacheStorage.getConfig().contains(String.valueOf(skinId));
 	}
 
 	public Skin getSkin(int skinId) {
 		String value;
 		String signature;
-		if (config.getConfigurationSection(String.valueOf(skinId)) != null) {
-			value = config.getString(skinId + ".value");
-			signature = config.getString(skinId + ".signature");
+		if (cacheStorage.getConfig().getConfigurationSection(String.valueOf(skinId)) != null) {
+			value = cacheStorage.getConfig().getString(skinId + ".value");
+			signature = cacheStorage.getConfig().getString(skinId + ".signature");
 			return new Skin(value, signature);
 		} else {
 			Logger.severe("Couldn't load skin '" + skinId + "'");

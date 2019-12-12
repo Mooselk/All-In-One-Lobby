@@ -9,17 +9,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.data.Config;
 
-public class SelectorConfig implements ISelectorSettings {
-	
+public class SelectorConfig extends Config {
+
 	private static File selector;
-	private static FileConfiguration selectorConf;
-	private boolean success;
-	
-	
-	public SelectorConfig() {
-	}
+	private static FileConfiguration selectorConfiguration;
 	
 	@Override
 	public void create() {
@@ -35,9 +30,9 @@ public class SelectorConfig implements ISelectorSettings {
 				e.printStackTrace();
 			}
 		}
-		selectorConf = new YamlConfiguration();
+		selectorConfiguration = new YamlConfiguration();
 		try {
-			selectorConf.load(selector);
+			selectorConfiguration.load(selector);
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
 			e.printStackTrace();
@@ -45,54 +40,34 @@ public class SelectorConfig implements ISelectorSettings {
 	}
 
 	@Override
-	public void load() {
-		selector = null;
-		selectorConf = null;
-		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
-		selectorConf = new YamlConfiguration();
-		try {
-			selectorConf.load(selector);
-		} catch (IOException | InvalidConfigurationException e) {
-			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
-			e.printStackTrace();
-		}
-	}
-	
-	@Override
 	public void save() {
 		try {
-			selectorConf.save(selector);
+			selectorConfiguration.save(selector);
 		} catch (IOException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to save selector.yml!");
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public boolean reload() {
 		selector = null;
-		selectorConf = null;
+		selectorConfiguration = null;
 		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
-		selectorConf = new YamlConfiguration();
+		selectorConfiguration = new YamlConfiguration();
 		try {
-			selectorConf.load(selector);
-			success = true;
+			selectorConfiguration.load(selector);
+			return true;
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to load selector.yml!");
-			success = false;
 			e.printStackTrace();
 		}
-		return success;
-	}
-	
-	@Override
-	public boolean reloadFailed() {
-		return success;
+		return false;
 	}
 
 	@Override
-	public FileConfiguration getSelectorFile() {
-		this.load();
-		return selectorConf;
+	public FileConfiguration getConfig() {
+		return selectorConfiguration;
 	}
+
 }

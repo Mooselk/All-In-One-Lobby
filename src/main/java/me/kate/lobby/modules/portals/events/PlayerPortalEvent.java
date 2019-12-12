@@ -32,7 +32,7 @@ public class PlayerPortalEvent implements Listener {
 	}
 
 	private boolean isInCuboid(final Player player) {
-		for (Map.Entry<String, Cuboid> entry : Main.PORTALS.entrySet()) {
+		for (Map.Entry<String, Cuboid> entry : Main.getInstance().getPortals().entrySet()) {
 			Cuboid cube = entry.getValue();
 			if (cube.isIn(player)) {
 				String key = entry.getKey();

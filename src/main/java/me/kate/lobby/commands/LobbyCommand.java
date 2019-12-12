@@ -10,18 +10,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
-import me.kate.lobby.data.files.HidePlayersConfig;
+import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.data.files.SelectorConfig;
-import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
-import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.modules.Spawn;
 import me.kate.lobby.servers.Servers;
 
 public class LobbyCommand extends Servers implements CommandExecutor {
 
 	private final Messages msgs = new Messages();
-	private ISelectorSettings selector = new SelectorConfig();
-	private IHidePlayerSettings hider = new HidePlayersConfig();
+	private Config selectorConfig = new SelectorConfig();
+	private Config mainConfig = new PluginConfig();
+	private ToggleConfig togglePlayersConfig = new ToggleConfig();
 	
 	public LobbyCommand(JavaPlugin plugin) {
 		super(plugin);
@@ -69,22 +69,19 @@ public class LobbyCommand extends Servers implements CommandExecutor {
 						if (args.length > 1) {
 							switch (args[1]) {
 							case "playerhider":
-								if (hider.reload())
+								if (togglePlayersConfig.reload())
 									msgs.send("Successfully reloaded playerhider", player);
 								else
 									msgs.send("Failed to reload playerhider", player);
 								break;
 							case "selector":
-								if (selector.reload())
+								if (selectorConfig.reload())
 									msgs.send("Successfully reloaded selector", player);
 								else
 									msgs.send("Failed to reload selector", player);
 								break;
 							case "config":
-								if (Config.reload()) {
-									// fix this
-									// throw null error
-									// Main.getInstance().reloadConfig();
+								if (mainConfig.reload()) {
 									if (Main.getInstance().getConfig().getBoolean("tablist.enabled")) {
 										Main.getInstance().getTabList().update();
 									}

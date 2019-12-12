@@ -9,56 +9,55 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.Config;
 
-public class NPCConfig {
+public class NPCConfig extends Config {
 	
-	private static File npcfile;
-	private static FileConfiguration npcconf;
-	
-	public static FileConfiguration getNPCConfig() {
-		return npcconf;
-	}
+	private static File npcFile;
+	private static FileConfiguration npcConfiguration;
 
-	public static void create() {
-		npcfile = new File(Main.getInstance().getDataFolder(), "npcs.yml");
-		if (!npcfile.exists()) {
-			npcfile.getParentFile().mkdirs();
+	@Override
+	public void create() {
+		npcFile = new File(Main.getInstance().getDataFolder(), "npcs.yml");
+		if (!npcFile.exists()) {
+			npcFile.getParentFile().mkdirs();
 			Main.getInstance().saveResource("npcs.yml", false);
 			Bukkit.getLogger().info("[Lobby] Creating npcs.yml...");
 		}
-		npcconf = new YamlConfiguration();
+		npcConfiguration = new YamlConfiguration();
 		try {
-			npcconf.load(npcfile);
+			npcConfiguration.load(npcFile);
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to create npcs.yml!");
 			e.printStackTrace();
 		}
 	}
-	public static void save() {
+	
+	@Override
+	public void save() {
 		try {
-			npcconf.save(npcfile);
+			npcConfiguration.save(npcFile);
 		} catch (IOException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to save npcs.yml!");
 			e.printStackTrace();
 		}
 	}
 	
-	public static void reload() {
+	@Override
+	public boolean reload() {
 		try {
-			npcconf.load(npcfile);
+			npcConfiguration.load(npcFile);
+			return true;
 		} catch (IOException | InvalidConfigurationException e) {
 			Bukkit.getLogger().severe("[Lobby] Failed to reload npcs.yml!");
 			e.printStackTrace();
+			return false;
 		}
 	}
-	
-	public static void forceLoad() {
-		npcfile = new File(Main.getInstance().getDataFolder(), "npcs.yml");
-		npcconf = new YamlConfiguration();
-		try {
-			npcconf.load(npcfile);
-		} catch (IOException | InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
+
+	@Override
+	public FileConfiguration getConfig() {
+		// TODO Auto-generated method stub
+		return npcConfiguration;
 	}
 }

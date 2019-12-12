@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,6 +14,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.cache.SkinCache;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
@@ -31,7 +31,8 @@ public class NPCBuilder extends NPCRegistry {
 	private final IUtils utils = new Utils();
 	private final Messages msgs = new Messages();
 	
-	private FileConfiguration config = NPCConfig.getNPCConfig();
+	private Config npcConfig = new NPCConfig();
+	
 	private SkinCache skinCache = new SkinCache();
 	private ServerManager servers = new ServerManager();
 
@@ -42,7 +43,7 @@ public class NPCBuilder extends NPCRegistry {
 	}
 	
 	public void create(int skinId, String name, Location location, Player player) {
-		utils.npcToConfig(location, NPCConfig.getNPCConfig(), "npcs." + name, name, skinId);
+		utils.npcToConfig(location, npcConfig.getConfig(), "npcs." + name, name, skinId);
 	}
 
 	public void loadNPCsFor(Player player) {
@@ -54,9 +55,9 @@ public class NPCBuilder extends NPCRegistry {
 	}
 
 	public void buildNPC() {
-		if (config.getConfigurationSection("npcs") != null) {
-			for (final String name : config.getConfigurationSection("npcs").getKeys(false)) {
-				final ConfigurationSection section = config.getConfigurationSection("npcs." + name);
+		if (npcConfig.getConfig().getConfigurationSection("npcs") != null) {
+			for (final String name : npcConfig.getConfig().getConfigurationSection("npcs").getKeys(false)) {
+				final ConfigurationSection section = npcConfig.getConfig().getConfigurationSection("npcs." + name);
 				int skinId = section.getInt("skin");
 				NPC npc = Main.getInstance().getNPCLib()
 						.createNPC(utils.replaceHoloText(section.getStringList("holotext"), "0"));
@@ -85,7 +86,7 @@ public class NPCBuilder extends NPCRegistry {
 	}
 
 	public void applyItems(NPC npc, String name) {
-		for (String items : config.getStringList("npcs." + name + ".equipment")) {
+		for (String items : npcConfig.getConfig().getStringList("npcs." + name + ".equipment")) {
 			if (items.startsWith("helmet:")) {
 				if (items.endsWith(":true")) {
 					String material = items.replace("helmet:", "");
@@ -170,27 +171,27 @@ public class NPCBuilder extends NPCRegistry {
 	public void reloadNPCs(Player player, boolean msg) {
 		destroyAll(player);
 		clearRegistry();
-		NPCConfig.reload();
+		npcConfig.reload();
 		servers.loadServers();
 		buildNPC();
 		new BukkitRunnable() {
 			@Override
 			public void run() {
-				showAll(true, player);
+				showAll(player);
 				if (msg) { msgs.send("&f[&6NPC&f] Reload complete!", player); }
 			}
 		}.runTaskLater(plugin, 3);
 	}
 	
-	public void setSkin() {
+	public void setSkin(NPC npc) {
 		
 	}
 
 	public void move(Location location, String name, Player player) {
-		config.set("npcs." + name + ".location", null);
-		utils.toConfig(location, config, "npcs." + name + ".location");
-		NPCConfig.save();
-		NPCConfig.reload();
+		npcConfig.getConfig().set("npcs." + name + ".location", null);
+		utils.toConfig(location, npcConfig.getConfig(), "npcs." + name + ".location");
+		npcConfig.save();
+		npcConfig.reload();
 		reloadNPCs(player, false);
 		msgs.send("Moved NPC " + name, player);
 	}
@@ -210,17 +211,10 @@ public class NPCBuilder extends NPCRegistry {
 		clearRegistry();
 	}
 
-	public void showAll(boolean update, Player player) {
-		if (update) {
-			for (Player online : Bukkit.getOnlinePlayers()) {
-				for (NPC npc : NPCManager.getAllNPCs()) {
-					if (!npc.isShown(online)) { npc.show(online); }
-				}
-			}
-		}
-		if (!update && player != null) {
+	public void showAll(Player player) {
+		for (Player online : Bukkit.getOnlinePlayers()) {
 			for (NPC npc : NPCManager.getAllNPCs()) {
-				if (!npc.isShown(player)) { npc.show(player); }
+				if (!npc.isShown(online)) { npc.show(online); }
 			}
 		}
 	}

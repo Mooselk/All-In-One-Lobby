@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.managers.CooldownManager;
 import me.kate.lobby.modules.portals.utils.SendToServer;
@@ -16,6 +17,7 @@ public class InteractNPCEvent implements Listener {
 
 	private final CooldownManager cooldownManager = new CooldownManager();
 	private final Messages msgs = new Messages();
+	private Config npcConfig = new NPCConfig();
 
 	@EventHandler
 	public void onNPCInteract(NPCInteractEvent event) {
@@ -23,10 +25,10 @@ public class InteractNPCEvent implements Listener {
 		String id = Main.getInstance().getRegistry().getNPCInfo().get(event.getNPC().getId());
 		int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 		if (timeLeft == 0) {
-			cooldownManager.startCooldown(player, NPCConfig.getNPCConfig().getInt("cooldown"));
-			for (final String npc : NPCConfig.getNPCConfig().getConfigurationSection("npcs").getKeys(false)) {
+			cooldownManager.startCooldown(player, npcConfig.getConfig().getInt("cooldown"));
+			for (final String npc : npcConfig.getConfig().getConfigurationSection("npcs").getKeys(false)) {
 				if (id.equalsIgnoreCase(npc)) {
-					final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + npc);
+					final ConfigurationSection section = npcConfig.getConfig().getConfigurationSection("npcs." + npc);
 					String server = section.getString("server.server-name");
 					sendMessages(player, section);
 					if (!server.equalsIgnoreCase("none")) {

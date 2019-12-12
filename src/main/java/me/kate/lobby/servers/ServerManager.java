@@ -6,11 +6,14 @@ import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.ping.MineStat;
 
 public class ServerManager {
 
+	private Config npcConfig = new NPCConfig();
+	
 	private Map<String, MineStat> serverInfo = new HashMap<>();
 
 	/**
@@ -52,11 +55,11 @@ public class ServerManager {
 		if (!Main.getInstance().getRegistry().getAssociation().isEmpty()) {
 			Main.getInstance().getRegistry().getAssociation().clear();
 		}
-		if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
-			for (final String name : NPCConfig.getNPCConfig()
+		if (npcConfig.getConfig().getConfigurationSection("npcs") != null) {
+			for (final String name : npcConfig.getConfig()
 					.getConfigurationSection("npcs")
 					.getKeys(false)) {
-				final ConfigurationSection section = NPCConfig.getNPCConfig().getConfigurationSection("npcs." + name + ".server");
+				final ConfigurationSection section = npcConfig.getConfig().getConfigurationSection("npcs." + name + ".server");
 				if (section.getBoolean("live-player-count")) {
 					String serverName = section.getString("server-name");
 					String npcName = name;

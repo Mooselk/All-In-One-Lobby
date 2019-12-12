@@ -9,15 +9,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.files.interfaces.IPlayerSettings;
+import me.kate.lobby.data.Config;
 
-public class PlayerSettingsConfig implements IPlayerSettings {
+public class PlayerSettingsConfig extends Config {
 
 	public static File playerSettings;
 	public static FileConfiguration playerSettingsConf;
-
-	public PlayerSettingsConfig() {
-	}
 
 	@Override
 	public void create() {
@@ -52,25 +49,26 @@ public class PlayerSettingsConfig implements IPlayerSettings {
 	}
 	
 	@Override
-	public void reload() {
+	public boolean reload() {
 		playerSettings = null;
 		playerSettingsConf = null;
 		playerSettings = new File(Main.getInstance().getDataFolder() + "/data/", "playersettings.yml");
 		playerSettingsConf = new YamlConfiguration();
 		try {
 			playerSettingsConf.load(playerSettings);
+			return true;
 		} catch (InvalidConfigurationException | IOException e) {
 			Bukkit.getLogger().severe("[Lobby] Error updating playersettings.yml!");
 			e.printStackTrace();
+			return false;
 		}
 	}
 
 	@Override
-	public FileConfiguration getPlayerSettings() {
+	public FileConfiguration getConfig() {
 		return playerSettingsConf;
 	}
 
-	@Override
 	public boolean sectionExists(String section) {
 		if (playerSettingsConf.getConfigurationSection(section) != null) {
 			return true;
@@ -78,7 +76,6 @@ public class PlayerSettingsConfig implements IPlayerSettings {
 		return false;
 	}
 	
-	@Override
 	public void createSection(String section) {
 		playerSettingsConf.createSection(section);
 		playerSettingsConf.getConfigurationSection(section).set("hidden", false);

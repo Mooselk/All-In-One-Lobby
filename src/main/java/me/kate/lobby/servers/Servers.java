@@ -9,6 +9,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.HoloTextHandler;
 import me.kate.lobby.ping.MineStat;
@@ -19,12 +20,18 @@ public class Servers extends ServerManager {
 	private HoloTextHandler holotext = new HoloTextHandler();
 	private Map<String, String> countMap = new HashMap<>();
 
+	private Config npcConfig = new NPCConfig();
+	
 	private static final int DELAY = 3;
 
 	private JavaPlugin plugin;
 	
 	public Servers(JavaPlugin plugin) {
 		this.plugin = plugin;
+	}
+	
+	public Map<String, String> getCountMap() {
+		return countMap;
 	}
 	
 	public void getCountAsync() {
@@ -38,12 +45,12 @@ public class Servers extends ServerManager {
 						serverInfo = new HashMap<>();
 						minestat.refresh();
 						serverInfo.put("isOnline", minestat.isServerUp());
-						if (!Main.PLACEHOLDERS.containsKey(server)) {
+						if (!Main.getInstance().getPlaceholders().containsKey(server)) {
 							if (minestat.isServerUp()) {
 								countMap.put(server, minestat.getCurrentPlayers());
 								serverInfo.put("max", minestat.getMaximumPlayers());
 								serverInfo.put("online", minestat.getCurrentPlayers());
-								Main.PLACEHOLDERS.put(server, serverInfo);
+								Main.getInstance().getPlaceholders().put(server, serverInfo);
 								if (Main.DEBUG) { System.out.println("PLACEHOLDERS does not contain " + server + ", adding."); }
 								sleep();
 							} else continue;
@@ -54,10 +61,10 @@ public class Servers extends ServerManager {
 								continue;
 							} else {
 								countMap.remove(server);
-								Main.PLACEHOLDERS.remove(server);
+								Main.getInstance().getPlaceholders().remove(server);
 								serverInfo.put("online", minestat.getCurrentPlayers());
 								serverInfo.put("max", minestat.getMaximumPlayers());
-								Main.PLACEHOLDERS.put(server, serverInfo);
+								Main.getInstance().getPlaceholders().put(server, serverInfo);
 								countMap.put(server, minestat.getCurrentPlayers());
 								if (Main.DEBUG) { System.out.println("Updating player count.(" + server + ": " + playerCount + ")"); }
 								sleep();
@@ -89,13 +96,9 @@ public class Servers extends ServerManager {
 		}
 	}
 
-	public Map<String, String> getCountMap() {
-		return countMap;
-	}
-
 	public void startNPCTask() {
 		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
-			if (NPCConfig.getNPCConfig().getConfigurationSection("npcs") != null) {
+			if (npcConfig.getConfig().getConfigurationSection("npcs") != null) {
 				for (Map.Entry<String, MineStat> str : getServerInfo().entrySet()) {
 					String server = str.getKey();
 					String name = Main.getInstance().getRegistry().getAssociation().get(server);

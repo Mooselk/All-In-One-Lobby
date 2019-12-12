@@ -9,17 +9,15 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.Config;
 
-public class PortalsConfig {
+public class PortalsConfig extends Config {
 	
 	public static File portalfile;
 	public static FileConfiguration portalconf;
-	
-	public static FileConfiguration getPortalConfig() {
-		return portalconf;
-	}
 
-	public static void create() {
+	@Override
+	public void create() {
 		portalfile = new File(Main.getInstance().getDataFolder(), "portals.yml");
 		if (!portalfile.exists()) {
 			portalfile.getParentFile().mkdirs();
@@ -34,7 +32,22 @@ public class PortalsConfig {
 			e.printStackTrace();
 		}
 	}
-	public static void save() {
+	
+	@Override
+	public boolean reload() {
+		try {
+			portalconf.load(portalfile);
+			return true;
+		} catch (IOException | InvalidConfigurationException e) {
+			Bukkit.getLogger().severe("[Lobby] Failed to reload portals.yml!");
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+	@Override
+	public void save() {
 		try {
 			portalconf.save(portalfile);
 		} catch (IOException e) {
@@ -42,25 +55,10 @@ public class PortalsConfig {
 			e.printStackTrace();
 		}
 	}
-	
-	public static void reload() {
-		try {
-			portalconf.load(portalfile);
-		} catch (IOException | InvalidConfigurationException e) {
-			Bukkit.getLogger().severe("[Lobby] Failed to reload portals.yml!");
-			e.printStackTrace();
-		}
-	}
-	
-	public static void forceLoad() {
-		portalfile = null;
-		portalconf= null;
-		portalfile = new File(Main.getInstance().getDataFolder(), "portals.yml");
-		portalconf = new YamlConfiguration();
-		try {
-			portalconf.load(portalfile);
-		} catch (IOException | InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
+
+
+	@Override
+	public FileConfiguration getConfig() {
+		return portalconf;
 	}
 }

@@ -11,16 +11,13 @@ import me.kate.lobby.cache.CacheStorage;
 import me.kate.lobby.commands.LobbyCommand;
 import me.kate.lobby.commands.NPCCommand;
 import me.kate.lobby.commands.PortalCommand;
-import me.kate.lobby.data.Config;
-import me.kate.lobby.data.files.HidePlayersConfig;
 import me.kate.lobby.data.files.JumpPadConfig;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.data.files.PlayerSettingsConfig;
+import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.data.files.SelectorConfig;
-import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
-import me.kate.lobby.data.files.interfaces.IPlayerSettings;
-import me.kate.lobby.data.files.interfaces.ISelectorSettings;
+import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.listeners.InteractNPCEvent;
 import me.kate.lobby.listeners.PlayerJoinEvents;
 import me.kate.lobby.listeners.PlayerLeaveEvents;
@@ -73,19 +70,14 @@ public class Main extends JavaPlugin {
 	private NPCLib npclib;
 	private TabList tablist;
 	private NPCRegistry registry;
-
-	private IPlayerSettings playerSettings = new PlayerSettingsConfig();
-	private ISelectorSettings selectorSettings = new SelectorConfig();
-	private IHidePlayerSettings hideSettings = new HidePlayersConfig();
-	private Portal portals = new Portal();
 	
-	public static final Map<String, Map<String, Object>> PLACEHOLDERS = new HashMap<>();
+	public final Map<String, Map<String, Object>> placeholders = new HashMap<>();
 
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
-	public static final Map<String, Cuboid> PORTALS = new HashMap<>();
+	public final Map<String, Cuboid> portal = new HashMap<>();
 
 	public static Main getInstance() {
 		return instance;
@@ -107,9 +99,18 @@ public class Main extends JavaPlugin {
 		return tasks;
 	}
 	
+	public Map<String, Map<String, Object>> getPlaceholders() {
+		return placeholders;
+	}
+	
+	public Map<String, Cuboid> getPortals() {
+		return portal;
+	}
+	
+	
 	@Override
 	public void onEnable() {
-		String version = getServer()
+		final String version = getServer()
 				.getClass()
 				.getPackage()
 				.getName()
@@ -120,7 +121,7 @@ public class Main extends JavaPlugin {
 		this.registerEvents();
 		this.registerCommands();
 		this.npclib = new NPCLib(this);
-		this.portals.load();
+		new Portal().load();
 		this.loadNPCs();
 		this.registerChannel();
 		this.setupServers();
@@ -162,14 +163,14 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void loadConfigs() {
-		PortalsConfig.create();
-		CacheStorage.create();
-		JumpPadConfig.create();
-		NPCConfig.create();
-		Config.create();
-		playerSettings.create();
-		selectorSettings.create();
-		hideSettings.create();
+		new SelectorConfig().create();
+		new PortalsConfig().create();
+		new CacheStorage().create();
+		new JumpPadConfig().create();
+		new NPCConfig().create();
+		new PluginConfig().create();
+		new PlayerSettingsConfig().create();
+		new ToggleConfig().create();
 	}
 	
 	private void loadNPCs() {

@@ -16,7 +16,7 @@ public class SelectorClickEvent extends Selector implements Listener {
 	public void onPlayerInteractEvent(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
 		if (player.getItemInHand().getType().equals(
-				Material.getMaterial(getSelectorFile().getConfigurationSection("selector.options").getString("material")))) {
+				Material.getMaterial(config.getConfig().getConfigurationSection("selector.options").getString("material")))) {
 			if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				event.setCancelled(true);
 				open(player);

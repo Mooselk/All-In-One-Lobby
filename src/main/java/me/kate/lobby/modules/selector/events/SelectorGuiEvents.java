@@ -17,7 +17,7 @@ public class SelectorGuiEvents extends Selector implements Listener {
 	public void onClick(final InventoryClickEvent event) {
 		final Player player = (Player) event.getWhoClicked();
 		int slot = event.getSlot();
-		final ConfigurationSection sec = getSelectorFile().getConfigurationSection("selector." + slot);
+		final ConfigurationSection sec = config.getConfig().getConfigurationSection("selector." + slot);
 		if (sec == null) { return; } 
 		if (event.getSlot() == slot) {
 			if (!sec.getBoolean("decoration") && isServerOnline(slot)) {

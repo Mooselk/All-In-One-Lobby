@@ -8,8 +8,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.Config;
 
-public class CacheStorage {
+public class CacheStorage extends Config {
 	
 	private static File skinfile;
 	private static FileConfiguration skinstorage;
@@ -18,7 +19,8 @@ public class CacheStorage {
 		return skinstorage;
 	}
 
-	public static void create() {
+	@Override
+	public void create() {
 		skinfile = new File(Main.getInstance().getDataFolder() + "/skins/", "skincache.yml");
 		if (!skinfile.exists()) {
 			skinfile.getParentFile().mkdirs();
@@ -36,7 +38,9 @@ public class CacheStorage {
 			e.printStackTrace();
 		}
 	}
-	public static void save() {
+	
+	@Override
+	public void save() {
 		try {
 			skinstorage.save(skinfile);
 		} catch (IOException e) {
@@ -44,21 +48,19 @@ public class CacheStorage {
 		}
 	}
 	
-	public static void reload() {
+	@Override
+	public boolean reload() {
 		try {
 			skinstorage.load(skinfile);
+			return true;
 		} catch (IOException | InvalidConfigurationException e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
-	
-	public static void forceLoad() {
-		skinfile = new File(Main.getInstance().getDataFolder() + "/skins/", "skincache.yml");
-		skinstorage = new YamlConfiguration();
-		try {
-			skinstorage.load(skinfile);
-		} catch (IOException | InvalidConfigurationException e) {
-			e.printStackTrace();
-		}
+
+	@Override
+	public FileConfiguration getConfig() {
+		return skinstorage;
 	}
 }

@@ -10,19 +10,22 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.JumpPadConfig;
 
 public class JumpPadInteractEvent implements Listener {
-
-	private String top = JumpPadConfig.getPadConfig().getString("settings.top-block");
-	private String bottom = JumpPadConfig.getPadConfig().getString("settings.bottom-block");
-	private String sound = JumpPadConfig.getPadConfig().getString("settings.sound");
-	private boolean enable_sound = JumpPadConfig.getPadConfig().getBoolean("jumppad.sound");
-	private double power = JumpPadConfig.getPadConfig().getDouble("settings.power");
-	private double height = JumpPadConfig.getPadConfig().getDouble("settings.height");
 	
-	private String pitch1 = JumpPadConfig.getPadConfig().getString("settings.pitch1");
-	private String pitch2 = JumpPadConfig.getPadConfig().getString("settings.pitch2");
+	private Config jumpPadConfig = new JumpPadConfig();
+
+	private String top = jumpPadConfig.getConfig().getString("settings.top-block");
+	private String bottom = jumpPadConfig.getConfig().getString("settings.bottom-block");
+	private String sound = jumpPadConfig.getConfig().getString("settings.sound");
+	private boolean enable_sound = jumpPadConfig.getConfig().getBoolean("jumppad.sound");
+	private double power = jumpPadConfig.getConfig().getDouble("settings.power");
+	private double height = jumpPadConfig.getConfig().getDouble("settings.height");
+	
+	private String pitch1 = jumpPadConfig.getConfig().getString("settings.pitch1");
+	private String pitch2 = jumpPadConfig.getConfig().getString("settings.pitch2");
 
 	private JumpPad pad = new JumpPad(power, height, top, bottom, sound, pitch1, pitch2);
 

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.modules.portals.Portal;
 import me.kate.lobby.modules.portals.PortalLocation;
@@ -16,12 +17,13 @@ import me.kate.lobby.utils.Logger;
 
 public class PortalCommand extends PortalLocation implements CommandExecutor {
 
+	private Config portalConfig = new PortalsConfig();
+	private final Portal portal = new Portal();
+	private final Messages msgs = new Messages();
+	
 	public PortalCommand() {
 		super(null, null);
 	}
-
-	private final Portal portal = new Portal();
-	private final Messages msgs = new Messages();
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -80,7 +82,7 @@ public class PortalCommand extends PortalLocation implements CommandExecutor {
 						} else {
 							if (args.length == 2) {
 								String name = args[1];
-								if (PortalsConfig.getPortalConfig().getString("portals." + name) != null) {
+								if (portalConfig.getConfig().getString("portals." + name) != null) {
 									portal.delete(name);
 									msgs.send("&f[&6Portal&f] Deleted portal '" + name + "'.", player);
 								} else {
@@ -93,8 +95,8 @@ public class PortalCommand extends PortalLocation implements CommandExecutor {
 				
 				if (args[0].equalsIgnoreCase("clear")) {
 					if (player.hasPermission("lobby.portal.clear")) {
-						if (!Main.PORTALS.isEmpty()) {
-							Main.PORTALS.clear();
+						if (!Main.getInstance().getPortals().isEmpty()) {
+							// Main.getInstance().getPortals().clear();
 							msgs.send("&f[&6Portal&f] Cleared last selection.", player);
 						} else {
 							msgs.send("&f[&6Portal&f] No selections to clear.", player);

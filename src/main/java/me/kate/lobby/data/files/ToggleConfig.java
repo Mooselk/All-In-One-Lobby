@@ -10,13 +10,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.files.interfaces.IHidePlayerSettings;
+import me.kate.lobby.data.Config;
 
-public class HidePlayersConfig implements IHidePlayerSettings {
+public class ToggleConfig extends Config {
 
 	private static File hideSettings;
 	public static FileConfiguration hideSettingsConf;
-	private boolean success;
 
 	@Override
 	public void create() {
@@ -32,20 +31,6 @@ public class HidePlayersConfig implements IHidePlayerSettings {
 				e.printStackTrace();
 			}
 		}
-		hideSettingsConf = new YamlConfiguration();
-		try {
-			hideSettingsConf.load(hideSettings);
-		} catch (IOException | InvalidConfigurationException e) {
-			Bukkit.getLogger().severe("[Lobby] Failed to load hideplayers.yml!");
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void load() {
-		hideSettings = null;
-		hideSettingsConf = null;
-		hideSettings = new File(Main.getInstance().getDataFolder(), "hideplayers.yml");
 		hideSettingsConf = new YamlConfiguration();
 		try {
 			hideSettingsConf.load(hideSettings);
@@ -73,61 +58,51 @@ public class HidePlayersConfig implements IHidePlayerSettings {
 		hideSettingsConf = new YamlConfiguration();
 		try {
 			hideSettingsConf.load(hideSettings);
-			success = true;
+			return true;
 		} catch (InvalidConfigurationException | IOException e) {
 			Bukkit.getLogger().severe("[Lobby] Error updating hideplayers.yml!");
-			success = false;
 			e.printStackTrace();
+			return false;
 		}
-		return success;
 	}
 
 	@Override
-	public FileConfiguration getHideSettings() {
+	public FileConfiguration getConfig() {
 		return hideSettingsConf;
 	}
 
-	@Override
 	public String getHideMessage() {
 		return hideSettingsConf.getString("messages.hide");
 	}
 
-	@Override
 	public String getUnhideMessage() {
-
 		return hideSettingsConf.getString("messages.unhide");
 	}
 
-	@Override
 	public String getHideDisplayName() {
 		return hideSettingsConf.getString("item.hide.name");
 	}
 
-	@Override
 	public String getUnhideDisplayName() {
 		return hideSettingsConf.getString("item.unhide.name");
 	}
 
-	@Override
 	public List<String> getHideLore() {
 		return hideSettingsConf.getStringList("item.hide.lore");
 	}
 
-	@Override
 	public List<String> getUnhideLore() {
 		return hideSettingsConf.getStringList("item.unhide.lore");
 	}
-	@Override
+	
 	public String getHideMaterial() {
 		return hideSettingsConf.getString("item.hide.material");
 	}
 
-	@Override
 	public String getUnHideMaterial() {
 		return hideSettingsConf.getString("item.unhide.material");
 	}
 
-	@Override
 	public String getCooldownMessage(int timeleft) {
 		String message = hideSettingsConf.getString("messages.cooldown");
 		if (message.contains("%timeleft%")) {
@@ -136,7 +111,6 @@ public class HidePlayersConfig implements IHidePlayerSettings {
 		return message;
 	}
 
-	@Override
 	public int getCooldownLength() {
 		return hideSettingsConf.getInt("options.cooldown");
 	}

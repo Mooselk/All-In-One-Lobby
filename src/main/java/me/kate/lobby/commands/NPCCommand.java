@@ -8,12 +8,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Messages;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.NPCBuilder;
 
 public class NPCCommand extends NPCBuilder implements CommandExecutor {
 
 	private final Messages msgs = new Messages();
+	
+	private Config npcConfig = new NPCConfig();
 	
 	public NPCCommand(JavaPlugin plugin) {
 		super(plugin);
@@ -70,11 +73,11 @@ public class NPCCommand extends NPCBuilder implements CommandExecutor {
 							msgs.send("&6Usage: &f/npc delete <npc_name>", player);
 						}
 						if (args.length == 2) {
-							if (NPCConfig.getNPCConfig().getString("npcs." + args[1]) != null) {
+							if (npcConfig.getConfig().getString("npcs." + args[1]) != null) {
 								msgs.send("&f[&6NPC&f] Deleted NPC '" + args[1] + "'.", player);
-								NPCConfig.getNPCConfig().set("npcs." + args[1], null);
-								NPCConfig.save();
-								NPCConfig.reload();
+								npcConfig.getConfig().set("npcs." + args[1], null);
+								npcConfig.save();
+								npcConfig.reload();
 								destroy(args[1]);
 								reloadNPCs(player, false);
 							} else {
