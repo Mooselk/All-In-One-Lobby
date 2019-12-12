@@ -56,13 +56,13 @@ tablist:
     - "third line"
     
 servers:
-  hypixel:
+  factions:
     ip: play.hypixel.net
     port: 25565
-  mineplex:
+  skyblock:
     ip: us.mineplex.com
     port: 25565
-  ruthless:
+  some-other-server:
     ip: ruthlesspvp.us
     port: 25565
 ```
