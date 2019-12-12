@@ -54,6 +54,17 @@ tablist:
     - "footer"
     - "second line"
     - "third line"
+    
+servers:
+  hypixel:
+    ip: play.hypixel.net
+    port: 25565
+  mineplex:
+    ip: us.mineplex.com
+    port: 25565
+  ruthless:
+    ip: ruthlesspvp.us
+    port: 25565
 ```
 
 ### Commands
@@ -102,10 +113,11 @@ cooldown: 2
     
     # Server info
     server:
-      server-name: skyblock # Bungee server player is sent to onClick
-      live-player-count: true # Disable / Enable server pinging
-      ip: 127.0.0.1 # Servers ip
-      port: 25569 # Servers port
+      live-player-count: true
+      
+      # Bungee server player is sent to onInteract
+      # Server for live player count (Defined in config.yml)
+      server-name: skyblock
     
     # NPCS location
     location:
