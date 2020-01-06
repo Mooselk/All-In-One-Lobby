@@ -16,6 +16,7 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PlayerSettingsConfig;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
+import me.kate.lobby.modules.PlayerPotionEffects;
 import me.kate.lobby.modules.Spawn;
 import me.kate.lobby.modules.toggleplayers.Hideable;
 import me.kate.lobby.modules.toggleplayers.TogglePlayers;
@@ -31,6 +32,8 @@ public class PlayerJoinEvents extends NPCBuilder implements Listener {
 	private Hideable playerToggle = new TogglePlayers();
 	private PlayerSettingsConfig playerSettings = new PlayerSettingsConfig();
 	
+	private PlayerPotionEffects effects = new PlayerPotionEffects();
+	
 	private final IUtils utils = new Utils();
 	
 	private ConfigurationSection togglePlayersHide = playerToggleConfig.getConfig().getConfigurationSection("item.hide");
@@ -43,6 +46,8 @@ public class PlayerJoinEvents extends NPCBuilder implements Listener {
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
+		
+		effects.addEffect(player);
 		
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
 			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
