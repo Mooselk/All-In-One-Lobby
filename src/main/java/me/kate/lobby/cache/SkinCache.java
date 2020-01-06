@@ -21,11 +21,9 @@ public class SkinCache {
 	}
 
 	public Skin getSkin(int skinId) {
-		String value;
-		String signature;
 		if (cacheStorage.getConfig().getConfigurationSection(String.valueOf(skinId)) != null) {
-			value = cacheStorage.getConfig().getString(skinId + ".value");
-			signature = cacheStorage.getConfig().getString(skinId + ".signature");
+			String value = cacheStorage.getConfig().getString(skinId + ".value");
+			String signature = cacheStorage.getConfig().getString(skinId + ".signature");
 			return new Skin(value, signature);
 		} else {
 			Logger.severe("Couldn't load skin '" + skinId + "'");

@@ -36,11 +36,9 @@ public class JumpPadInteractEvent implements Listener {
 			final Block block = event.getClickedBlock();
 			final Location location = block.getLocation();
 			final Material mat = block.getType();
-			if (mat.equals(Material.getMaterial(pad.getTopBlock())) 
-					&& pad.validJumpPad(location)) {
+			if (mat.equals(Material.getMaterial(pad.getTopBlock())) && pad.validJumpPad(location)) {
 				if (enable_sound) {
-					player.playSound(player.getLocation(), 
-							Sound.valueOf(pad.getSound()), Float.valueOf(pad.getPitch1()), Float.valueOf(pad.getPitch2()));
+					player.playSound(player.getLocation(), Sound.valueOf(pad.getSound()), Float.valueOf(pad.getPitch1()), Float.valueOf(pad.getPitch2()));
 				}
 				pad.launchIdiot(player);
 			}

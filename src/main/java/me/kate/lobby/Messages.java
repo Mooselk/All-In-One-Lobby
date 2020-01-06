@@ -5,8 +5,6 @@ import org.bukkit.entity.Player;
 
 public class Messages {
 	
-	public Messages() {}
-	
 	public void send(String msg, Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	}

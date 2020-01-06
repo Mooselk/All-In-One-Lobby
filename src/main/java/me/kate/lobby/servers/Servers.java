@@ -13,6 +13,7 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.HoloTextHandler;
 import me.kate.lobby.ping.MineStat;
+import me.kate.lobby.utils.Logger;
 
 public class Servers extends ServerManager {
 
@@ -45,19 +46,20 @@ public class Servers extends ServerManager {
 						serverInfo = new HashMap<>();
 						minestat.refresh();
 						serverInfo.put("isOnline", minestat.isServerUp());
+						// if (Main.DEBUG) { System.out.println("Placeholders " + Main.getInstance().getPlaceholders()); }
 						if (!Main.getInstance().getPlaceholders().containsKey(server)) {
 							if (minestat.isServerUp()) {
 								countMap.put(server, minestat.getCurrentPlayers());
 								serverInfo.put("max", minestat.getMaximumPlayers());
 								serverInfo.put("online", minestat.getCurrentPlayers());
 								Main.getInstance().getPlaceholders().put(server, serverInfo);
-								if (Main.DEBUG) { System.out.println("PLACEHOLDERS does not contain " + server + ", adding."); }
+								// if (Main.DEBUG) { System.out.println("PLACEHOLDERS does not contain " + server + ", adding."); }
 								sleep();
 							} else continue;
 						} else {
 							String playerCount = countMap.get(server);
 							if (playerCount.equals(minestat.getCurrentPlayers())) {
-								if (Main.DEBUG) { System.out.println("Player count remains the same, skipping. (" + server + ": " + playerCount + ")"); }
+								// if (Main.DEBUG) { System.out.println("Player count remains the same, skipping. (" + server + ": " + playerCount + ")"); }
 								continue;
 							} else {
 								countMap.remove(server);
@@ -97,7 +99,8 @@ public class Servers extends ServerManager {
 	}
 
 	public void startNPCTask() {
-		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			Logger.debug("NPC task running");
 			if (npcConfig.getConfig().getConfigurationSection("npcs") != null) {
 				for (Map.Entry<String, MineStat> str : getServerInfo().entrySet()) {
 					String server = str.getKey();

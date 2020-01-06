@@ -99,6 +99,6 @@ public class LobbyCommand extends Servers implements CommandExecutor {
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 }

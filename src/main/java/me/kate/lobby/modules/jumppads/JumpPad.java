@@ -35,7 +35,7 @@ public class JumpPad {
 
 	public boolean validJumpPad(final Location location) {
 		final Block block = location.subtract(0, 1, 0).getBlock();
-		if (block.getType().equals(Material.getMaterial(this.getBottomBlock()))) {
+		if (block.getType().equals(Material.getMaterial(getBottomBlock()))) {
 			return true;
 		}
 		return false;

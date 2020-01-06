@@ -56,15 +56,13 @@ public class Main extends JavaPlugin {
 	/*
 	 * * * * * TO-DO * * * * *
 	 * 
-	 * Fix portal selections (Make them per player) 
 	 * NPC setskin
 	 * Edit NPCs with commands
-	 * Fix persisting tablist (Shows on other servers)
 	 * 
 	 * * * * * * * * * * * *
 	 */
 
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 
 	private static Main instance;
 	private NPCLib npclib;
@@ -73,6 +71,8 @@ public class Main extends JavaPlugin {
 	
 	public final Map<String, Map<String, Object>> placeholders = new HashMap<>();
 
+	private Portal portals = new Portal();
+	
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
@@ -121,10 +121,10 @@ public class Main extends JavaPlugin {
 		this.registerEvents();
 		this.registerCommands();
 		this.npclib = new NPCLib(this);
-		new Portal().load();
 		this.loadNPCs();
 		this.registerChannel();
 		this.setupServers();
+		portals.load();
 		if (this.getConfig().getBoolean("tablist.enabled")) {
 			if (setupTablist()) {
 				Logger.info("[Lobby] Loaded TabList for version " + version);

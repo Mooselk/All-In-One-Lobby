@@ -22,7 +22,7 @@ selector:
     
   19:
     online:
-      name: '&8* &cFactions Hell &7(HCF) &8*'
+      name: '&8* &cExample ass &7(HCF) &8*'
       material: "TNT"
       byte: 0
       enchanted: false
@@ -50,15 +50,15 @@ selector:
         - " "
       
     server:
-      server-id: factions
+      server-id: hypixel
       ping-server: true
       ip: me.hypixel.net
       port: 25565
       external-query: true
       ping-timeout: 10
       
-    server: "/factions"
-    message: "&8[&cLobby&8] &7Sending you to 'factions'!"
+    connect: "factions"
+    message: "&f[&6Lobby&f] Sending you to 'factions'!"
     
   21:
     online:
@@ -90,15 +90,13 @@ selector:
         - " "
         
     server:
-      server-id: pvp
+      server-id: mineplex
       ping-server: true
-      ip: mc.cosmicmc.net
-      port: 25565
       external-query: true
       ping-timeout: 10
       
-    server: "pvp"
-    message: "&8[&cLobby&8] &7Sending you to 'pvp'!"
+    connect: "pvp"
+    message: "&f[&6Lobby&f] Sending you to 'pvp'!"
     
     
   23:
@@ -132,15 +130,13 @@ selector:
         - " "
         
     server:
-      server-id: skyblock
+      server-id: ruthless
       ping-server: true
-      ip: mc.fruitservers.net
-      port: 25565
       external-query: true
       ping-timeout: 10
     
-    server: "skyblock"
-    message: "&8[&cLobby&8] &7Sending you to 'skyblock'!"
+    connect: "skyblock"
+    message: "&f[&6Lobby&f] Sending you to 'skyblock'!"
     
     
   25:
@@ -175,13 +171,11 @@ selector:
     server:
       server-id: dev
       ping-server: true
-      ip: play.xankaicraft.net
-      port: 25565
       external-query: true
       ping-timeout: 10
     
-    server: "none"
-    message: "none"
+    connect: "skyblock"
+    message: "ass"
     
   29:
     online:
@@ -214,7 +208,7 @@ selector:
       external-query: true
       ping-timeout: 10
     
-    server: "none"
+    connect: "none"
     message: "none"
     
   31:
@@ -253,7 +247,7 @@ selector:
       external-query: true
       ping-timeout: 10
     
-    server: "none"
+    connect: "none"
     message: "none"
     
   33:
@@ -287,9 +281,9 @@ selector:
       external-query: true
       ping-timeout: 10
     
-    server: "none"
+    connect: "none"
     message: "none"
-    
+      
   45:
     decoration: true
     name: " "
@@ -392,11 +386,6 @@ selector:
     name: " "
     material: "STAINED_GLASS_PANE"
     byte: 2
-  18:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
   18:
     decoration: true
     name: " "

@@ -12,7 +12,6 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.utils.IUtils;
-import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Utils;
 
 public class HoloTextHandler {
@@ -66,12 +65,11 @@ public class HoloTextHandler {
 			isOnline = (boolean) placeholders.get("isOnline");
 		}
 		if (isOnline) {
-			Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
-			Logger.debug("  " + Main.getInstance().getPlaceholders());
+//			Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
+//			Logger.debug("  " + Main.getInstance().getPlaceholders());
 			return (String) placeholders.get("online");
 		} 
 		if (!isOnline) {
-			// Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
 			return offline;
 		}
 		return count;
