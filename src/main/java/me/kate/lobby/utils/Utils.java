@@ -41,17 +41,14 @@ public class Utils implements IUtils {
 	}
 
 	@Override
-	public String replace(String in, int max, int online, int ping) {
+	public String replace(String in, int max, int online) {
 		String out = in;
-		if (max != 0 || online != 0 || ping != 0) {
+		if (max != 0 || online != 0) {
 			if (in.contains("%online%")) {
 				out = out.replaceAll("%online%", String.valueOf(online));
 			}
 			if (in.contains("%max%")) {
 				out = out.replaceAll("%max%", String.valueOf(max));
-			}
-			if (in.contains("%ping%")) {
-				out = out.replace("%ping%", String.valueOf(ping) + "ms");
 			}
 		} else {
 			if (in.contains("%online%")) {

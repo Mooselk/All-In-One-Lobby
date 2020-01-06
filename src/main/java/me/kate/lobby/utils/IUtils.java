@@ -11,7 +11,7 @@ public interface IUtils {
 	
 	List<String> replaceLore(List<String> lore, int max, int online);
 
-	String replace(String in, int max, int online, int ping);
+	String replace(String in, int max, int online);
 	
 	String color(String color);
 	
