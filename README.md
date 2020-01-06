@@ -114,9 +114,7 @@ cooldown: 2
     # Server info
     server:
       live-player-count: true
-      
-      # Bungee server player is sent to onInteract
-      # Server for live player count (Defined in config.yml)
+      # Server to get live player count from (Defined in config.yml)
       server-name: skyblock
     
     # NPCS location
