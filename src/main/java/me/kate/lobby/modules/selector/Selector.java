@@ -22,21 +22,18 @@ import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Utils;
 
 public class Selector {
-	
+
 	protected Config config = new SelectorConfig();
-	
-	private Inventory inv = Bukkit.createInventory(null, config.getConfig().getInt("selector.options.rows") * 9, ChatColor.translateAlternateColorCodes(
-					'&', config.getConfig().getString("selector.options.name")));
+
+	private Inventory inv = Bukkit.createInventory(null, config.getConfig().getInt("selector.options.rows") * 9,
+			ChatColor.translateAlternateColorCodes('&', config.getConfig().getString("selector.options.name")));
 
 	private Map<Integer, ItemStack> itemsOnline = new HashMap<>();
 	private Map<Integer, ItemStack> itemsOffline = new HashMap<>();
-	private Map<Integer, ItemStack> itemsDeco = new HashMap<>();
 	private final IUtils utils = new Utils();
 
 	public Selector() {
-		this.loadOnline();
-		this.loadOffline();
-		this.loadDeco();
+		this.setup();
 	}
 
 	public void open(Player player) {
@@ -47,102 +44,78 @@ public class Selector {
 	public void close(Player player) {
 		player.closeInventory();
 	}
-
-	public void loadDeco() {
-		if (itemsDeco.isEmpty()) {
-			for (final String key : config.getConfig().getConfigurationSection("selector").getKeys(false)) {
-				if (!key.equals("options")) {
-					final ConfigurationSection section = config.getConfig()
-							.getConfigurationSection("selector." + key);
-					if (section.getBoolean("decoration")) {
-						final int slot = Integer.valueOf(key);
-						final String name = section.getString("name");
-						final Material material = Material.getMaterial(section.getString("material"));
-						final short data = (short) section.getInt("byte");
-						final ItemStack item = new ItemBuilder(material).setName(name).setDurability(data)
-								.toItemStack();
-						inv.setItem(slot, item);
-					}
-				}
+	
+	private void setup() {
+		for (final String key : config.getConfig().getConfigurationSection("selector").getKeys(false)) {
+			final ConfigurationSection section = config.getConfig().getConfigurationSection("selector." + key);
+			if (key.equals("options")) { continue; }
+			if (section.getBoolean("decoration")) {
+				inv.setItem(Integer.valueOf(key), createItem("selector." + key));
+			} else {
+				itemsOnline.put(Integer.valueOf(key), createItem("selector." + key + ".online"));
+				
+				itemsOffline.put(Integer.valueOf(key), createItem("selector." + key + ".offline"));
 			}
 		}
 	}
-
-	public void loadOffline() {
-		if (itemsOffline.isEmpty()) {
-			for (final String key : config.getConfig().getConfigurationSection("selector").getKeys(false)) {
-				if (!key.equals("options")) {
-					final ConfigurationSection section = config.getConfig()
-							.getConfigurationSection("selector." + key);
-					if (section.getBoolean("decoration")) {
-						continue;
-					}
-					final int slot = Integer.valueOf(key);
-					final String name = section.getString("offline.name");
-					final List<String> lore = section.getStringList("offline.lore");
-					final Material material = Material.getMaterial(section.getString("offline.material"));
-					final short data = (short) section.getInt("offline.byte");
-					final ItemStack item = new ItemBuilder(material).setName(utils.replace(name, 0, 0, 0))
-							.setLore(utils.replaceLore(lore, 0, 0)).setDurability(data).toItemStack();
-					itemsOffline.put(slot, item);
-				}
-			}
-		}
-	}
-
-	public void loadOnline() {
-		if (itemsOnline.isEmpty()) {
-			for (final String key : config.getConfig().getConfigurationSection("selector").getKeys(false)) {
-				if (!key.equals("options")) {
-					final ConfigurationSection section = config.getConfig().getConfigurationSection("selector." + key);
-					if (section.getBoolean("decoration")) {
-						continue;
-					}
-					final int slot = Integer.valueOf(key);
-					final String name = section.getString("online.name");
-					final Material material = Material.getMaterial(section.getString("online.material"));
-					final List<String> lore = section.getStringList("online.lore");
-					final boolean enchanted = section.getBoolean("online.enchanted");
-					final ItemStack item = new ItemBuilder(material).setName(name).setLore(lore).setEnchanted(enchanted)
-							.toItemStack();
-					itemsOnline.put(slot, item);
-				}
-			}
-		}
-	}
-
-	public void update() {
+	
+	private void update() {
 		for (Map.Entry<Integer, ItemStack> map : itemsOnline.entrySet()) {
+			
 			int slot = map.getKey();
 			ItemStack itemstack = map.getValue();
-			final ConfigurationSection section = config.getConfig()
-					.getConfigurationSection("selector." + slot);
-			List<String> lore = section.getStringList("online.lore");
 			ItemMeta meta = itemstack.getItemMeta();
+			
+			final ConfigurationSection section = config.getConfig().getConfigurationSection("selector." + slot);
+			
+			String displayName = meta.getDisplayName();
+			List<String> lore = meta.getLore();
+			
+			
 			if (section.getBoolean("server.ping-server")) {
 				String serverName = section.getString("server.server-id");
 				Map<String, Object> placeholders = null;
 				boolean isOnline = false;
+				
 				if (Main.getInstance().getPlaceholders().containsKey(serverName)) {
 					placeholders = Main.getInstance().getPlaceholders().get(serverName);
 					isOnline = (boolean) placeholders.get("isOnline");
 				}
+				
 				if (isOnline) {
 					String onlineplayers = (String) placeholders.get("online");
 					String maxplayers = (String) placeholders.get("max");
 					int online = Integer.valueOf(onlineplayers);
 					int max = Integer.valueOf(maxplayers);
+					
 					meta.setLore(utils.replaceLore(lore, max, online));
-					meta.setDisplayName(utils.replace(section.getString("online.name"), 0, 0, 0));
+					meta.setDisplayName(utils.replace(displayName, max, online));
 					itemstack.setItemMeta(meta);
+					
 					inv.setItem(slot, itemstack);
 				}
 				if (!isOnline) {
-					final ItemStack offline = itemsOffline.get(slot);
+					ItemStack offline = itemsOffline.get(slot);
 					inv.setItem(slot, offline);
 				}
 			}
 		}
+	}
+
+	private ItemStack createItem(String path) {
+		final ConfigurationSection section = config.getConfig().getConfigurationSection(path);
+		String name = section.getString("name");
+		Material material = Material.getMaterial(section.getString("material"));
+		List<String> lore = section.getStringList("lore");
+		short data = (short) section.getInt("byte");
+		boolean enchanted = section.getBoolean("enchanted");
+		ItemStack item = new ItemBuilder(material)
+				.setName(name)
+				.setDurability(data)
+				.setLore(lore)
+				.setEnchanted(enchanted)
+				.toItemStack();
+		return item;
 	}
 
 	public boolean isServerOnline(int slot) {
@@ -154,8 +127,6 @@ public class Selector {
 			if (Main.getInstance().getPlaceholders().containsKey(serverName)) {
 				placeholders = Main.getInstance().getPlaceholders().get(serverName);
 				isOnline = (boolean) placeholders.get("isOnline");
-			} else {
-				isOnline = false;
 			}
 		}
 		Logger.debug("Online?: " + isOnline + " Slot: " + slot);
