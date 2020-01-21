@@ -18,30 +18,11 @@ public class Portal extends Selections {
 	
 	private Config portalConfig = new PortalsConfig();
 	
-	public void load() {
-		if (!Main.getInstance().getPortals().isEmpty()) { Main.getInstance().getPortals().clear(); }
+	public void load(boolean reload) {
+		if (!Main.getInstance().getPortals().isEmpty() && reload) { Main.getInstance().getPortals().clear(); }
 		if (portalConfig.getConfig().getConfigurationSection("portals") != null) {
 			for (String key : portalConfig.getConfig().getConfigurationSection("portals").getKeys(false)) {
 				final ConfigurationSection section = portalConfig.getConfig().getConfigurationSection("portals." + key);
-				final Location loc1 = new Location(Bukkit.getWorld(
-						section.getString("world")),
-						section.getInt("loc-1.x"),
-						section.getInt("loc-1.y"),
-						section.getInt("loc-1.z"));
-				final Location loc2 = new Location(Bukkit.getWorld(
-						section.getString("world")),
-						section.getInt("loc-2.x"),
-						section.getInt("loc-2.y"),
-						section.getInt("loc-2.z"));
-				Main.getInstance().getPortals().put(key, new Cuboid(loc1, loc2));
-			}
-		}
-	}
-	
-	public void reload() {
-		for (String key : portalConfig.getConfig().getConfigurationSection("portals").getKeys(false)) {
-			final ConfigurationSection section = portalConfig.getConfig().getConfigurationSection("portals." + key);
-			if (!Main.getInstance().getPortals().containsKey(key)) {
 				final Location loc1 = new Location(Bukkit.getWorld(
 						section.getString("world")),
 						section.getInt("loc-1.x"),
@@ -85,8 +66,8 @@ public class Portal extends Selections {
 		portalConfig.getConfig().set("portals." + name + ".server", server);
 		portalConfig.save();
 		portalConfig.reload();
-		this.reload();
-		super.clearSelection(player);
+		load(true);
+		clearSelection(player);
 	}
 	
 	public void delete(String name) {

@@ -69,12 +69,12 @@ public class Main extends JavaPlugin {
 	private TabList tablist;
 	private NPCRegistry registry;
 	
-	public final Map<String, Map<String, Object>> placeholders = new HashMap<>();
+	private final Map<String, Map<String, Object>> placeholders = new HashMap<>();
 
 	private Portal portals = new Portal();
+	private final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
-	public final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
 	public final Map<String, Cuboid> portal = new HashMap<>();
@@ -124,7 +124,7 @@ public class Main extends JavaPlugin {
 		this.loadNPCs();
 		this.registerChannel();
 		this.setupServers();
-		portals.load();
+		portals.load(false);
 		if (this.getConfig().getBoolean("tablist.enabled")) {
 			if (setupTablist()) {
 				Logger.info("[Lobby] Loaded TabList for version " + version);
