@@ -10,24 +10,20 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
-import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.JumpPadConfig;
 
 public class JumpPadInteractEvent implements Listener {
 	
-	private Config jumpPadConfig = new JumpPadConfig();
+	private JumpPadConfig jumpPadConfig = new JumpPadConfig();
 
-	private String top = jumpPadConfig.getConfig().getString("settings.top-block");
-	private String bottom = jumpPadConfig.getConfig().getString("settings.bottom-block");
-	private String sound = jumpPadConfig.getConfig().getString("settings.sound");
-	private boolean enable_sound = jumpPadConfig.getConfig().getBoolean("jumppad.sound");
-	private double power = jumpPadConfig.getConfig().getDouble("settings.power");
-	private double height = jumpPadConfig.getConfig().getDouble("settings.height");
-	
-	private String pitch1 = jumpPadConfig.getConfig().getString("settings.pitch1");
-	private String pitch2 = jumpPadConfig.getConfig().getString("settings.pitch2");
-
-	private JumpPad pad = new JumpPad(power, height, top, bottom, sound, pitch1, pitch2);
+	private JumpPad jPad = new JumpPad(
+			jumpPadConfig.getPower(), 
+			jumpPadConfig.getHeight(), 
+			jumpPadConfig.getTopBlock(), 
+			jumpPadConfig.getBottomBlock(), 
+			jumpPadConfig.getSound(), 
+			jumpPadConfig.getPitchOne(), 
+			jumpPadConfig.getPitchTwo());
 
 	@EventHandler
 	public void onTrigger(final PlayerInteractEvent event) {
@@ -35,12 +31,16 @@ public class JumpPadInteractEvent implements Listener {
 			final Player player = event.getPlayer();
 			final Block block = event.getClickedBlock();
 			final Location location = block.getLocation();
-			final Material mat = block.getType();
-			if (mat.equals(Material.getMaterial(pad.getTopBlock())) && pad.validJumpPad(location)) {
-				if (enable_sound) {
-					player.playSound(player.getLocation(), Sound.valueOf(pad.getSound()), Float.valueOf(pad.getPitch1()), Float.valueOf(pad.getPitch2()));
+			final Material material = block.getType();
+			if (material.equals(Material.getMaterial(jPad.getTopBlock())) && jPad.validJumpPad(location)) {
+				if (jumpPadConfig.isSoundEnabled()) {
+					player.playSound(
+					player.getLocation(), 
+					Sound.valueOf(jPad.getSound()), 
+					Float.valueOf(jPad.getPitch1()), 
+					Float.valueOf(jPad.getPitch2())); 
 				}
-				pad.launchIdiot(player);
+				jPad.launch(player);
 			}
 		}
 	}

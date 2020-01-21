@@ -60,4 +60,35 @@ public class JumpPadConfig extends Config {
 		return jumpPadConf;
 	}
 	
+	public String getTopBlock() {
+		return getConfig().getString("settings.top-block");
+	}
+	
+	public String getBottomBlock() {
+		return getConfig().getString("settings.top-block");
+	}
+	
+	public String getSound() {
+		return getConfig().getString("settings.sound");
+	}
+	
+	public boolean isSoundEnabled() {
+		return getConfig().getBoolean("jumppad.sound");
+	}
+	
+	public double getPower() {
+		return getConfig().getDouble("settings.power");
+	}
+	
+	public double getHeight() {
+		return getConfig().getDouble("settings.height");
+	}
+	
+	public String getPitchOne() {
+		return getConfig().getString("settings.pitch1");
+	}
+	
+	public String getPitchTwo() {
+		return getConfig().getString("settings.pitch2");
+	}
 }

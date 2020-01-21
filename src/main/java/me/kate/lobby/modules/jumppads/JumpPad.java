@@ -26,7 +26,7 @@ public class JumpPad {
 		this.pitch2 = pitch2;
 	}
 
-	public void launchIdiot(final Player player) {
+	public void launch(final Player player) {
 		Vector vector = player.getLocation().getDirection().multiply(this.power).setY(this.height);
 		Location location = player.getLocation();
 		player.teleport(location.add(0, 0.3, 0));
