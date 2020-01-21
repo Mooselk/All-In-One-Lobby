@@ -2,8 +2,10 @@ package me.kate.lobby.data.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -55,7 +57,16 @@ public class PortalsConfig extends Config {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public Set<String> get(String key) {
+		return getConfig().getConfigurationSection(key).getKeys(false);
+	}
 
+	@Override
+	public ConfigurationSection getSection(String section) {
+		return getConfig().getConfigurationSection(section);
+	}
 
 	@Override
 	public FileConfiguration getConfig() {

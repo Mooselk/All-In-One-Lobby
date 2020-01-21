@@ -1,4 +1,4 @@
-package me.kate.lobby.modules.portals;
+package me.kate.lobby.modules.portals.select;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,7 +41,13 @@ public class Selections {
 		return null;
 	}
 	
-	public UUID translate(String uuidString) {
+	public void select(Player player, Position position, String portalLocation) {
+		String playerSelection = position.toString() + "-" + player.getUniqueId().toString();
+		getSelections().put(playerSelection, portalLocation);
+		Logger.debug("Selections: " + getSelections());
+	}
+	
+	private UUID translate(String uuidString) {
 		UUID uuid = null;
 		if (uuidString.startsWith("POS1-")) {
 			uuid = UUID.fromString(uuidString.replace("POS1-", ""));
@@ -50,11 +56,5 @@ public class Selections {
 			uuid = UUID.fromString(uuidString.replace("POS2-", ""));
 		}
 		return uuid;
-	}
-	
-	public void select(Player player, Position position, String portalLocation) {
-		String playerSelection = position.toString() + "-" + player.getUniqueId().toString();
-		getSelections().put(playerSelection, portalLocation);
-		Logger.debug("Selections: " + getSelections());
 	}
 }

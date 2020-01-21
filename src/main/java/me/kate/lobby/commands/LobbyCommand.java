@@ -35,7 +35,6 @@ public class LobbyCommand extends Servers implements CommandExecutor {
 				if (player.hasPermission("lobby.help")) {
 					msgs.lobbyHelp(player);
 				}
-				return true;
 			} else {
 				if (args[0].equalsIgnoreCase("test")) {
 					

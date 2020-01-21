@@ -9,6 +9,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.managers.CooldownManager;
 import me.kate.lobby.modules.portals.utils.Cuboid;
@@ -18,6 +19,8 @@ import me.kate.lobby.utils.Logger;
 public class PlayerPortalEvent implements Listener {
 
 	private final CooldownManager cooldownManager = new CooldownManager();
+	
+	private Config portalConfig = new PortalsConfig();
 	
 	@EventHandler
 	public void onMove(final PlayerMoveEvent event) {
@@ -36,7 +39,7 @@ public class PlayerPortalEvent implements Listener {
 			Cuboid cube = entry.getValue();
 			if (cube.isIn(player)) {
 				String key = entry.getKey();
-				String server = PortalsConfig.portalconf.getString("portals." + key + ".server");
+				String server = portalConfig.getConfig().getString("portals." + key + ".server");
 				int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 				if (timeLeft == 0) {
 					cooldownManager.startCooldown(player, 3);

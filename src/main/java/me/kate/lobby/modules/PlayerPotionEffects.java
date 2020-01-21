@@ -12,7 +12,7 @@ import me.kate.lobby.data.files.PluginConfig;
 public class PlayerPotionEffects {
 	
 	private Config mainConfig = new PluginConfig();
-	private final List<String> EFFECTS = mainConfig.getConfig().getStringList("options.join-effects");
+	private List<String> EFFECTS = mainConfig.getConfig().getStringList("options.join-effects");
 	
 	public void addEffect(Player player) {
 		for (String effect : EFFECTS) {

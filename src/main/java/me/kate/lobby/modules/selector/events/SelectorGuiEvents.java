@@ -17,16 +17,15 @@ public class SelectorGuiEvents extends Selector implements Listener {
 	public void onClick(final InventoryClickEvent event) {
 		final Player player = (Player) event.getWhoClicked();
 		int slot = event.getSlot();
-		final ConfigurationSection sec = config.getConfig().getConfigurationSection("selector." + slot);
-		if (sec == null) { return; } 
+		final ConfigurationSection section = config.getSection("selector." + slot);
+		if (section == null) { return; } 
 		if (event.getSlot() == slot) {
-			if (!sec.getBoolean("decoration") && isServerOnline(slot)) {
-				if (!sec.getString("message").equalsIgnoreCase("none")) {
-					player.sendMessage(ChatColor.translateAlternateColorCodes('&', sec.getString("message")));
+			if (!section.getBoolean("decoration") && isServerOnline(slot)) {
+				if (!section.getString("message").equalsIgnoreCase("none")) {
+					player.sendMessage(ChatColor.translateAlternateColorCodes('&', section.getString("message")));
 				}
-				if (!sec.getString("connect").equalsIgnoreCase("none")
-						&& (!sec.getString("connect").equalsIgnoreCase("menuclose"))) {
-					SendToServer.send(player, sec.getString("connect"));
+				if (!section.getString("connect").equalsIgnoreCase("none") && (!section.getString("connect").equalsIgnoreCase("menuclose"))) {
+					SendToServer.send(player, section.getString("connect"));
 				} else {
 					close(player);
 				}

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -78,5 +79,9 @@ public class SelectorConfig extends Config {
 	
 	public ConfigurationSection getSection(String path) {
 		return selectorConfiguration.getConfigurationSection(path);
+	}
+	
+	public Material getSelectorMaterial() {
+		return Material.getMaterial(getConfig().getString("options.material"));
 	}
 }

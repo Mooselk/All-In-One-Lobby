@@ -7,10 +7,6 @@ import me.kate.lobby.Main;
 
 public class LocalServerPinger {
 	
-	public LocalServerPinger() {
-		
-	}
-	
 	private static String getVersion(final Server server) {
         final String packageName = server.getClass().getPackage().getName();
         return packageName.substring(packageName.lastIndexOf(46) + 1);

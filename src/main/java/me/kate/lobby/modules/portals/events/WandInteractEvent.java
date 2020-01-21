@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.Messages;
 import me.kate.lobby.modules.portals.PortalLocation;
-import me.kate.lobby.modules.portals.Position;
-import me.kate.lobby.modules.portals.Selections;
+import me.kate.lobby.modules.portals.select.Position;
+import me.kate.lobby.modules.portals.select.Selections;
 import me.kate.lobby.modules.portals.utils.PortalWand;
 
 public class WandInteractEvent extends Selections implements Listener {

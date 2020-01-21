@@ -2,7 +2,9 @@ package me.kate.lobby.cache;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -62,5 +64,15 @@ public class CacheStorage extends Config {
 	@Override
 	public FileConfiguration getConfig() {
 		return skinstorage;
+	}
+	
+	@Override
+	public Set<String> get(String key) {
+		return getConfig().getConfigurationSection(key).getKeys(false);
+	}
+
+	@Override
+	public ConfigurationSection getSection(String section) {
+		return getConfig().getConfigurationSection(section);
 	}
 }

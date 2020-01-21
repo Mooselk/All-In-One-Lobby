@@ -2,8 +2,10 @@ package me.kate.lobby.data.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -57,7 +59,19 @@ public class NPCConfig extends Config {
 
 	@Override
 	public FileConfiguration getConfig() {
-		// TODO Auto-generated method stub
 		return npcConfiguration;
+	}
+	
+	/**
+	 * @param path
+	 * @return Set<String>
+	 * Get configuration keys
+	 */
+	public Set<String> get(String path) {
+		return npcConfiguration.getConfigurationSection(path).getKeys(false);
+	}
+	
+	public ConfigurationSection getSection(String path) {
+		return npcConfiguration.getConfigurationSection(path);
 	}
 }

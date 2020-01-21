@@ -2,7 +2,9 @@ package me.kate.lobby.data.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Set;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -60,6 +62,16 @@ public class JumpPadConfig extends Config {
 		return jumpPadConf;
 	}
 	
+	@Override
+	public Set<String> get(String key) {
+		return getConfig().getConfigurationSection(key).getKeys(false);
+	}
+
+	@Override
+	public ConfigurationSection getSection(String section) {
+		return getConfig().getConfigurationSection(section);
+	}
+	
 	public String getTopBlock() {
 		return getConfig().getString("settings.top-block");
 	}
@@ -91,4 +103,5 @@ public class JumpPadConfig extends Config {
 	public String getPitchTwo() {
 		return getConfig().getString("settings.pitch2");
 	}
+
 }

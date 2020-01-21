@@ -17,7 +17,7 @@ import me.kate.lobby.utils.Logger;
 
 public class Servers extends ServerManager {
 
-	private final String taskUUID = "820c06aa-0e8a-11ea-8d71-362b9e155667";
+	private static final String taskUUID = "820c06aa-0e8a-11ea-8d71-362b9e155667";
 	private HoloTextHandler holotext = new HoloTextHandler();
 	private Map<String, String> countMap = new HashMap<>();
 
@@ -68,7 +68,7 @@ public class Servers extends ServerManager {
 								serverInfo.put("max", minestat.getMaximumPlayers());
 								Main.getInstance().getPlaceholders().put(server, serverInfo);
 								countMap.put(server, minestat.getCurrentPlayers());
-								if (Main.DEBUG) { System.out.println("Updating player count.(" + server + ": " + playerCount + ")"); }
+								// if (Main.DEBUG) { System.out.println("Updating player count.(" + server + ": " + playerCount + ")"); }
 								sleep();
 							}
 						}
@@ -87,11 +87,9 @@ public class Servers extends ServerManager {
 		}).start();
 	}
 
-	public void sleep() {
+	private void sleep() {
 		try {
-			if (Main.DEBUG) {
-				System.out.println("Sleeping...");
-			}
+			if (Main.DEBUG) { System.out.println("Sleeping..."); }
 			Thread.sleep(1000);
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();

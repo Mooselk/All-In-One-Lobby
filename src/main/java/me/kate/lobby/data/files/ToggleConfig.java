@@ -3,8 +3,10 @@ package me.kate.lobby.data.files;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -15,7 +17,7 @@ import me.kate.lobby.data.Config;
 public class ToggleConfig extends Config {
 
 	private static File hideSettings;
-	public static FileConfiguration hideSettingsConf;
+	private static FileConfiguration hideSettingsConf;
 
 	@Override
 	public void create() {
@@ -70,49 +72,63 @@ public class ToggleConfig extends Config {
 	public FileConfiguration getConfig() {
 		return hideSettingsConf;
 	}
+	
+	@Override
+	public Set<String> get(String key) {
+		return getConfig().getConfigurationSection(key).getKeys(false);
+	}
+
+	@Override
+	public ConfigurationSection getSection(String section) {
+		return getConfig().getConfigurationSection(section);
+	}
 
 	public String getHideMessage() {
-		return hideSettingsConf.getString("messages.hide");
+		return getConfig().getString("messages.hide");
 	}
 
 	public String getUnhideMessage() {
-		return hideSettingsConf.getString("messages.unhide");
+		return getConfig().getString("messages.unhide");
 	}
 
 	public String getHideDisplayName() {
-		return hideSettingsConf.getString("item.hide.name");
+		return getConfig().getString("item.hide.name");
 	}
 
 	public String getUnhideDisplayName() {
-		return hideSettingsConf.getString("item.unhide.name");
+		return getConfig().getString("item.unhide.name");
 	}
 
 	public List<String> getHideLore() {
-		return hideSettingsConf.getStringList("item.hide.lore");
+		return getConfig().getStringList("item.hide.lore");
 	}
 
 	public List<String> getUnhideLore() {
-		return hideSettingsConf.getStringList("item.unhide.lore");
+		return getConfig().getStringList("item.unhide.lore");
 	}
 	
 	public String getHideMaterial() {
-		return hideSettingsConf.getString("item.hide.material");
+		return getConfig().getString("item.hide.material");
 	}
 
 	public String getUnHideMaterial() {
-		return hideSettingsConf.getString("item.unhide.material");
+		return getConfig().getString("item.unhide.material");
+	}
+	
+	public int getSlot() {
+		return getConfig().getInt("options.slot");
 	}
 
+	public int getCooldownLength() {
+		return getConfig().getInt("options.cooldown");
+	}
+	
 	public String getCooldownMessage(int timeleft) {
-		String message = hideSettingsConf.getString("messages.cooldown");
+		String message = getConfig().getString("messages.cooldown");
 		if (message.contains("%timeleft%")) {
 			message = message.replaceAll("%timeleft%", String.valueOf(timeleft));
 		}
 		return message;
-	}
-
-	public int getCooldownLength() {
-		return hideSettingsConf.getInt("options.cooldown");
 	}
 
 }

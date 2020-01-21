@@ -12,7 +12,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.Messages;
-import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.managers.CooldownManager;
@@ -32,8 +31,8 @@ public class TogglePlayersEvent implements Listener {
 
 	private ToggleConfig playerToggleConfig = new ToggleConfig();
 	private FileConfiguration hideConfig = playerToggleConfig.getConfig();
-
-	private Config selectorConfig = new SelectorConfig();
+	private SelectorConfig selectorConfig = new SelectorConfig();
+	
 	private FileConfiguration selectorConf = selectorConfig.getConfig();
 	private ConfigurationSection hideSection = hideConfig.getConfigurationSection("item.hide");
 	private ConfigurationSection unhideSection = hideConfig.getConfigurationSection("item.unhide");
@@ -68,7 +67,7 @@ public class TogglePlayersEvent implements Listener {
 				if (timeLeft == 0) {
 					cooldownManager.startCooldown(player, playerToggleConfig.getCooldownLength());
 					playerToggle.hide(player, hSection);
-					player.getInventory().setItem(2, unhide);
+					player.getInventory().setItem(playerToggleConfig.getSlot(), unhide);
 					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 						lastMessage = now;
 						msgs.send(playerToggleConfig.getHideMessage(), player);
@@ -89,7 +88,7 @@ public class TogglePlayersEvent implements Listener {
 				if (timeLeft == 0) {
 					cooldownManager.startCooldown(player, playerToggleConfig.getCooldownLength());
 					playerToggle.unhide(player, hSection);
-					player.getInventory().setItem(2, hide);
+					player.getInventory().setItem(playerToggleConfig.getSlot(), hide);
 					long nowEnable = System.currentTimeMillis();
 					if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
 						lastEnableMessage = nowEnable;
@@ -110,17 +109,9 @@ public class TogglePlayersEvent implements Listener {
 	@EventHandler
 	public void onClick(final InventoryClickEvent event) {
 		ItemStack item = event.getCurrentItem();
-		if (item == null) {
-			return;
-		}
-		if (item.equals(selector)) {
-			event.setCancelled(true);
-		}
-		if (item.equals(hide)) {
-			event.setCancelled(true);
-		}
-		if (item.equals(unhide)) {
-			event.setCancelled(true);
-		}
+		if (item == null) { return; }
+		if (item.equals(selector)) { event.setCancelled(true); }
+		if (item.equals(hide)) { event.setCancelled(true); }
+		if (item.equals(unhide)) { event.setCancelled(true); }
 	}
 }

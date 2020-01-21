@@ -26,9 +26,9 @@ public class InteractNPCEvent implements Listener {
 		int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 		if (timeLeft == 0) {
 			cooldownManager.startCooldown(player, npcConfig.getConfig().getInt("cooldown"));
-			for (final String npc : npcConfig.getConfig().getConfigurationSection("npcs").getKeys(false)) {
+			for (final String npc : npcConfig.get("npcs")) {
 				if (id.equalsIgnoreCase(npc)) {
-					final ConfigurationSection section = npcConfig.getConfig().getConfigurationSection("npcs." + npc);
+					final ConfigurationSection section = npcConfig.getSection("npcs." + npc);
 					String server = section.getString("server.server-name");
 					sendMessages(player, section);
 					if (!server.equalsIgnoreCase("none")) {
@@ -39,12 +39,11 @@ public class InteractNPCEvent implements Listener {
 		}
 	}
 	
-	public void sendMessages(Player player, ConfigurationSection section) {
+	private void sendMessages(Player player, ConfigurationSection section) {
 		for (String message : section.getStringList("messages")) {
 			if (!message.equals("none"))
 				msgs.send(message, player);
-			else
-				break;
+			else break;
 		}
 	}
 }

@@ -10,15 +10,10 @@ import me.kate.lobby.data.files.PlayerSettingsConfig;
 public class TogglePlayers implements Hideable {
 
 	private Config playerSettings = new PlayerSettingsConfig();
-	
-	private boolean hidden;
-
-	public TogglePlayers() {}
 
 	@Override
-	public boolean isHidden(Player p) {
-		// TO-DO get players setting
-		return hidden;
+	public boolean isHidden(Player player) {
+		return playerSettings.getConfig().getBoolean(player.getUniqueId().toString());
 	}
 
 	@Override
@@ -26,33 +21,28 @@ public class TogglePlayers implements Hideable {
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			player.hidePlayer(online);
 		}
-		section = playerSettings.getConfig().getConfigurationSection(player.getUniqueId().toString());
-		playerSettings.save();
+		section = playerSettings.getSection(player.getUniqueId().toString());
 		section.set("hidden", false);
+		playerSettings.save();
 	}
 
 	@Override
 	public void unhide(Player player, ConfigurationSection section) {
-		section = null;
 		for (Player online : Bukkit.getOnlinePlayers()) {
 			player.showPlayer(online);
 		}
-		section = playerSettings.getConfig().getConfigurationSection(player.getUniqueId().toString());
-		playerSettings.save();
+		section = playerSettings.getSection(player.getUniqueId().toString());
 		section.set("hidden", true);
+		playerSettings.save();
 	}
 
 	@Override
 	public void setHidden(boolean hide, Player player) {
-		if (hide) {
-			for (Player online : Bukkit.getOnlinePlayers()) {
+		for (Player online : Bukkit.getOnlinePlayers()) {
+			if (hide)
 				player.hidePlayer(online);
-			}
-		}
-		if (!hide) {
-			for (Player online : Bukkit.getOnlinePlayers()) {
+			if (!hide)
 				player.showPlayer(online);
-			}
 		}
 	}
 }

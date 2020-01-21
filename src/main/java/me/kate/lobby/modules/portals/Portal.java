@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PortalsConfig;
+import me.kate.lobby.modules.portals.select.Selections;
 import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Utils;
@@ -20,9 +21,9 @@ public class Portal extends Selections {
 	
 	public void load(boolean reload) {
 		if (!Main.getInstance().getPortals().isEmpty() && reload) { Main.getInstance().getPortals().clear(); }
-		if (portalConfig.getConfig().getConfigurationSection("portals") != null) {
-			for (String key : portalConfig.getConfig().getConfigurationSection("portals").getKeys(false)) {
-				final ConfigurationSection section = portalConfig.getConfig().getConfigurationSection("portals." + key);
+		if (portalConfig.getSection("portals") != null) {
+			for (String key : portalConfig.get("portals")) {
+				final ConfigurationSection section = portalConfig.getSection("portals." + key);
 				final Location loc1 = new Location(Bukkit.getWorld(
 						section.getString("world")),
 						section.getInt("loc-1.x"),
@@ -42,8 +43,8 @@ public class Portal extends Selections {
 		if (!Main.getInstance().getPortals().isEmpty()) {
 			Main.getInstance().getPortals().clear();
 		}
-		for (String key : portalConfig.getConfig().getConfigurationSection("portals").getKeys(false)) {
-			final ConfigurationSection section = portalConfig.getConfig().getConfigurationSection("portals." + key);
+		for (String key : portalConfig.get("portals")) {
+			final ConfigurationSection section = portalConfig.getSection("portals." + key);
 				final Location loc1 = new Location(Bukkit.getWorld(
 						section.getString("world")),
 						section.getInt("loc-1.x"),

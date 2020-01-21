@@ -6,13 +6,14 @@ import java.util.Map;
 import org.bukkit.configuration.ConfigurationSection;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
+import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.ping.MineStat;
 
 public class ServerManager {
 
-	private Config npcConfig = new NPCConfig();
+	private NPCConfig npcConfig = new NPCConfig();
+	private PluginConfig config = new PluginConfig();
 	
 	private Map<String, MineStat> serverInfo = new HashMap<>();
 
@@ -31,13 +32,8 @@ public class ServerManager {
 		if (!serverInfo.isEmpty()) {
 			this.clearServers();
 		}
-		for (String key : Main.getInstance()
-				.getConfig()
-				.getConfigurationSection("servers.")
-				.getKeys(false)) {
-			final ConfigurationSection section = Main.getInstance()
-					.getConfig()
-					.getConfigurationSection("servers." + key);
+		for (String key : config.get("servers.")) {
+			final ConfigurationSection section = config.getSection("servers." + key);
 			String serverName = key;
 			String address = section.getString("ip");
 			int port = section.getInt("port");
@@ -55,11 +51,9 @@ public class ServerManager {
 		if (!Main.getInstance().getRegistry().getAssociation().isEmpty()) {
 			Main.getInstance().getRegistry().getAssociation().clear();
 		}
-		if (npcConfig.getConfig().getConfigurationSection("npcs") != null) {
-			for (final String name : npcConfig.getConfig()
-					.getConfigurationSection("npcs")
-					.getKeys(false)) {
-				final ConfigurationSection section = npcConfig.getConfig().getConfigurationSection("npcs." + name + ".server");
+		if (npcConfig.getSection("npcs") != null) {
+			for (final String name : npcConfig.get("npcs")) {
+				final ConfigurationSection section = npcConfig.getSection("npcs." + name + ".server");
 				if (section.getBoolean("live-player-count")) {
 					String serverName = section.getString("server-name");
 					String npcName = name;
