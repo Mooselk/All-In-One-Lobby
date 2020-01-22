@@ -44,6 +44,11 @@ options:
     block-place-msg: "&f[&6Lobby&f]You're not allowed to do that here!"
     place-bypass-permission: "lobby.placeblocks"
     
+  # effect:length:aplifier
+  join-effects:
+    - speed:max:3
+    - jump:max:3
+    
 tablist:
   enabled: true
   header:
