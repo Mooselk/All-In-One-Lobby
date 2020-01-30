@@ -4,20 +4,53 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bukkit.Bukkit;
+
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.internal.NPCManager;
 import me.kate.lobby.utils.Logger;
 
 public class NPCRegistry {
 	
-	private static final Map<String, String> NPCINFO = new HashMap<>();
+	/**
+	 * Name, NPCObject
+	 */
 	private static final Map<String, NPC> NPCS_OBJECT = new HashMap<>();
+	
+	public Map<String, NPC> getNPCObjects() {
+		return NPCS_OBJECT;
+	}
+	
+	/**
+	 * NPCID, NPCName
+	 */
+	private static final Map<String, String> NPCINFO = new HashMap<>();
+	
+	public Map<String, String> getNPCInfo() {
+		return NPCINFO;
+	}
+	
+	/**
+	 * NPCName, ServerName
+	 */
 	private static final Map<String, String> SERVER_ASSOCIATION = new HashMap<>();
+	
+	public Map<String, String> getAssociation() {
+		return SERVER_ASSOCIATION;
+	}
+	
+	/**
+	 *  NPC, NPCHolotext
+	 */
 	private static final Map<NPC, ArrayList<String>> HOLOTEXT = new HashMap<>();
 	
+	public Map<NPC, ArrayList<String>> getNPCHoloText() {
+		return HOLOTEXT;
+	}
+	
 	public void addToRegistry(NPC npc, String name) {
-		Logger.debug("Adding NPC: " + npc + " with name " + name + " to NPCRegistry");
-		NPCS_OBJECT.put(name, npc); 
+		Bukkit.getLogger().info("NPCid: " + npc.getId() + " Name: " + name);
+		NPCS_OBJECT.put(name, npc); 																	Logger.info("Adding NPC: " + npc + " with name " + name + " to NPCRegistry");
 		NPCINFO.put(npc.getId(), name);
 	}
 	
@@ -28,37 +61,41 @@ public class NPCRegistry {
 		if (!NPCINFO.isEmpty()) { NPCINFO.clear(); }
 	}
 	
-	public Map<String, NPC> getNPCObjects() {
-		return NPCS_OBJECT;
+	public void printMaps(boolean before) {
+		if (before) {
+			Bukkit.getLogger().info("  - Before -  ");
+		} else {
+			Bukkit.getLogger().info("  - After -  ");
+		}
+		Bukkit.getLogger().info("SERVER_ASSOCIATION: " + SERVER_ASSOCIATION);
+		Bukkit.getLogger().info("NPCS_OBJECT: " + NPCS_OBJECT);
+		Bukkit.getLogger().info("HOLOTEXT: " + HOLOTEXT);
+		Bukkit.getLogger().info("NPCINFO: " + NPCINFO);
 	}
 	
-	public Map<String, String> getNPCInfo() {
-		return NPCINFO;
-	}
-	
-	public Map<String, String> getAssociation() {
-		return SERVER_ASSOCIATION;
-	}
-	
-	public Map<NPC, ArrayList<String>> getNPCHoloText() {
-		return HOLOTEXT;
-	}
-	
+	// test this
 	public void remove(String name) {
-		if (NPCS_OBJECT.containsKey(name)) {
+		final NPC npc = getNPCObjects().get(name);
+		
+		if (NPCS_OBJECT.containsKey(name))
 			NPCS_OBJECT.remove(name);
+		
+		if (NPCINFO.containsKey(npc.getId())) {
+			Bukkit.getLogger().info(" Attempting to remove NPCid: " + npc.getId() + " Name: " + name);
+			NPCINFO.remove(npc.getId());
 		}
 		
-		if (NPCINFO.containsValue(name)) {
-			NPCINFO.remove(getValue(NPCINFO, name));
-		}
+		if (SERVER_ASSOCIATION.containsValue(name))
+			SERVER_ASSOCIATION.remove(getValue(SERVER_ASSOCIATION, name));
+		
+		if (HOLOTEXT.containsKey(npc))
+			HOLOTEXT.remove(npc);
 	}
 	
 	public String getValue(Map<String, String> map, String value) {
 		for (Map.Entry<String, String> s : map.entrySet()) {
 			if (s.getValue().equalsIgnoreCase(value)) {
-				String key = s.getKey();
-				return key;
+				return s.getKey();
 			}
 		}
 		return null;

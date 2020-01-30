@@ -14,10 +14,11 @@ public class ServerManager {
 
 	private NPCConfig npcConfig = new NPCConfig();
 	private PluginConfig config = new PluginConfig();
-	
+
 	private Map<String, MineStat> serverInfo = new HashMap<>();
 
 	/**
+	 * ServerName, MineStat
 	 * @returns serverInfo map
 	 */
 	public Map<String, MineStat> getServerInfo() {
@@ -46,10 +47,10 @@ public class ServerManager {
 	 * For each NPC in the NPC config If live-player-count is true add the server
 	 * associated with said NPC, used later to update text
 	 */
-	
+
 	public void loadNPCAssosiation() {
-		if (!Main.getInstance().getRegistry().getAssociation().isEmpty()) {
-			Main.getInstance().getRegistry().getAssociation().clear();
+		if (!Main.getRegistry().getAssociation().isEmpty()) {
+			Main.getRegistry().getAssociation().clear();
 		}
 		if (npcConfig.getSection("npcs") != null) {
 			for (final String name : npcConfig.get("npcs")) {
@@ -57,8 +58,22 @@ public class ServerManager {
 				if (section.getBoolean("live-player-count")) {
 					String serverName = section.getString("server-name");
 					String npcName = name;
-					Main.getInstance().getRegistry().getAssociation().put(serverName, npcName);
+					Main.getRegistry().getAssociation().put(npcName, serverName);
 				}
+			}
+		}
+	}
+
+	public void loadNPCAssosiation(String npc) {
+		if (npcConfig.getSection("npcs") != null) {
+			final ConfigurationSection section = npcConfig.getSection("npcs." + npc + ".server");
+			if (section.getBoolean("live-player-count")) {
+				String serverName = section.getString("server-name");
+				String npcName = npc;
+				if (Main.getRegistry().getAssociation().containsKey(npcName)) {
+					Main.getRegistry().getAssociation().remove(npcName);
+				}
+				Main.getRegistry().getAssociation().put(npcName, serverName);
 			}
 		}
 	}
