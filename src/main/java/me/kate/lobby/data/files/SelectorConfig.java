@@ -73,6 +73,11 @@ public class SelectorConfig extends Config {
 		return selectorConfiguration;
 	}
 	
+	@Override
+	public String getName() {
+		return "ServerSelector";
+	}
+	
 	public Set<String> get(String path) {
 		return selectorConfiguration.getConfigurationSection(path).getKeys(false);
 	}
@@ -82,6 +87,10 @@ public class SelectorConfig extends Config {
 	}
 	
 	public Material getSelectorMaterial() {
-		return Material.getMaterial(getConfig().getString("options.material"));
+		return Material.getMaterial(getConfig().getString("selector.options.material"));
+	}
+	
+	public int getSlot() {
+		return getConfig().getInt("selector.options.slot");
 	}
 }

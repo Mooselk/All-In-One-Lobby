@@ -62,6 +62,11 @@ public class NPCConfig extends Config {
 		return npcConfiguration;
 	}
 	
+	@Override
+	public String getName() {
+		return "NPCs";
+	}
+	
 	/**
 	 * @param path
 	 * @return Set<String>

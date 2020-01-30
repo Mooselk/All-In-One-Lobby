@@ -19,4 +19,6 @@ public abstract class Config {
 	
 	public abstract ConfigurationSection getSection(String section);
 	
+	public abstract String getName();
+	
 }

@@ -36,6 +36,11 @@ public class JumpPadConfig extends Config {
 	}
 	
 	@Override
+	public String getName() {
+		return "JumpPads";
+	}
+	
+	@Override
 	public void save() {
 		try {
 			jumpPadConf.save(jumpPadFile);

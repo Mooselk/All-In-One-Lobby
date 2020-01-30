@@ -74,6 +74,11 @@ public class ToggleConfig extends Config {
 	}
 	
 	@Override
+	public String getName() {
+		return "PlayerToggle";
+	}
+	
+	@Override
 	public Set<String> get(String key) {
 		return getConfig().getConfigurationSection(key).getKeys(false);
 	}

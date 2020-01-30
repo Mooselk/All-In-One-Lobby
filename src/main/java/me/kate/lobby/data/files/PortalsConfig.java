@@ -72,4 +72,9 @@ public class PortalsConfig extends Config {
 	public FileConfiguration getConfig() {
 		return portalconf;
 	}
+	
+	@Override
+	public String getName() {
+		return "Portals";
+	}
 }

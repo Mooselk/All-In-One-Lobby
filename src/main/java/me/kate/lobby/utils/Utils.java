@@ -10,6 +10,7 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 
@@ -90,9 +91,7 @@ public class Utils implements IUtils {
 	}
 	
 	private final boolean live = false;
-	private final int port = 25565;
-	private final String ip = "localhost";
-	private final List<String> defaultHoloText = Arrays.asList("Edit this text", "Players: %players%");
+	private final List<String> defaultHoloText = Arrays.asList("Edit this text in NPC config!", "Players: %players%");
 	private final List<String> defaultMessages = Arrays.asList("&3Default message!", "&9Second line!");
 	private final List<String> equipmentExample = Arrays.asList("helmet:IRON_HELMET:true", "hand:STONE_SWORD");
 	
@@ -103,10 +102,8 @@ public class Utils implements IUtils {
 		config.set(path + ".holotext", defaultHoloText);
 		config.set(path + ".messages", defaultMessages);
 		config.set(path + ".equipment", equipmentExample);
-		config.set(path + ".server.server-name", "example");
 		config.set(path + ".server.live-player-count", live);
-		config.set(path + ".server.ip", ip);
-		config.set(path + ".server.port", port);
+		config.set(path + ".server.server-name", "example");
 		config.set(path + ".location.x", location.getBlockX());
 		config.set(path + ".location.y", location.getBlockY());
 		config.set(path + ".location.z", location.getBlockZ());
@@ -137,7 +134,7 @@ public class Utils implements IUtils {
 		return ChatColor.translateAlternateColorCodes('&', out);
 	}
 	
-	public String getValue(Map<String, String> map, String value) {
+	public static String getValue(Map<String, String> map, String value) {
 		for (Map.Entry<String, String> s : map.entrySet()) {
 			if (s.getValue().equalsIgnoreCase(value)) {
 				String key = s.getKey();
@@ -145,5 +142,13 @@ public class Utils implements IUtils {
 			}
 		}
 		return null;
+	}
+	
+	public static void reloadConfig(Config config, Player player) {
+		if (config.reload()) {
+			Messages.send("&f[&6Lobby&f] Successfully reloaded &6" + config.getName() + "&f!", player);
+		} else {
+			Messages.send("&f[&6Lobby&f] Failed to reload &6" + config.getName() + "&f!", player);
+		}
 	}
 }

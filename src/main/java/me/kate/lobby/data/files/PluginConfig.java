@@ -47,6 +47,11 @@ public class PluginConfig extends Config {
 	public FileConfiguration getConfig() {
 		return configuration;
 	}
+	
+	@Override
+	public String getName() {
+		return "Config";
+	}
 
 	public Set<String> get(String key) {
 		return this.getConfig().getConfigurationSection(key).getKeys(false);
