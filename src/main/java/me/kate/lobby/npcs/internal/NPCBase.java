@@ -291,7 +291,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
                 return this.leggings;
             case BOOTS:
                 return this.boots;
-            case MAINHAND:
+            case HAND:
                 return this.inHand;
             case OFFHAND:
                 return this.offHand;
@@ -319,7 +319,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             case BOOTS:
                 this.boots = item;
                 break;
-            case MAINHAND:
+            case HAND:
                 this.inHand = item;
                 break;
             case OFFHAND:
