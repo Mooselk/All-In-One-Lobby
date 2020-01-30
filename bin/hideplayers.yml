@@ -4,7 +4,7 @@ options:
 
 messages:
   hide: "&f[&6Lobby&f] All players have been hidden."
-  unhide: "&f[&6Lobby&f] &7All players have been unhidden."
+  unhide: "&f[&6Lobby&f] All players have been unhidden."
   cooldown: "&f[&6Lobby&f] %timeleft% seconds before you can use this again."
   
 item:

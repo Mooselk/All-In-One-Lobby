@@ -67,6 +67,11 @@ public class CacheStorage extends Config {
 	}
 	
 	@Override
+	public String getName() {
+		return "SkinCache";
+	}
+	
+	@Override
 	public Set<String> get(String key) {
 		return getConfig().getConfigurationSection(key).getKeys(false);
 	}
