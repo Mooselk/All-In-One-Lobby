@@ -122,7 +122,7 @@ public class NPC_v1_8_R3 extends NPCBase {
             case BOOTS:
                 item = boots;
                 break;
-            case MAINHAND:
+            case HAND:
                 item = inHand;
                 break;
             default:

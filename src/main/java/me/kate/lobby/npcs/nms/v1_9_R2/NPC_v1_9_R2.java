@@ -127,7 +127,7 @@ public class NPC_v1_9_R2 extends NPCBase {
                 item = boots;
                 nmsSlot = EnumItemSlot.FEET;
                 break;
-            case MAINHAND:
+            case HAND:
                 item = inHand;
                 nmsSlot = EnumItemSlot.MAINHAND;
                 break;
