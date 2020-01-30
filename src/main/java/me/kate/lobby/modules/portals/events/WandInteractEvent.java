@@ -16,8 +16,6 @@ import me.kate.lobby.modules.portals.utils.PortalWand;
 
 public class WandInteractEvent extends Selections implements Listener {
 
-	private final Messages msgs = new Messages();
-
 	@EventHandler
 	public void onClick(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
@@ -31,7 +29,7 @@ public class WandInteractEvent extends Selections implements Listener {
 
 					select(player, Position.POS1, new PortalLocation(pos1, Position.POS1).toPortal());
 					
-					msgs.send("Position &6#1 &fset to (&6" + pos1.getBlockX() + ", " + pos1.getBlockY() + ", " + pos1.getBlockZ() + "&f).", player);
+					Messages.send("Position &6#1 &fset to (&6" + pos1.getBlockX() + ", " + pos1.getBlockY() + ", " + pos1.getBlockZ() + "&f).", player);
 					event.setCancelled(true);
 				}
 				
@@ -40,7 +38,7 @@ public class WandInteractEvent extends Selections implements Listener {
 					
 					select(player, Position.POS2, new PortalLocation(pos2, Position.POS2).toPortal());
 					
-					msgs.send("Position &6#2 &fset to (&6" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + "&f).", player);
+					Messages.send("Position &6#2 &fset to (&6" + pos2.getBlockX() + ", " + pos2.getBlockY() + ", " + pos2.getBlockZ() + "&f).", player);
 					event.setCancelled(true);
 				}
 			}

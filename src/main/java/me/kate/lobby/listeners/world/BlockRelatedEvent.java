@@ -13,8 +13,6 @@ public class BlockRelatedEvent implements Listener {
 
 	private JavaPlugin plugin;
 	
-	private final Messages msgs = new Messages();
-	
 	public BlockRelatedEvent(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
@@ -24,7 +22,7 @@ public class BlockRelatedEvent implements Listener {
 		final Player player = (Player) event.getPlayer();
 		if (plugin.getConfig().getConfigurationSection("options.build").getBoolean("disable-block-place")) {
 			if (!player.hasPermission(plugin.getConfig().getConfigurationSection("options.build").getString("break-bypass-permission")) || !player.isOp()) {
-				msgs.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-break-msg"), player);
+				Messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-break-msg"), player);
 				event.setCancelled(true);
 			}
 		}
@@ -35,7 +33,7 @@ public class BlockRelatedEvent implements Listener {
 		final Player player = (Player) event.getPlayer();
 		if (plugin.getConfig().getConfigurationSection("options.build").getBoolean("disable-block-break")) {
 			if (!player.hasPermission(plugin.getConfig().getConfigurationSection("options.build").getString("place-bypass-permission")) || !player.isOp()) {
-				msgs.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-place-msg"), player);
+				Messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-place-msg"), player);
 				event.setCancelled(true);
 			}
 		}

@@ -22,24 +22,24 @@ public class HoloTextHandler {
 	
 	public void updateText(String serverName, String name) {
 		String playerCount = getPlayerCount(serverName);
-		getHoloText();
+		getNPCHoloText();
 		try {
-			NPC npc = Main.getInstance().getRegistry().getNPCObjects().get(name);
-			String idToName = Main.getInstance().getRegistry().getNPCInfo().get(npc.getId());
+			NPC npc = Main.getRegistry().getNPCObjects().get(name);
+			String idToName = Main.getRegistry().getNPCInfo().get(npc.getId());
 			if (idToName.equals(name)) {
-				npc.setText(replaceHoloText(Main.getInstance().getRegistry().getNPCHoloText().get(npc), playerCount));
+				npc.setText(replaceHoloText(Main.getRegistry().getNPCHoloText().get(npc), playerCount));
 			}
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void getHoloText() {
-		for (final String name : npcConfig.getConfig().getConfigurationSection("npcs").getKeys(false)) {
-			final ConfigurationSection section = npcConfig.getConfig().getConfigurationSection("npcs." + name);
-			NPC npcs = Main.getInstance().getRegistry().getNPCObjects().get(name);
-			if (!Main.getInstance().getRegistry().getNPCHoloText().containsKey(npcs)) {
-				Main.getInstance().getRegistry().getNPCHoloText().put(npcs, utils.colorParser(section.getStringList("holotext")));
+	private void getNPCHoloText() {
+		for (final String name : npcConfig.getSection("npcs").getKeys(false)) {
+			final ConfigurationSection section = npcConfig.getSection("npcs." + name);
+			NPC npcs = Main.getRegistry().getNPCObjects().get(name);
+			if (!Main.getRegistry().getNPCHoloText().containsKey(npcs)) {
+				Main.getRegistry().getNPCHoloText().put(npcs, utils.colorParser(section.getStringList("holotext")));
 			}
 		}
 	}
@@ -53,8 +53,6 @@ public class HoloTextHandler {
 		return text;
 	}
 	
-	
-	
 	public String getPlayerCount(String serverName) {
 		final String count = "Loading...";
 		final String offline = "0";
@@ -64,14 +62,8 @@ public class HoloTextHandler {
 			placeholders = Main.getInstance().getPlaceholders().get(serverName);
 			isOnline = (boolean) placeholders.get("isOnline");
 		}
-		if (isOnline) {
-//			Logger.debug("Online: " + (String) placeholders.get("online") + " server: " + serverName);
-//			Logger.debug("  " + Main.getInstance().getPlaceholders());
-			return (String) placeholders.get("online");
-		} 
-		if (!isOnline) {
-			return offline;
-		}
+		if (isOnline) { return (String) placeholders.get("online"); } 
+		if (!isOnline) { return offline; }
 		return count;
 	}
 }

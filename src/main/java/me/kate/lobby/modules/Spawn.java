@@ -12,8 +12,6 @@ public class Spawn {
 
 	private static FileConfiguration config = Main.getInstance().getConfig();
 	
-	private static final Messages MSGS = new Messages();
-	
 	public static Location toSpawn() {
 		double x = config.getDouble("spawn.x");
 		double y = config.getDouble("spawn.y");
@@ -34,7 +32,7 @@ public class Spawn {
 		config.set("spawn.z", loc.getBlockZ());
 		config.set("spawn.yaw", loc.getYaw());
 		config.set("spawn.pitch", loc.getPitch());
-		MSGS.send("&f[&6Lobby&f] Set spawn in world '&6" 
+		Messages.send("&f[&6Lobby&f] Set spawn in world '&6" 
 		+ player.getWorld().getName() 
 		+ "&f' at X: &6" + loc.getBlockX() 
 		+ "&f Y: &6" + loc.getBlockY() 

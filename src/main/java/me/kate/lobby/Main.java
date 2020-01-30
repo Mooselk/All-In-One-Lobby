@@ -18,7 +18,9 @@ import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
+import me.kate.lobby.gui.listeners.SettingsGUIListener;
 import me.kate.lobby.listeners.InteractNPCEvent;
+import me.kate.lobby.listeners.InventoryListener;
 import me.kate.lobby.listeners.PlayerJoinEvents;
 import me.kate.lobby.listeners.PlayerLeaveEvents;
 import me.kate.lobby.listeners.world.BlockRelatedEvent;
@@ -62,16 +64,16 @@ public class Main extends JavaPlugin {
 	 * * * * * * * * * * * *
 	 */
 
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 
 	private static Main instance;
-	private NPCLib npclib;
+	private static NPCLib npclib;
+	private static NPCRegistry registry;
 	private TabList tablist;
-	private NPCRegistry registry;
+	private Portal portals;
 	
 	private final Map<String, Map<String, Object>> placeholders = new HashMap<>();
-
-	private Portal portals = new Portal();
+	
 	private final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
@@ -83,18 +85,18 @@ public class Main extends JavaPlugin {
 		return instance;
 	}
 	
+	public static NPCLib getNPCLib() {
+		return npclib;
+	}
+	
+	public static NPCRegistry getRegistry() {
+		return registry;
+	}
+	
 	public TabList getTabList() {
 		return tablist;
 	}
 
-	public NPCLib getNPCLib() {
-		return npclib;
-	}
-	
-	public NPCRegistry getRegistry() {
-		return registry;
-	}
-	
 	public Map<UUID, BukkitTask> getTasks() {
 		return tasks;
 	}
@@ -117,13 +119,14 @@ public class Main extends JavaPlugin {
 				.split("\\.")[3];
 		instance = this;
 		registry = new NPCRegistry();
+		npclib = new NPCLib(this);
 		this.loadConfigs();
 		this.registerEvents();
 		this.registerCommands();
-		this.npclib = new NPCLib(this);
 		this.loadNPCs();
 		this.registerChannel();
 		this.setupServers();
+		portals = new Portal();
 		portals.load(false);
 		if (this.getConfig().getBoolean("tablist.enabled")) {
 			if (setupTablist()) {
@@ -146,16 +149,17 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new MobSpawnEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorGuiEvents(), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorClickEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new TogglePlayersEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerPortalEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new TogglePlayersEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerPortalEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerLeaveEvents(this), this);
 		this.getServer().getPluginManager().registerEvents(new WandInteractEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new WeatherBlockEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new PlantGrowthEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+		this.getServer().getPluginManager().registerEvents(new SettingsGUIListener(), this);
 	}
-
 	private void registerCommands() {
 		this.getCommand("lobby").setExecutor(new LobbyCommand(this));
 		this.getCommand("npc").setExecutor(new NPCCommand(this));

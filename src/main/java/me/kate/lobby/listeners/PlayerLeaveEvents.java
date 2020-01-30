@@ -11,7 +11,7 @@ import me.kate.lobby.utils.Utils;
 
 public class PlayerLeaveEvents implements Listener {
 	
-	private final IUtils utils = new Utils();
+	private IUtils utils = new Utils();
 	
 	private JavaPlugin plugin;
 	

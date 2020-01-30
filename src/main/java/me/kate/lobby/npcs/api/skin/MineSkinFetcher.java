@@ -24,7 +24,7 @@ public class MineSkinFetcher {
 
     private static final String MINESKIN_API = "https://api.mineskin.org/get/id/";
     private static final ExecutorService threadPool = Executors.newSingleThreadExecutor();
-
+    
     public static void fetchSkinFromIdAsync(int id, Callback callback) {
     	threadPool.execute(() -> {
             try {

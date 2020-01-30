@@ -13,7 +13,7 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.HoloTextHandler;
 import me.kate.lobby.ping.MineStat;
-import me.kate.lobby.utils.Logger;
+import me.kate.lobby.utils.Utils;
 
 public class Servers extends ServerManager {
 
@@ -45,21 +45,18 @@ public class Servers extends ServerManager {
 						Map<String, Object> serverInfo = null;
 						serverInfo = new HashMap<>();
 						minestat.refresh();
-						serverInfo.put("isOnline", minestat.isServerUp());
-						// if (Main.DEBUG) { System.out.println("Placeholders " + Main.getInstance().getPlaceholders()); }
+						serverInfo.put("isOnline", minestat.isServerUp());						 if (Main.DEBUG) { System.out.println("Placeholders " + Main.getInstance().getPlaceholders()); }
 						if (!Main.getInstance().getPlaceholders().containsKey(server)) {
 							if (minestat.isServerUp()) {
 								countMap.put(server, minestat.getCurrentPlayers());
 								serverInfo.put("max", minestat.getMaximumPlayers());
 								serverInfo.put("online", minestat.getCurrentPlayers());
-								Main.getInstance().getPlaceholders().put(server, serverInfo);
-								// if (Main.DEBUG) { System.out.println("PLACEHOLDERS does not contain " + server + ", adding."); }
+								Main.getInstance().getPlaceholders().put(server, serverInfo); 	 if (Main.DEBUG) { System.out.println("PLACEHOLDERS does not contain " + server + ", adding."); }
 								sleep();
 							} else continue;
 						} else {
 							String playerCount = countMap.get(server);
-							if (playerCount.equals(minestat.getCurrentPlayers())) {
-								// if (Main.DEBUG) { System.out.println("Player count remains the same, skipping. (" + server + ": " + playerCount + ")"); }
+							if (playerCount.equals(minestat.getCurrentPlayers())) { 			 if (Main.DEBUG) { System.out.println("Player count remains the same, skipping. (" + server + ": " + playerCount + ")"); }
 								continue;
 							} else {
 								countMap.remove(server);
@@ -67,8 +64,7 @@ public class Servers extends ServerManager {
 								serverInfo.put("online", minestat.getCurrentPlayers());
 								serverInfo.put("max", minestat.getMaximumPlayers());
 								Main.getInstance().getPlaceholders().put(server, serverInfo);
-								countMap.put(server, minestat.getCurrentPlayers());
-								// if (Main.DEBUG) { System.out.println("Updating player count.(" + server + ": " + playerCount + ")"); }
+								countMap.put(server, minestat.getCurrentPlayers());				 if (Main.DEBUG) { System.out.println("Updating player count.(" + server + ": " + playerCount + ")"); }
 								sleep();
 							}
 						}
@@ -89,7 +85,7 @@ public class Servers extends ServerManager {
 
 	private void sleep() {
 		try {
-			if (Main.DEBUG) { System.out.println("Sleeping..."); }
+			if (Main.DEBUG) { System.out.println("[DEBUG] Sleeping..."); }
 			Thread.sleep(1000);
 		} catch (InterruptedException e2) {
 			e2.printStackTrace();
@@ -98,11 +94,10 @@ public class Servers extends ServerManager {
 
 	public void startNPCTask() {
 		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-			Logger.debug("NPC task running");
-			if (npcConfig.getConfig().getConfigurationSection("npcs") != null) {
+			if (npcConfig.getSection("npcs") != null) {
 				for (Map.Entry<String, MineStat> str : getServerInfo().entrySet()) {
 					String server = str.getKey();
-					String name = Main.getInstance().getRegistry().getAssociation().get(server);
+					String name = Utils.getValue(Main.getRegistry().getAssociation(), server);
 					// Check if name is not equal to null
 					// in case there are more servers than NPCS
 					if (name != null) { holotext.updateText(server, name); }
@@ -114,8 +109,6 @@ public class Servers extends ServerManager {
 
 	public void stopNPCTask() {
 		BukkitTask bukkitTask = Main.getInstance().getTasks().remove(UUID.fromString(taskUUID));
-		if (bukkitTask != null) {
-			bukkitTask.cancel();
-		}
+		if (bukkitTask != null) { bukkitTask.cancel(); }
 	}
 }

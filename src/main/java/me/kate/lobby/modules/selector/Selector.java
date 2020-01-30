@@ -79,11 +79,10 @@ public class Selector {
 			ItemStack itemstack = map.getValue();
 			ItemMeta meta = itemstack.getItemMeta();
 			
-			final ConfigurationSection section = config.getSection("selector." + slot);
-			
 			String displayName = meta.getDisplayName();
 			List<String> lore = meta.getLore();
 			
+			final ConfigurationSection section = config.getSection("selector." + slot);
 			
 			if (section.getBoolean("server.ping-server")) {
 				String serverName = section.getString("server.server-id");

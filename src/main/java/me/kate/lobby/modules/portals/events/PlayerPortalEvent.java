@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
@@ -17,10 +18,14 @@ import me.kate.lobby.modules.portals.utils.SendToServer;
 import me.kate.lobby.utils.Logger;
 
 public class PlayerPortalEvent implements Listener {
-
-	private final CooldownManager cooldownManager = new CooldownManager();
 	
+	private JavaPlugin plugin;
+	private final CooldownManager cooldownManager = new CooldownManager(plugin);
 	private Config portalConfig = new PortalsConfig();
+	
+	public PlayerPortalEvent(JavaPlugin plugin) {
+		this.plugin = plugin;
+	}
 	
 	@EventHandler
 	public void onMove(final PlayerMoveEvent event) {
