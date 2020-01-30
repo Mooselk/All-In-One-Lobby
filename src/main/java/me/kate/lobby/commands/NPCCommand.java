@@ -28,73 +28,93 @@ public class NPCCommand extends NPCBuilder implements CommandExecutor {
 		if (command.getName().equalsIgnoreCase("npc")) {
 			if (args.length == 0) {
 				msgs.npcHelp(player);
-				return true;
 			} else {
 				if (args[0].equalsIgnoreCase("help")) {
 					if (player.hasPermission("lobby.npc.help")) {
 						msgs.npcHelp(player);
 					} else {
-						msgs.noPermission(player);
+						Messages.noPermission(player);
 					}
 				}
 				if (args[0].equalsIgnoreCase("create")) {
 					if (player.hasPermission("lobby.npc.create")) {
 						if (args.length < 3) {
-							msgs.send("&6Usage: &f/npc create <npc_name> <skin_id>", player);
+							Messages.send("&6Usage: &f/npc create <npc_name> <skin_id>", player);
 						} else {
 							this.npcToConfig(args[1], args[2], player.getLocation(), player);
-							msgs.send("&f[&6NPC&f] Created NPC '" + args[1] + "' with skinId '" + args[2] + "' at"
+							Messages.send("&f[&6NPC&f] Created NPC '" + args[1] + "' with skinId '" + args[2] + "' at"
 									+ " X: "+ (int) player.getLocation().getX()
 									+ ", Y: " + (int) player.getLocation().getY() 
 									+ ", Z: " + (int) player.getLocation().getZ(), player);
 							reloadNPCs(player, false);
 						}
 					} else {
-						msgs.noPermission(player);
+						Messages.noPermission(player);
 					}
 				}
 
 				if (args[0].equalsIgnoreCase("move")) {
 					if (player.hasPermission("lobby.npc.move")) {
 						if (args.length < 2) {
-							msgs.send("&6Usage: &f/npc move <npc_name>", player);
+							Messages.send("&6Usage: &f/npc move <npc_name>", player);
 						} else {
 							move(player.getLocation(), args[1], player);
 						}
-						
 					} else {
-						msgs.noPermission(player);
+						Messages.noPermission(player);
+					}
+				}
+				
+				if (args[0].equalsIgnoreCase("setskin")) {
+					if (player.hasPermission("lobby.npc.move")) {
+						if (args.length < 3) {
+							Messages.send("&6Usage: &f/npc setskin <npc_name> <skinId>", player);
+						} else {
+							setSkin(getNPCObjects().get(args[1]), Integer.valueOf(args[2]), args[1], player);
+						}
+					} else {
+						Messages.noPermission(player);
 					}
 				}
 
 				if (args[0].equalsIgnoreCase("delete")) {
 					if (player.hasPermission("lobby.npc.delete")) {
 						if (args.length < 2) {
-							msgs.send("&6Usage: &f/npc delete <npc_name>", player);
+							Messages.send("&6Usage: &f/npc delete <npc_name>", player);
 						}
 						if (args.length == 2) {
 							if (npcConfig.getConfig().getString("npcs." + args[1]) != null) {
-								msgs.send("&f[&6NPC&f] Deleted NPC '" + args[1] + "'.", player);
+								Messages.send("&f[&6NPC&f] Deleted NPC '" + args[1] + "'.", player);
 								npcConfig.getConfig().set("npcs." + args[1], null);
 								npcConfig.save();
 								npcConfig.reload();
 								destroy(args[1]);
 								reloadNPCs(player, false);
 							} else {
-								msgs.send("&f[&6NPC&f] Error deleting NPC '" + args[1] + "'. NPC does not exist!", player);
+								Messages.send("&f[&6NPC&f] Error deleting NPC '" + args[1] + "'. NPC does not exist!", player);
 							}
 						}
 					} else {
-						msgs.noPermission(player);
+						Messages.noPermission(player);
 					}
 				}
 			}
 			if (args[0].equalsIgnoreCase("reload")) {
 				if (player.hasPermission("lobby.npc.reload")) {
-					msgs.send("&f[&6NPC&f] Reloading NPCs...", player);
+					Messages.send("&f[&6NPC&f] Reloading NPCs...", player);
 					reloadNPCs(player, true);
 				} else {
-					msgs.noPermission(player);
+					Messages.noPermission(player);
+				}
+			}
+			if (args[0].equalsIgnoreCase("list")) {
+				if (player.hasPermission("lobby.npc.list")) {
+					Messages.send("&f[&6NPC&f] Loaded NPCs:", player);
+					for (String name : listNPCs()) {
+						Messages.send(" - &6" + name, player);
+					}
+				} else {
+					Messages.noPermission(player);
 				}
 			}
 		}
@@ -102,7 +122,7 @@ public class NPCCommand extends NPCBuilder implements CommandExecutor {
 
 	}
 
-	private void npcToConfig(String id, String skin, Location loc, Player p) {
-		create(Integer.valueOf(skin), id, loc, p);
+	private void npcToConfig(String id, String skin, Location loc, Player player) {
+		create(Integer.valueOf(skin), id, loc.add(0.5, 0, 0.5), player);
 	}
 }
