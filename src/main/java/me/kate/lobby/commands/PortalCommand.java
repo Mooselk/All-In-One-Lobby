@@ -36,20 +36,20 @@ public class PortalCommand extends PortalLocation implements CommandExecutor {
 					if (player.hasPermission("lobby.portal.help"))
 						msgs.portalHelp(player);
 					else 
-						msgs.noPermission(player);
+						Messages.noPermission(player);
 				}
 
 				if (args[0].equalsIgnoreCase("wand")) {
 					if (player.hasPermission("lobby.portal.wand")) {
-						msgs.send("&f[&6Portal&f] &5Left click: &dSelect pos #1; &5Right click: &dSelect pos #2", player);
+						Messages.send("&f[&6Portal&f] &5Left click: &dSelect pos #1; &5Right click: &dSelect pos #2", player);
 						player.getInventory().addItem(PortalWand.WAND);
-					} else msgs.noPermission(player);
+					} else Messages.noPermission(player);
 				}
 
 				if (args[0].equalsIgnoreCase("create")) {
 					if (player.hasPermission("lobby.portal.create")) {
 						if (args.length < 3) {
-							msgs.send("&6Usage: &f/portal create <portal_name> <server>", player);
+							Messages.send("&6Usage: &f/portal create <portal_name> <server>", player);
 						} else {
 							if (args.length == 3) {
 								String name = args[1];
@@ -65,50 +65,51 @@ public class PortalCommand extends PortalLocation implements CommandExecutor {
 									Logger.debug("Location 1: " + pos1 + " Location 2: " + pos2);
 									
 									portal.create(pos1, pos2, name, world, server, player);
-									msgs.send("&f[&6Portal&f] Created portal '" + name + "'.", player);
+									Messages.send("&f[&6Portal&f] Created portal '" + name + "'.", player);
 									
 								} else {
-									msgs.send("&f[&6Portal&f] Create a selection before creating a portal.", player);
+									Messages.send("&f[&6Portal&f] Create a selection before creating a portal.", player);
 								}
 							}
 						}
-					} else msgs.noPermission(player);
+					} else Messages.noPermission(player);
 				}
 
 				if (args[0].equalsIgnoreCase("delete")) {
 					if (player.hasPermission("lobby.portal.delete")) {
 						if (args.length < 2) {
-							msgs.send("&6Usage: &f/portal delete <portal_name>", player);
+							Messages.send("&6Usage: &f/portal delete <portal_name>", player);
 						} else {
 							if (args.length == 2) {
 								String name = args[1];
 								if (portalConfig.getConfig().getString("portals." + name) != null) {
 									portal.delete(name);
-									msgs.send("&f[&6Portal&f] Deleted portal '" + name + "'.", player);
+									Messages.send("&f[&6Portal&f] Deleted portal '" + name + "'.", player);
 								} else {
-									msgs.send("&f[&6Portal&f] Error deleting portal '" + name + "'. Portal does not exist!", player);
+									Messages.send("&f[&6Portal&f] Error deleting portal '" + name + "'. Portal does not exist!", player);
 								}
 							}
 						}
-					} else msgs.noPermission(player);
+					} else Messages.noPermission(player);
 				}
 				
 				if (args[0].equalsIgnoreCase("clear")) {
 					if (player.hasPermission("lobby.portal.clear")) {
 						if (!Main.getInstance().getPortals().isEmpty()) {
 							// Main.getInstance().getPortals().clear();
-							msgs.send("&f[&6Portal&f] Cleared last selection.", player);
+							Messages.send("unfinished", player);
+							Messages.send("&f[&6Portal&f] Cleared last selection.", player);
 						} else {
-							msgs.send("&f[&6Portal&f] No selections to clear.", player);
+							Messages.send("&f[&6Portal&f] No selections to clear.", player);
 						}
-					} else msgs.noPermission(player);
+					} else Messages.noPermission(player);
 				}
 
 				if (args[0].equalsIgnoreCase("reload")) {
 					if (player.hasPermission("lobby.portal.reload")) {
 						portal.reloadAll();
-						msgs.send("&f[&6Portals&f] Reloading all portals.", player);
-					} else msgs.noPermission(player);
+						Messages.send("&f[&6Portals&f] Reloading all portals.", player);
+					} else Messages.noPermission(player);
 				}
 			}
 		}

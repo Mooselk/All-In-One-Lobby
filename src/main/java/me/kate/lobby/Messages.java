@@ -5,11 +5,11 @@ import org.bukkit.entity.Player;
 
 public class Messages {
 	
-	public void send(String msg, Player player) {
+	public static void send(String msg, Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', msg));
 	}
 	
-	public void noPermission(Player player) {
+	public static void noPermission(Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have permission to use this command."));
 	}
 	
