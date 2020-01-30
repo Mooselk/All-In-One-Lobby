@@ -13,8 +13,10 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
+import me.kate.lobby.gui.SettingsGUI;
 import me.kate.lobby.modules.Spawn;
 import me.kate.lobby.servers.Servers;
+import me.kate.lobby.utils.Utils;
 
 public class LobbyCommand extends Servers implements CommandExecutor {
 
@@ -36,14 +38,11 @@ public class LobbyCommand extends Servers implements CommandExecutor {
 					msgs.lobbyHelp(player);
 				}
 			} else {
-				if (args[0].equalsIgnoreCase("test")) {
-					
-				}
 				if (args[0].equalsIgnoreCase("help")) {
 					if (player.hasPermission("lobby.npc.help")) {
 						msgs.lobbyHelp(player);
 					} else {
-						msgs.noPermission(player);
+						Messages.noPermission(player);
 					}
 				}
 				if (args[0].equalsIgnoreCase("setspawn")) {
@@ -51,15 +50,15 @@ public class LobbyCommand extends Servers implements CommandExecutor {
 						Location loc = player.getLocation();
 						Spawn.setSpawn(player, loc);
 					} else {
-						msgs.noPermission(player);
+						Messages.noPermission(player);
 					}
 				}
 				if (args[0].equalsIgnoreCase("spawn")) {
 					if (player.hasPermission("lobby.spawn")) {
 						player.teleport(Spawn.toSpawn());
-						msgs.send("&f[&6Lobby&f] Teleporting to spawn...", player);
+						Messages.send("&f[&6Lobby&f] Teleporting to spawn...", player);
 					} else {
-						msgs.noPermission(player);
+						Messages.noPermission(player);
 
 					}
 				}
@@ -68,28 +67,19 @@ public class LobbyCommand extends Servers implements CommandExecutor {
 						if (args.length > 1) {
 							switch (args[1]) {
 							case "playerhider":
-								if (togglePlayersConfig.reload())
-									msgs.send("Successfully reloaded playerhider", player);
-								else
-									msgs.send("Failed to reload playerhider", player);
+								Utils.reloadConfig(togglePlayersConfig, player);
 								break;
 							case "selector":
-								if (selectorConfig.reload())
-									msgs.send("Successfully reloaded selector", player);
-								else
-									msgs.send("Failed to reload selector", player);
+								Utils.reloadConfig(selectorConfig, player);
 								break;
 							case "config":
-								if (mainConfig.reload()) {
-									if (Main.getInstance().getConfig().getBoolean("tablist.enabled")) {
-										Main.getInstance().getTabList().update();
-									}
-									msgs.send("Successfully reloaded config", player);
-								} else
-									msgs.send("Failed to reload config", player);
+								Utils.reloadConfig(mainConfig, player);
+								if (mainConfig.getConfig().getBoolean("tablist.enabled")) {
+									Main.getInstance().getTabList().update();
+								}
 								break;
 							default:
-								msgs.send("Unknown config: " + args[1].toLowerCase(), player);
+								Messages.send("Unknown config: " + args[1].toLowerCase(), player);
 							}
 						} else {
 							msgs.lobbyHelpReload(player);
