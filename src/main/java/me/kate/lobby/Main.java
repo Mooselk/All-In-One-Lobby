@@ -3,6 +3,8 @@ package me.kate.lobby;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
@@ -51,6 +53,10 @@ import me.kate.lobby.npcs.nms.v1_8_R3.TabList_v1_8_R3;
 import me.kate.lobby.npcs.nms.v1_9_R1.TabList_v1_9_R1;
 import me.kate.lobby.npcs.nms.v1_9_R2.TabList_v1_9_R2;
 import me.kate.lobby.servers.Servers;
+import me.kate.lobby.tasks.BungeePingTask;
+import me.kate.lobby.tasks.BungeeMessenger;
+import me.kate.lobby.tasks.NPCTask;
+import me.kate.lobby.tasks.Task;
 import me.kate.lobby.utils.Logger;
 
 public class Main extends JavaPlugin {
@@ -76,11 +82,12 @@ public class Main extends JavaPlugin {
 	
 	private final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	
+	public static final ExecutorService threadPool = Executors.newSingleThreadExecutor();
 	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
 	public final Map<String, Cuboid> portal = new HashMap<>();
-
+	
 	public static Main getInstance() {
 		return instance;
 	}
@@ -126,6 +133,7 @@ public class Main extends JavaPlugin {
 		this.loadNPCs();
 		this.registerChannel();
 		this.setupServers();
+		this.startTasks();
 		portals = new Portal();
 		portals.load(false);
 		if (this.getConfig().getBoolean("tablist.enabled")) {
@@ -135,6 +143,8 @@ public class Main extends JavaPlugin {
 				Logger.severe("[Lobby] Failed to load tablist for " + version + " unsupported version.");
 			}
 		}
+		getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessenger());
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
 	}
 
 	@Override
@@ -161,7 +171,7 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new SettingsGUIListener(), this);
 	}
 	private void registerCommands() {
-		this.getCommand("lobby").setExecutor(new LobbyCommand(this));
+		this.getCommand("lobby").setExecutor(new LobbyCommand());
 		this.getCommand("npc").setExecutor(new NPCCommand(this));
 		this.getCommand("portal").setExecutor(new PortalCommand());
 	}
@@ -183,14 +193,19 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupServers() {
-		final Servers servers = new Servers(this);
+		final Servers servers = new Servers();
 		servers.loadServers();
-		servers.getCountAsync();
-		servers.startNPCTask();
+	}
+	
+	private void startTasks() {
+		final Task npctask = new NPCTask(this);
+		final Task bungee = new BungeePingTask(this);
+		bungee.start();
+		npctask.start();
 	}
 	
 	private void registerChannel() {
-		this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+		
 	}
 	
 	private boolean setupTablist() {
@@ -210,6 +225,6 @@ public class Main extends JavaPlugin {
 		if (versionName.equals("v1_13_R1")) { tablist = new TabList_v1_13_R1(); }
 		if (versionName.equals("v1_13_R2")) { tablist = new TabList_v1_13_R2(); }
 		if (versionName.equals("v1_14_R1")) { tablist = new TabList_v1_14_R1(); }
-		return tablist !=null;
+		return tablist != null;
 	}
 }
