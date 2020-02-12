@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,16 +15,17 @@ import org.bukkit.ChatColor;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
+import me.kate.lobby.Main;
+
 /**
  * @author Jitse Boonstra
  */
 public class MineSkinFetcher {
 
     private static final String MINESKIN_API = "https://api.mineskin.org/get/id/";
-    private static final ExecutorService threadPool = Executors.newSingleThreadExecutor();
     
     public static void fetchSkinFromIdAsync(int id, Callback callback) {
-    	threadPool.execute(() -> {
+    	Main.threadPool.execute(() -> {
             try {
                 StringBuilder builder = new StringBuilder();
                 HttpURLConnection httpURLConnection = (HttpURLConnection) new URL(MINESKIN_API + id).openConnection();

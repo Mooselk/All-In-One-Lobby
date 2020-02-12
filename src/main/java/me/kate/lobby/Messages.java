@@ -13,7 +13,7 @@ public class Messages {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cYou do not have permission to use this command."));
 	}
 	
-	public void lobbyHelp(Player player) {
+	public static void lobbyHelp(Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m------------&r[ &l&6Lobby Help&r ]&m------------"));
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/spawn &f- Sends you to lobby spawn point."));
@@ -24,11 +24,11 @@ public class Messages {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 	}
 
-	public void lobbyHelpReload(Player player) {
+	public static void lobbyHelpReload(Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&f[&6Lobby&f] Reloadable configs: config, selector, playerhider"));
 	}
 	
-	public void npcHelp(Player player) {
+	public static void npcHelp(Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m-------------&r[ &l&6NPC Help&r ]&m-------------"));
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/npc create <&fnpc_name&6> <&fskin_id&6> &f- Creates NPC."));
@@ -40,7 +40,7 @@ public class Messages {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6Note: &f&oSkin ids can be otained from https://mineskin.org/"));
 	}
 	
-	public void portalHelp(Player player) {
+	public static void portalHelp(Player player) {
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&m-------------&r[ &l&6Portal Help&r ]&m-------------"));
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', ""));
 		player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&6/portal wand &f- Gives portal selection tool."));

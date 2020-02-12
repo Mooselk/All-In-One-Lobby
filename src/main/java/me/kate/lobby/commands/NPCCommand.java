@@ -14,8 +14,6 @@ import me.kate.lobby.npcs.NPCBuilder;
 
 public class NPCCommand extends NPCBuilder implements CommandExecutor {
 
-	private final Messages msgs = new Messages();
-	
 	private Config npcConfig = new NPCConfig();
 	
 	public NPCCommand(JavaPlugin plugin) {
@@ -27,11 +25,11 @@ public class NPCCommand extends NPCBuilder implements CommandExecutor {
 		final Player player = (Player) sender;
 		if (command.getName().equalsIgnoreCase("npc")) {
 			if (args.length == 0) {
-				msgs.npcHelp(player);
+				Messages.npcHelp(player);
 			} else {
 				if (args[0].equalsIgnoreCase("help")) {
 					if (player.hasPermission("lobby.npc.help")) {
-						msgs.npcHelp(player);
+						Messages.npcHelp(player);
 					} else {
 						Messages.noPermission(player);
 					}

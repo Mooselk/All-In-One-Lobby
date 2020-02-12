@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 
 public interface IUtils {
 	
-	List<String> replaceLore(List<String> lore, int max, int online);
+	List<String> replaceLore(List<String> lore, int online);
 
-	String replace(String in, int max, int online);
+	String replace(String in, int online);
 	
 	String color(String color);
 	

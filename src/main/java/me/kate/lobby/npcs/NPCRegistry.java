@@ -9,6 +9,7 @@ import org.bukkit.Bukkit;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.internal.NPCManager;
 import me.kate.lobby.utils.Logger;
+import me.kate.lobby.utils.Utils;
 
 public class NPCRegistry {
 	
@@ -46,6 +47,10 @@ public class NPCRegistry {
 	
 	public Map<NPC, ArrayList<String>> getNPCHoloText() {
 		return HOLOTEXT;
+	}
+	
+	public ArrayList<String> getHoloTextFor(NPC npc) {
+		return HOLOTEXT.get(npc);
 	}
 	
 	public void addToRegistry(NPC npc, String name) {
@@ -86,19 +91,10 @@ public class NPCRegistry {
 		}
 		
 		if (SERVER_ASSOCIATION.containsValue(name))
-			SERVER_ASSOCIATION.remove(getValue(SERVER_ASSOCIATION, name));
+			SERVER_ASSOCIATION.remove(Utils.getValue(SERVER_ASSOCIATION, name));
 		
 		if (HOLOTEXT.containsKey(npc))
 			HOLOTEXT.remove(npc);
-	}
-	
-	public String getValue(Map<String, String> map, String value) {
-		for (Map.Entry<String, String> s : map.entrySet()) {
-			if (s.getValue().equalsIgnoreCase(value)) {
-				return s.getKey();
-			}
-		}
-		return null;
 	}
 
 	public NPC getNPCById(String id) {

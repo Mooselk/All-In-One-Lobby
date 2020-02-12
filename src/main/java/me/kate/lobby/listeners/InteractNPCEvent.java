@@ -16,13 +16,14 @@ import me.kate.lobby.npcs.api.events.NPCInteractEvent;
 
 public class InteractNPCEvent implements Listener {
 
-	private JavaPlugin plugin;
-	private CooldownManager cooldownManager = new CooldownManager(plugin);
+	// private JavaPlugin plugin;
 	private Config npcConfig = new NPCConfig();
 	
 	public InteractNPCEvent(JavaPlugin plugin) {
-		this.plugin = plugin;
+		// this.plugin = plugin;
 	}
+	
+	private CooldownManager cooldownManager = new CooldownManager(Main.getInstance());
 	
 	@EventHandler
 	public void onNPCInteract(NPCInteractEvent event) {

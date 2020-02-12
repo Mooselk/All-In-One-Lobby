@@ -85,17 +85,18 @@ public class NPCBuilder extends NPCRegistry {
 	public void applyItems(NPC npc, String name) {
 		for (String items : npcConfig.getConfig().getStringList("npcs." + name + ".equipment")) {
 			String[] parts = items.split(":");
-			if (parts.length > 2 && parts[2].equals("true"))
+			if (parts.length > 2 && parts[2].equals("true")) {
 				npc.setItem(NPCSlot.getSlot(parts[0]
 						.toUpperCase()), new ItemBuilder(Material
 						.getMaterial(parts[1]))
 						.addEnchant(Enchantment.DURABILITY, 1)
 						.toItemStack());
-			else 
+			} else {
 				npc.setItem(NPCSlot.getSlot(parts[0]
 						.toUpperCase()), new ItemBuilder(Material
 						.getMaterial(parts[1]))
 						.toItemStack());
+			}
 		}
 	}
 
@@ -159,7 +160,7 @@ public class NPCBuilder extends NPCRegistry {
 
 	public void destroy(String name) {
 		if (Main.getRegistry().getNPCInfo().containsValue(name)) {
-			NPC npcs = getNPCById(getValue(getNPCInfo(), name));
+			NPC npcs = getNPCById(Utils.getValue(getNPCInfo(), name));
 			remove(name);
 			npcs.destroy();
 		}

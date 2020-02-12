@@ -24,9 +24,11 @@ public class Selector {
 
 	protected SelectorConfig config = new SelectorConfig();
 
-	public Inventory inventory = Bukkit.createInventory(null, config.getConfig().getInt("selector.options.rows") * 9,
-			ChatColor.translateAlternateColorCodes('&', config.getConfig().getString("selector.options.name")));
-
+	private Inventory inventory = Bukkit.createInventory(null, 
+			config.getConfig().getInt("selector.options.rows") * 9, 
+			ChatColor.translateAlternateColorCodes('&', 
+			config.getConfig().getString("selector.options.name")));
+	
 	private Map<Integer, ItemStack> itemsOnline = new HashMap<>();
 	private Map<Integer, ItemStack> itemsOffline = new HashMap<>();
 	private IUtils utils = new Utils();
@@ -36,8 +38,9 @@ public class Selector {
 	}
 
 	public void open(Player player) {
-		this.update();
+		this.update(player);
 		player.openInventory(inventory);
+		player.updateInventory();
 	}
 
 	public void close(Player player) {
@@ -59,30 +62,31 @@ public class Selector {
 		return isOnline;
 	}
 	
-	private void setup() {
-		for (final String key : config.get("selector")) {
-			final ConfigurationSection section = config.getSection("selector." + key);
+	public void setup() {
+		for (final String key : config.getConfig().getConfigurationSection("selector").getKeys(false)) {
+			final ConfigurationSection section = config.getConfig().getConfigurationSection("selector." + key);
 			if (key.equals("options")) { continue; }
 			if (section.getBoolean("decoration")) {
 				inventory.setItem(Integer.valueOf(key), createItem("selector." + key));
 			} else {
 				itemsOnline.put(Integer.valueOf(key), createItem("selector." + key + ".online"));
+				
 				itemsOffline.put(Integer.valueOf(key), createItem("selector." + key + ".offline"));
 			}
 		}
 	}
 	
-	private void update() {
+	private void update(Player player) {
 		for (Map.Entry<Integer, ItemStack> map : itemsOnline.entrySet()) {
-			
 			int slot = map.getKey();
 			ItemStack itemstack = map.getValue();
 			ItemMeta meta = itemstack.getItemMeta();
 			
 			String displayName = meta.getDisplayName();
-			List<String> lore = meta.getLore();
 			
 			final ConfigurationSection section = config.getSection("selector." + slot);
+			
+			List<String> lore = section.getStringList("online.lore");
 			
 			if (section.getBoolean("server.ping-server")) {
 				String serverName = section.getString("server.server-id");
@@ -96,26 +100,19 @@ public class Selector {
 				
 				if (isOnline) {
 					String onlineplayers = (String) placeholders.get("online");
-					String maxplayers = (String) placeholders.get("max");
-					meta.setLore(utils.replaceLore(lore, 
-							Integer.valueOf(maxplayers), 
-							Integer.valueOf(onlineplayers)));
-					meta.setDisplayName(utils.replace(displayName, 
-							Integer.valueOf(maxplayers), 
-							Integer.valueOf(onlineplayers)));
+					int online = Integer.valueOf(onlineplayers);
+					meta.setLore(utils.replaceLore(lore, online));
+					meta.setDisplayName(utils.replace(displayName, online));
+					player.updateInventory();
 					itemstack.setItemMeta(meta);
 					inventory.setItem(slot, itemstack);
 				}
 				if (!isOnline) {
-					getOffline(slot);
+					ItemStack offline = itemsOffline.get(slot);
+					inventory.setItem(slot, offline);
 				}
 			}
 		}
-	}
-
-	private void getOffline(int slot) {
-		ItemStack offline = itemsOffline.get(slot);
-		inventory.setItem(slot, offline);
 	}
 	
 	private ItemStack createItem(String path) {

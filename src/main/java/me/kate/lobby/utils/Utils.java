@@ -26,15 +26,12 @@ public class Utils implements IUtils {
 	}
 
 	@Override
-	public List<String> replaceLore(List<String> lore, int max, int online) {
+	public List<String> replaceLore(List<String> lore, int online) {
 		ArrayList<String> mlore = null; mlore = new ArrayList<String>();
 		for (String l : lore) {
 			String out = l;
 			if (l.contains("%online%")) {
 				out = out.replaceAll("%online%", String.valueOf(online));
-			}
-			if (l.contains("%max%")) {
-				out = out.replaceAll("%max%", String.valueOf(max));
 			}
 			mlore.add(ChatColor.translateAlternateColorCodes('&', out));
 		}
@@ -42,24 +39,15 @@ public class Utils implements IUtils {
 	}
 
 	@Override
-	public String replace(String in, int max, int online) {
+	public String replace(String in, int online) {
 		String out = in;
-		if (max != 0 || online != 0) {
+		if (online != 0) {
 			if (in.contains("%online%")) {
 				out = out.replaceAll("%online%", String.valueOf(online));
-			}
-			if (in.contains("%max%")) {
-				out = out.replaceAll("%max%", String.valueOf(max));
 			}
 		} else {
 			if (in.contains("%online%")) {
 				out = out.replaceAll("%online%", "0");
-			}
-			if (in.contains("%max%")) {
-				out = out.replaceAll("%max%", "0");
-			}
-			if (in.contains("%ping%")) {
-				out = out.replaceAll("%ping%", "Offline");
 			}
 		}
 		return ChatColor.translateAlternateColorCodes('&', out);

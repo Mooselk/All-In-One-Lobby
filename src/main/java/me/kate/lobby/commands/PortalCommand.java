@@ -19,7 +19,6 @@ public class PortalCommand extends PortalLocation implements CommandExecutor {
 
 	private Config portalConfig = new PortalsConfig();
 	private final Portal portal = new Portal();
-	private final Messages msgs = new Messages();
 	
 	public PortalCommand() {
 		super(null, null);
@@ -30,11 +29,11 @@ public class PortalCommand extends PortalLocation implements CommandExecutor {
 		final Player player = (Player) sender;
 		if (cmd.getName().equalsIgnoreCase("portal")) {
 			if (args.length == 0) {
-				msgs.portalHelp(player);
+				Messages.portalHelp(player);
 			} else {
 				if (args[0].equalsIgnoreCase("help")) {
 					if (player.hasPermission("lobby.portal.help"))
-						msgs.portalHelp(player);
+						Messages.portalHelp(player);
 					else 
 						Messages.noPermission(player);
 				}

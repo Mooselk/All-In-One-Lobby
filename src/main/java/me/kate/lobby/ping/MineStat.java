@@ -24,8 +24,11 @@
 
 package me.kate.lobby.ping;
 
-import java.io.*;
-import java.net.*;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.InetSocketAddress;
+import java.net.Socket;
 
 public class MineStat {
 	public static final byte NUM_FIELDS = 6; // expected number of fields returned from server after query
@@ -99,7 +102,7 @@ public class MineStat {
 			// Socket clientSocket = new Socket(getAddress(), getPort());
 			Socket clientSocket = new Socket();
 			long startTime = System.currentTimeMillis();
-			clientSocket.connect(new InetSocketAddress(getAddress(), getPort()), 500);
+			clientSocket.connect(new InetSocketAddress(getAddress(), getPort()), 500);	
 			setLatency(System.currentTimeMillis() - startTime);
 			DataOutputStream dos = new DataOutputStream(clientSocket.getOutputStream());
 			BufferedReader br = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -141,7 +144,7 @@ public class MineStat {
 	public int getPort() {
 		return port;
 	}
-
+	
 	public void setPort(int port) {
 		this.port = port;
 	}

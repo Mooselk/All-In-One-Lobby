@@ -273,14 +273,14 @@ public class ItemBuilder {
 		return this;
 	}
 	
-	public ItemBuilder setGlassColor(short color) {
-		if (is.getType().equals(Material.STAINED_GLASS_PANE) 
-				|| is.getType().equals(Material.STAINED_GLASS)) {
-			is.setDurability(color);
-			return this;
-		}
-		return this;
-	}
+//	public ItemBuilder setGlassColor(short color) {
+//		if (!is.getType().equals(Material.STAINED_GLASS_PANE) 
+//				|| !is.getType().equals(Material.STAINED_GLASS)) {
+//			return this;
+//		}
+//		is.setDurability(color);
+//		return this;
+//	}
 
 	/**
 	 * Sets the dye color of a wool item. Works only on wool.
