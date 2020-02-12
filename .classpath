@@ -16,5 +16,7 @@
 	<classpathentry kind="lib" path="C:/Libraries/spigot-1.8.3-R0.1-SNAPSHOT-latest.jar"/>
 	<classpathentry kind="lib" path="C:/Libraries/spigot-1.13.jar"/>
 	<classpathentry kind="lib" path="C:/Libraries/spigot-1.14.3.jar"/>
+	<classpathentry kind="lib" path="C:/Libraries/spigot-1.15.1.jar"/>
+	<classpathentry kind="lib" path="C:/Libraries/BungeeCord.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
