@@ -5,6 +5,7 @@
 package me.kate.lobby.npcs.api;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -102,7 +103,7 @@ public interface NPC {
      * @return Object instance.
      */
     NPC toggleState(NPCState state);
-    
+
     /**
      * Get state of NPC.
      *
@@ -121,14 +122,14 @@ public interface NPC {
     NPC setItem(NPCSlot slot, ItemStack item);
 
     NPC setText(List<String> text);
-    
+
     /**
      * Get the text of an NPC
      *
      * @return List<String> text
      */
     List<String> getText();
-    
+
     /**
      * Get a NPC's item.
      *
@@ -136,4 +137,18 @@ public interface NPC {
      * @return ItemStack item.
      */
     ItemStack getItem(NPCSlot slot);
+
+    /**
+     * Update the skin for every play that can see the NPC.
+     *
+     * @param skin The new skin for the NPC.
+     */
+    void updateSkin(Skin skin);
+
+    /**
+     * Get the UUID of the NPC.
+     *
+     * @return The UUID of the NPC.
+     */
+    UUID getUniqueId();
 }

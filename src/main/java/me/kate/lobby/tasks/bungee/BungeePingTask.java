@@ -1,4 +1,4 @@
-package me.kate.lobby.tasks;
+package me.kate.lobby.tasks.bungee;
 
 import java.util.UUID;
 
@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.tasks.Task;
 
 public class BungeePingTask extends Task {
 

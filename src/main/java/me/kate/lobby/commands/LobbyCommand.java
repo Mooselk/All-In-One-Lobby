@@ -14,7 +14,7 @@ import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.modules.Spawn;
 import me.kate.lobby.modules.selector.Selector;
-import me.kate.lobby.tasks.HeartBeat;
+import me.kate.lobby.tasks.bungee.HeartBeat;
 import me.kate.lobby.utils.Utils;
 
 public class LobbyCommand implements CommandExecutor {

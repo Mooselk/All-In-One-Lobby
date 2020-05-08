@@ -10,7 +10,6 @@ import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.modules.toggleplayers.Hideable;
 import me.kate.lobby.modules.toggleplayers.TogglePlayers;
-import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Utils;
 
@@ -19,7 +18,6 @@ public class Items {
 	private ToggleConfig playerToggleConfig = new ToggleConfig();
 	private SelectorConfig selectorConfig = new SelectorConfig();
 
-	private IUtils utils = new Utils();
 	private Hideable playerToggle = new TogglePlayers();
 	
 	private ConfigurationSection togglePlayersHide = playerToggleConfig.getSection("item.hide");
@@ -39,8 +37,8 @@ public class Items {
 	
 	public ItemStack selector() {
 		return new ItemBuilder(Material.getMaterial(selectorConfig.getSection("selector.options").getString("material")))
-				.setName(utils.color(selectorConfig.getSection("selector.options").getString("item-name")))
-				.setLore(utils.colorParser(selectorConfig.getSection("selector.options").getStringList("lore")))
+				.setName(Utils.color(selectorConfig.getSection("selector.options").getString("item-name")))
+				.setLore(Utils.colorParser(selectorConfig.getSection("selector.options").getStringList("lore")))
 				.toItemStack();
 	}
 	

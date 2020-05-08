@@ -4,18 +4,17 @@
 
 package me.kate.lobby.npcs.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.npcs.NPCLib;
 import me.kate.lobby.npcs.internal.NPCBase;
@@ -24,7 +23,7 @@ import me.kate.lobby.npcs.internal.NPCManager;
 /**
  * @author Jitse Boonstra
  */
-public class PlayerListener implements Listener {
+public class PlayerListener extends HandleMoveBase implements Listener {
 
     private final NPCLib instance;
 
@@ -34,17 +33,43 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
-        onPlayerLeave(event.getPlayer());
+    	for (NPCBase npc : NPCManager.getAllNPCs())
+            npc.onLogout(event.getPlayer());
     }
 
-    @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
-    public void onPlayerKick(PlayerKickEvent event) {
-        onPlayerLeave(event.getPlayer());
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent event) {
+        // Need to auto hide the NPCs from the player, or else the system will think they can see the NPC on respawn.
+        Player player = event.getEntity();
+        for (NPCBase npc : NPCManager.getAllNPCs()) {
+            if (npc.isShown(player) && npc.getWorld().equals(player.getWorld())) {
+                npc.hide(player, true);
+            }
+        }
     }
 
-    private void onPlayerLeave(Player player) {
-        for (NPCBase npc : NPCManager.getAllNPCs())
-            npc.onLogout(player);
+    @EventHandler
+    public void onPlayerRespawn(PlayerRespawnEvent event) {
+        // If the player dies in the server spawn world, the world change event isn't called (nor is the PlayerTeleportEvent).
+        Player player = event.getPlayer();
+        Location respawn = event.getRespawnLocation();
+        if (respawn.getWorld() != null && respawn.getWorld().equals(player.getWorld())) {
+            // Waiting until the player is moved to the new location or else it'll mess things up.
+            // I.e. if the player is at great distance from the NPC spawning, they won't be able to see it.
+            new BukkitRunnable() {
+                @Override
+                public void run() {
+                    if (!player.isOnline()) {
+                        this.cancel();
+                        return;
+                    }
+                    if (player.getLocation().equals(respawn)) {
+                        handleMove(player);
+                        this.cancel();
+                    }
+                }
+            }.runTaskTimer(instance.getPlugin(), 0L, 1L);
+        }
     }
 
     @EventHandler
@@ -52,63 +77,16 @@ public class PlayerListener implements Listener {
         Player player = event.getPlayer();
         World from = event.getFrom();
 
-        // The PlayerTeleportEvent is call, and will handle visibility in the new world.
+        // The PlayerTeleportEvent is called, and will handle visibility in the new world.
         for (NPCBase npc : NPCManager.getAllNPCs()) {
-            if (npc.getWorld().equals(from)) {
-                if (!npc.getAutoHidden().contains(player.getUniqueId())) {
-                    npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true);
-                }
+            if (npc.isShown(player) && npc.getWorld().equals(from)) {
+                npc.hide(player, true);
             }
         }
-    }
-
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent event) {
-        Location from = event.getFrom();
-        Location to = event.getTo();
-        if (to == null || (from.getBlockX() != to.getBlockX()
-                || from.getBlockY() != to.getBlockY()
-                || from.getBlockZ() != to.getBlockZ()))
-            handleMove(event.getPlayer()); // Verify the player changed which block they are on. Since PlayerMoveEvent is one of the most called events, this is worth it.
     }
 
     @EventHandler
     public void onPlayerTeleport(PlayerTeleportEvent event) {
         handleMove(event.getPlayer());
-    }
-
-    private void handleMove(Player player) {
-        World world = player.getWorld();
-        for (NPCBase npc : NPCManager.getAllNPCs()) {
-            if (!npc.getShown().contains(player.getUniqueId())) {
-                continue; // NPC was never supposed to be shown to the player.
-            }
-
-            if (!npc.getWorld().equals(world)) {
-                continue; // NPC is not in the same world.
-            }
-
-            // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
-            // This will cause issues otherwise (e.g. custom skin disappearing).
-            double hideDistance = instance.getAutoHideDistance();
-            double distanceSquared = player.getLocation().distanceSquared(npc.getLocation());
-
-            int tempRange = Bukkit.getViewDistance() << 4;
-            boolean inRange = distanceSquared <= (hideDistance * hideDistance) && distanceSquared <= (tempRange * tempRange); // Avoids Math.pow due to how intensive it is. Could make a static utility function for it.
-            if (npc.getAutoHidden().contains(player.getUniqueId())) {
-                // Check if the player and NPC are within the range to sendShowPackets it again.
-                if (inRange) {
-                    npc.getAutoHidden().remove(player.getUniqueId());
-                    npc.show(player, true);
-                }
-            } else {
-                // Check if the player and NPC are out of range to sendHidePackets it.
-                if (!inRange) {
-                    npc.getAutoHidden().add(player.getUniqueId());
-                    npc.hide(player, true);
-                }
-            }
-        }
     }
 }

@@ -175,9 +175,11 @@ public final class Reflection {
         }
 
         // Search in parent classes
-        if (target.getSuperclass() != null)
+        if (target.getSuperclass() != null) {
+        	Bukkit.getLogger().info("Looking for the following, Name: (" + name + ") fieldType: (" + fieldType + ") Index: (" + index + ")");
             return getField(target.getSuperclass(), name, fieldType, index);
 
+        }
         throw new IllegalArgumentException("Cannot find field with type " + fieldType);
     }
 

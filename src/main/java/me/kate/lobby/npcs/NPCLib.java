@@ -4,15 +4,19 @@
 
 package me.kate.lobby.npcs;
 
+import java.util.List;
+
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+
+import me.kate.lobby.npcs.NPCLibOptions.MovementHandling;
 import me.kate.lobby.npcs.api.NPC;
 import me.kate.lobby.npcs.api.utilities.Logger;
 import me.kate.lobby.npcs.listeners.ChunkListener;
 import me.kate.lobby.npcs.listeners.PacketListener;
+import me.kate.lobby.npcs.listeners.PeriodicMoveListener;
 import me.kate.lobby.npcs.listeners.PlayerListener;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.util.List;
+import me.kate.lobby.npcs.listeners.PlayerMoveEventListener;
 
 public final class NPCLib {
 
@@ -22,9 +26,9 @@ public final class NPCLib {
 
     private double autoHideDistance = 50.0;
 
-    public NPCLib(JavaPlugin plugin) {
+    private NPCLib(JavaPlugin plugin, MovementHandling moveHandling) {
         this.plugin = plugin;
-        this.logger = new Logger("[Lobby-NPC]");
+        this.logger = new Logger("NPCLib");
 
         String versionName = plugin.getServer().getClass().getPackage().getName().split("\\.")[3];
 
@@ -48,10 +52,24 @@ public final class NPCLib {
         pluginManager.registerEvents(new PlayerListener(this), plugin);
         pluginManager.registerEvents(new ChunkListener(this), plugin);
 
+        if (moveHandling.usePme) {
+            pluginManager.registerEvents(new PlayerMoveEventListener(), plugin);
+        } else {
+            pluginManager.registerEvents(new PeriodicMoveListener(this, moveHandling.updateInterval), plugin);
+        }
+
         // Boot the according packet listener.
         new PacketListener().start(this);
 
         logger.info("Enabled for Minecraft " + versionName);
+    }
+
+    public NPCLib(JavaPlugin plugin) {
+        this(plugin, MovementHandling.playerMoveEvent());
+    }
+
+    public NPCLib(JavaPlugin plugin, NPCLibOptions options) {
+        this(plugin, options.moveHandling);
     }
 
     /**
@@ -95,7 +113,7 @@ public final class NPCLib {
         try {
             return (NPC) npcClass.getConstructors()[0].newInstance(this, text);
         } catch (Exception exception) {
-            logger.warning("Failed to create NPC. Please report the following stacktrace message: " + exception.getMessage());
+            logger.warning("Failed to create NPC. Please report the following stacktrace message", exception);
         }
 
         return null;

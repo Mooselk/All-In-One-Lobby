@@ -1,4 +1,4 @@
-package me.kate.lobby.tasks;
+package me.kate.lobby.tasks.bungee;
 
 import java.io.IOException;
 import java.net.Socket;

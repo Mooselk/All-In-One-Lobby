@@ -1,7 +1,3 @@
-/*
- * Copyright (c) 2018 Jitse Boonstra
- */
-
 package me.kate.lobby.npcs.api.skin;
 
 import java.util.Map;
@@ -18,12 +14,12 @@ public class Skin implements ConfigurationSerializable {
 	private static final String SIGNATURE = "signature";
 	
 	private final String value, signature;
-
+	
     public Skin(String value, String signature) {
         this.value = value;
         this.signature = signature;
     }
-
+    
     public String getValue() {
         return this.value;
     }

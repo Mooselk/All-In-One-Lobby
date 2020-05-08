@@ -53,10 +53,10 @@ import me.kate.lobby.npcs.nms.v1_8_R3.TabList_v1_8_R3;
 import me.kate.lobby.npcs.nms.v1_9_R1.TabList_v1_9_R1;
 import me.kate.lobby.npcs.nms.v1_9_R2.TabList_v1_9_R2;
 import me.kate.lobby.servers.Servers;
-import me.kate.lobby.tasks.BungeePingTask;
-import me.kate.lobby.tasks.BungeeMessenger;
 import me.kate.lobby.tasks.NPCTask;
 import me.kate.lobby.tasks.Task;
+import me.kate.lobby.tasks.bungee.BungeeMessenger;
+import me.kate.lobby.tasks.bungee.BungeePingTask;
 import me.kate.lobby.utils.Logger;
 
 public class Main extends JavaPlugin {

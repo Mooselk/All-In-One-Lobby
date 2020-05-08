@@ -7,15 +7,13 @@ import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.modules.tablist.TabList;
-import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Utils;
 import net.minecraft.server.v1_14_R1.IChatBaseComponent;
-import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerListHeaderFooter;
 import net.minecraft.server.v1_14_R1.IChatBaseComponent.ChatSerializer;
+import net.minecraft.server.v1_14_R1.PacketPlayOutPlayerListHeaderFooter;
 
 public class TabList_v1_14_R1 implements TabList {
 	
-	private final IUtils utils = new Utils();
 	private Player player;
 	
 	@Override
@@ -26,12 +24,12 @@ public class TabList_v1_14_R1 implements TabList {
 	@Override
 	public void sendHeaderFooter(Player player) {    
 		this.player = player;
-		IChatBaseComponent tabHeader = ChatSerializer.a("{\"text\": \"" + utils
+		IChatBaseComponent tabHeader = ChatSerializer.a("{\"text\": \"" + Utils
 				.replaceTab(Main
 				.getInstance()
 				.getConfig()
 				.getStringList("tablist.header"), player) + "\"}");
-        IChatBaseComponent tabFooter = ChatSerializer.a("{\"text\": \"" + utils
+        IChatBaseComponent tabFooter = ChatSerializer.a("{\"text\": \"" + Utils
         		.replaceTab(Main
         		.getInstance()
         		.getConfig()

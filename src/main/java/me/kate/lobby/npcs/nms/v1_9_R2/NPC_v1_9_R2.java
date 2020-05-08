@@ -4,23 +4,37 @@
 
 package me.kate.lobby.npcs.nms.v1_9_R2;
 
-import me.kate.lobby.npcs.NPCLib;
-import me.kate.lobby.npcs.api.state.NPCSlot;
-import me.kate.lobby.npcs.hologram.Hologram;
-import me.kate.lobby.npcs.internal.MinecraftVersion;
-import me.kate.lobby.npcs.internal.NPCBase;
-import me.kate.lobby.npcs.nms.v1_9_R2.packets.*;
-import net.minecraft.server.v1_9_R2.*;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_9_R2.entity.CraftPlayer;
 import org.bukkit.craftbukkit.v1_9_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
+
+import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.api.skin.Skin;
+import me.kate.lobby.npcs.api.state.NPCSlot;
+import me.kate.lobby.npcs.hologram.Hologram;
+import me.kate.lobby.npcs.internal.MinecraftVersion;
+import me.kate.lobby.npcs.internal.NPCBase;
+import me.kate.lobby.npcs.nms.v1_9_R2.packets.PacketPlayOutEntityHeadRotationWrapper;
+import me.kate.lobby.npcs.nms.v1_9_R2.packets.PacketPlayOutEntityMetadataWrapper;
+import me.kate.lobby.npcs.nms.v1_9_R2.packets.PacketPlayOutNamedEntitySpawnWrapper;
+import me.kate.lobby.npcs.nms.v1_9_R2.packets.PacketPlayOutPlayerInfoWrapper;
+import me.kate.lobby.npcs.nms.v1_9_R2.packets.PacketPlayOutScoreboardTeamWrapper;
+import net.minecraft.server.v1_9_R2.EnumItemSlot;
+import net.minecraft.server.v1_9_R2.PacketPlayOutEntityDestroy;
+import net.minecraft.server.v1_9_R2.PacketPlayOutEntityEquipment;
+import net.minecraft.server.v1_9_R2.PacketPlayOutEntityHeadRotation;
+import net.minecraft.server.v1_9_R2.PacketPlayOutEntityMetadata;
+import net.minecraft.server.v1_9_R2.PacketPlayOutNamedEntitySpawn;
+import net.minecraft.server.v1_9_R2.PacketPlayOutPlayerInfo;
+import net.minecraft.server.v1_9_R2.PacketPlayOutScoreboardTeam;
+import net.minecraft.server.v1_9_R2.PlayerConnection;
 
 /**
  * @author Jitse Boonstra
@@ -32,7 +46,6 @@ public class NPC_v1_9_R2 extends NPCBase {
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
-    private Set<UUID> hasTeamRegistered = new HashSet<>();
 
     public NPC_v1_9_R2(NPCLib instance, List<String> lines) {
         super(instance, lines);
@@ -65,12 +78,6 @@ public class NPC_v1_9_R2 extends NPCBase {
     }
 
     @Override
-    public void onLogout(Player player) {
-        super.onLogout(player);
-        hasTeamRegistered.remove(player.getUniqueId());
-    }
-
-    @Override
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
@@ -82,8 +89,9 @@ public class NPC_v1_9_R2 extends NPCBase {
 
         hologram.show(player);
 
+        // Removing the player info after 10 seconds.
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
-                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 50);
+                playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 200);
     }
 
     @Override
@@ -108,41 +116,25 @@ public class NPC_v1_9_R2 extends NPCBase {
     public void sendEquipmentPacket(Player player, NPCSlot slot, boolean auto) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
-        EnumItemSlot nmsSlot;
-        ItemStack item;
-        switch (slot) {
-            case HELMET:
-                item = helmet;
-                nmsSlot = EnumItemSlot.HEAD;
-                break;
-            case CHESTPLATE:
-                item = chestplate;
-                nmsSlot = EnumItemSlot.CHEST;
-                break;
-            case LEGGINGS:
-                item = leggings;
-                nmsSlot = EnumItemSlot.LEGS;
-                break;
-            case BOOTS:
-                item = boots;
-                nmsSlot = EnumItemSlot.FEET;
-                break;
-            case HAND:
-                item = inHand;
-                nmsSlot = EnumItemSlot.MAINHAND;
-                break;
-            case OFFHAND:
-                item = offHand;
-                nmsSlot = EnumItemSlot.OFFHAND;
-                break;
-            default:
-                if (!auto) {
-                    throw new IllegalArgumentException(slot.toString() + " is not a supported slot for the version of your server");
-                }
-                return;
-        }
+        EnumItemSlot nmsSlot = slot.getNmsEnum(EnumItemSlot.class);
+        ItemStack item = getItem(slot);
 
         PacketPlayOutEntityEquipment packet = new PacketPlayOutEntityEquipment(entityId, nmsSlot, CraftItemStack.asNMSCopy(item));
         playerConnection.sendPacket(packet);
+    }
+
+    @Override
+    public void updateSkin(Skin skin) {
+        GameProfile newProfile = new GameProfile(uuid, name);
+        newProfile.getProperties().get("textures").clear();
+        newProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
+        this.packetPlayOutPlayerInfoAdd = new PacketPlayOutPlayerInfoWrapper().create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, newProfile, name);
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+            playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);
+            playerConnection.sendPacket(packetPlayOutEntityDestroy);
+            playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
+            playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
+        }
     }
 }

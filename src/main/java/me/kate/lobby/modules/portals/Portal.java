@@ -10,12 +10,9 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.modules.portals.select.Selections;
 import me.kate.lobby.modules.portals.utils.Cuboid;
-import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Utils;
 
 public class Portal extends Selections {
-
-	private final IUtils utils = new Utils();
 	
 	private Config portalConfig = new PortalsConfig();
 	
@@ -60,8 +57,8 @@ public class Portal extends Selections {
 		}
 	
 	public void create(Location pos1, Location pos2, String name, String world, String server, Player player) {
-		utils.toConfig(pos1, portalConfig.getConfig(), "portals." + name + ".loc-1");
-		utils.toConfig(pos1, portalConfig.getConfig(), "portals." + name + ".loc-2");
+		Utils.toConfig(pos1, portalConfig.getConfig(), "portals." + name + ".loc-1");
+		Utils.toConfig(pos1, portalConfig.getConfig(), "portals." + name + ".loc-2");
 		
 		portalConfig.getConfig().set("portals." + name + ".world", world);
 		portalConfig.getConfig().set("portals." + name + ".server", server);

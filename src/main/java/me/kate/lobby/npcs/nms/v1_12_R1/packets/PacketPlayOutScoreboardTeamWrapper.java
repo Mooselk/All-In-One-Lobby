@@ -4,18 +4,18 @@
 
 package me.kate.lobby.npcs.nms.v1_12_R1.packets;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import me.kate.lobby.npcs.smallprotocol.Reflection;
 import net.minecraft.server.v1_12_R1.PacketPlayOutScoreboardTeam;
-
-import java.util.Collection;
 
 /**
  * @author Jitse Boonstra
  */
 public class PacketPlayOutScoreboardTeamWrapper {
 
-    @SuppressWarnings("unchecked")
-	public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
+    public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
         PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeam = new PacketPlayOutScoreboardTeam();
 
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "g", int.class)
@@ -33,10 +33,7 @@ public class PacketPlayOutScoreboardTeamWrapper {
         @SuppressWarnings("rawtypes")
 		Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
                 packetPlayOutScoreboardTeam.getClass(), "h", Collection.class);
-        @SuppressWarnings("rawtypes")
-		Collection collection = collectionFieldAccessor.get(packetPlayOutScoreboardTeam);
-        collection.add(name);
-        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, collection);
+        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, Collections.singletonList(name));
 
         return packetPlayOutScoreboardTeam;
     }

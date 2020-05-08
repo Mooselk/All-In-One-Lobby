@@ -15,7 +15,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
-import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.ItemBuilder;
 import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Utils;
@@ -31,7 +30,6 @@ public class Selector {
 	
 	private Map<Integer, ItemStack> itemsOnline = new HashMap<>();
 	private Map<Integer, ItemStack> itemsOffline = new HashMap<>();
-	private IUtils utils = new Utils();
 
 	public Selector() {
 		this.setup();
@@ -101,8 +99,8 @@ public class Selector {
 				if (isOnline) {
 					String onlineplayers = (String) placeholders.get("online");
 					int online = Integer.valueOf(onlineplayers);
-					meta.setLore(utils.replaceLore(lore, online));
-					meta.setDisplayName(utils.replace(displayName, online));
+					meta.setLore(Utils.replaceLore(lore, online));
+					meta.setDisplayName(Utils.replace(displayName, online));
 					player.updateInventory();
 					itemstack.setItemMeta(meta);
 					inventory.setItem(slot, itemstack);

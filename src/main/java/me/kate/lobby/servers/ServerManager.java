@@ -7,7 +7,6 @@ import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.ping.MineStat;
@@ -23,6 +22,17 @@ public class ServerManager {
 	
 	private static Map<String, String> addresses = new HashMap<>();
 
+	private static final Map<String, String> SERVER_ASSOCIATION = new HashMap<>();
+	
+	
+	/**
+	 *  NPCName, ServerName
+	 * @return SERVER_ASSOCIATION
+	 */
+	public static Map<String, String> getAssociation() {
+		return SERVER_ASSOCIATION;
+	}
+	
 	/**
 	 * ServerName, MineStat
 	 * 
@@ -78,8 +88,8 @@ public class ServerManager {
 	 */
 
 	public void loadNPCAssosiation() {
-		if (!Main.getRegistry().getAssociation().isEmpty()) {
-			Main.getRegistry().getAssociation().clear();
+		if (!getAssociation().isEmpty()) {
+			getAssociation().clear();
 		}
 		if (npcConfig.getSection("npcs") == null) {
 			return;
@@ -89,7 +99,7 @@ public class ServerManager {
 			if (section.getBoolean("live-player-count")) {
 				String serverName = section.getString("server-name");
 				String npcName = name;
-				Main.getRegistry().getAssociation().put(npcName, serverName);
+				getAssociation().put(npcName, serverName);
 			}
 		}
 	}
@@ -102,10 +112,10 @@ public class ServerManager {
 		if (section.getBoolean("live-player-count")) {
 			String serverName = section.getString("server-name");
 			String npcName = npc;
-			if (Main.getRegistry().getAssociation().containsKey(npcName)) {
-				Main.getRegistry().getAssociation().remove(npcName);
-			}
-			Main.getRegistry().getAssociation().put(npcName, serverName);
+//			if (getAssociation().containsKey(npcName)) {
+//				getAssociation().remove(npcName);
+//			}
+			getAssociation().put(npcName, serverName);
 		}
 	}
 

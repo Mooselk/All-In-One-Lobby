@@ -1,4 +1,4 @@
-package me.kate.lobby.tasks;
+package me.kate.lobby.tasks.bungee;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;

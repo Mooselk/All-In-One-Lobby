@@ -4,18 +4,18 @@
 
 package me.kate.lobby.npcs.nms.v1_9_R2.packets;
 
+import java.util.Collection;
+import java.util.Collections;
+
 import me.kate.lobby.npcs.smallprotocol.Reflection;
 import net.minecraft.server.v1_9_R2.PacketPlayOutScoreboardTeam;
-
-import java.util.Collection;
 
 /**
  * @author Jitse Boonstra
  */
 public class PacketPlayOutScoreboardTeamWrapper {
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
-	public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
+    public PacketPlayOutScoreboardTeam createRegisterTeam(String name) {
         PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeam = new PacketPlayOutScoreboardTeam();
 
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "g", int.class)
@@ -30,11 +30,10 @@ public class PacketPlayOutScoreboardTeamWrapper {
                 .set(packetPlayOutScoreboardTeam, "never");
         Reflection.getField(packetPlayOutScoreboardTeam.getClass(), "i", int.class)
                 .set(packetPlayOutScoreboardTeam, 0);
-        Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
+        @SuppressWarnings("rawtypes")
+		Reflection.FieldAccessor<Collection> collectionFieldAccessor = Reflection.getField(
                 packetPlayOutScoreboardTeam.getClass(), "h", Collection.class);
-        Collection collection = collectionFieldAccessor.get(packetPlayOutScoreboardTeam);
-        collection.add(name);
-        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, collection);
+        collectionFieldAccessor.set(packetPlayOutScoreboardTeam, Collections.singletonList(name));
 
         return packetPlayOutScoreboardTeam;
     }

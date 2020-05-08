@@ -1,0 +1,4 @@
+name: LobbyBungee
+main: me.kate.lobby.bungee.BungeeMain
+version: 1.0
+author: Kate

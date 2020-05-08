@@ -11,6 +11,7 @@ import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.NPCBuilder;
+import me.kate.lobby.objects.LobbyNPC;
 
 public class NPCCommand extends NPCBuilder implements CommandExecutor {
 
@@ -68,7 +69,7 @@ public class NPCCommand extends NPCBuilder implements CommandExecutor {
 						if (args.length < 3) {
 							Messages.send("&6Usage: &f/npc setskin <npc_name> <skinId>", player);
 						} else {
-							setSkin(getNPCObjects().get(args[1]), Integer.valueOf(args[2]), args[1], player);
+							setSkin(LobbyNPC.getByName(args[1]), Integer.valueOf(args[2]), player);
 						}
 					} else {
 						Messages.noPermission(player);

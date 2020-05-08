@@ -14,19 +14,18 @@ import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 
-public class Utils implements IUtils {
+public class Utils {
 
-	private final Config npcConfig = new NPCConfig();
+	private static final Config npcConfig = new NPCConfig();
 	
-	@Override
-	public String replacePlayer(String in, Player player) {
+	
+	public static String replacePlayer(String in, Player player) {
 		String out = in.replaceAll("%player%", player.getName());
 		out = ChatColor.translateAlternateColorCodes('&', out);
 		return out;
 	}
 
-	@Override
-	public List<String> replaceLore(List<String> lore, int online) {
+	public static List<String> replaceLore(List<String> lore, int online) {
 		ArrayList<String> mlore = null; mlore = new ArrayList<String>();
 		for (String l : lore) {
 			String out = l;
@@ -38,8 +37,7 @@ public class Utils implements IUtils {
 		return mlore;
 	}
 
-	@Override
-	public String replace(String in, int online) {
+	public static String replace(String in, int online) {
 		String out = in;
 		if (online != 0) {
 			if (in.contains("%online%")) {
@@ -53,13 +51,12 @@ public class Utils implements IUtils {
 		return ChatColor.translateAlternateColorCodes('&', out);
 	}
 	
-	@Override
-	public String color(String color) {
+	public static String color(String color) {
 		return ChatColor.translateAlternateColorCodes('&', color);
 	}
 	
-	@Override
-	public ArrayList<String> colorParser(List<String> list) {
+	
+	public static ArrayList<String> colorParser(List<String> list) {
 		ArrayList<String> newList = null;
 		newList = new ArrayList<String>();
 		for (String line : list) {
@@ -69,8 +66,8 @@ public class Utils implements IUtils {
 	}
 	
 	// Test first
-	@Override
-	public void toConfig(Location location, FileConfiguration config, String path) {
+	
+	public static void toConfig(Location location, FileConfiguration config, String path) {
 		config.set(path + ".x", location.getBlockX());
 		config.set(path + ".y", location.getBlockY());
 		config.set(path + ".z", location.getBlockZ());
@@ -78,31 +75,30 @@ public class Utils implements IUtils {
 		config.set(path + ".yaw", location.getYaw());
 	}
 	
-	private final boolean live = false;
-	private final List<String> defaultHoloText = Arrays.asList("Edit this text in NPC config!", "Players: %players%");
-	private final List<String> defaultMessages = Arrays.asList("&3Default message!", "&9Second line!");
-	private final List<String> equipmentExample = Arrays.asList("helmet:IRON_HELMET:true", "hand:STONE_SWORD");
+	private static final boolean live = false;
+	private static final List<String> defaultHoloText = Arrays.asList("Edit this text in NPC config!", "Players: %players%");
+	private static final List<String> defaultMessages = Arrays.asList("&3Default message!", "&9Second line!");
+	private static final List<String> equipmentExample = Arrays.asList("helmet:IRON_HELMET:true", "hand:STONE_SWORD");
 	
-	@Override
-	public void npcToConfig(Location location, FileConfiguration config, String path, String npcName, int skinId) {
-		config.set(path + ".id", npcName);
-		config.set(path + ".skin", skinId);
-		config.set(path + ".holotext", defaultHoloText);
-		config.set(path + ".messages", defaultMessages);
-		config.set(path + ".equipment", equipmentExample);
-		config.set(path + ".server.live-player-count", live);
-		config.set(path + ".server.server-name", "example");
-		config.set(path + ".location.x", location.getBlockX());
-		config.set(path + ".location.y", location.getBlockY());
-		config.set(path + ".location.z", location.getBlockZ());
-		config.set(path + ".location.pitch", location.getPitch());
-		config.set(path + ".location.yaw", location.getYaw());
+	public static void npcToConfig(Location location, FileConfiguration config, String npcName, int skinId) {
+		config.set(npcName + ".id", npcName);
+		config.set(npcName + ".skin", skinId);
+		config.set(npcName + ".holotext", defaultHoloText);
+		config.set(npcName + ".messages", defaultMessages);
+		config.set(npcName + ".equipment", equipmentExample);
+		config.set(npcName + ".server.live-player-count", live);
+		config.set(npcName + ".server.server-name", "example");
+		config.set(npcName + ".location.x", location.getBlockX());
+		config.set(npcName + ".location.y", location.getBlockY());
+		config.set(npcName + ".location.z", location.getBlockZ());
+		config.set(npcName + ".location.pitch", location.getPitch());
+		config.set(npcName + ".location.yaw", location.getYaw());
 		npcConfig.save();
 		npcConfig.reload();
 	}
 	
-	@Override
-	public List<String> replaceHoloText(List<String> list, String players) {
+	
+	public static List<String> replaceText(List<String> list, String players) {
 		List<String> text = null;
 		text = new ArrayList<String>();
 		for (String in : list) {
@@ -111,8 +107,8 @@ public class Utils implements IUtils {
 		return text;
 	}
 	
-	@Override
-	public String replaceTab(List<String> lines, Player player) {
+	
+	public static String replaceTab(List<String> lines, Player player) {
 		List<String> text = null;
 		text = new ArrayList<String>();
 		for (String in : lines) {
@@ -138,5 +134,23 @@ public class Utils implements IUtils {
 		} else {
 			Messages.send("&f[&6Lobby&f] Failed to reload &6" + config.getName() + "&f!", player);
 		}
+	}
+	
+	private static final String ERROR = color("&4&lERROR");
+	
+	public static String replaceStatus(String in, String status) {
+		if (status == null) { return ERROR; }
+		if (in.contains("%status%") && status != null) {
+			return in.replace("%status%", status);
+		}
+		return " ";
+	}
+
+	public static List<String> replaceHoloText(List<String> list, String players) {
+		List<String> text = new ArrayList<String>();
+		for (String in : list) {
+			text.add(ChatColor.translateAlternateColorCodes('&', in.replace("%players%", players)));
+		}
+		return text;
 	}
 }

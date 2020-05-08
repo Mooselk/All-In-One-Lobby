@@ -9,12 +9,14 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.Messages;
+import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PlayerSettingsConfig;
+import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.modules.Items;
 import me.kate.lobby.modules.PlayerPotionEffects;
 import me.kate.lobby.modules.Spawn;
 import me.kate.lobby.npcs.NPCBuilder;
-import me.kate.lobby.utils.IUtils;
 import me.kate.lobby.utils.Utils;
 
 public class PlayerJoinEvents implements Listener {
@@ -25,7 +27,6 @@ public class PlayerJoinEvents implements Listener {
 	private PlayerSettingsConfig playerSettings = new PlayerSettingsConfig();
 	private PlayerPotionEffects effects = new PlayerPotionEffects();
 	
-	private IUtils utils = new Utils();
 	private Items items = new Items();
 	
 	public PlayerJoinEvents(JavaPlugin plugin) {
@@ -38,8 +39,12 @@ public class PlayerJoinEvents implements Listener {
 		
 		effects.addEffect(player);
 		
+		// this.sendJoinMessage(player);
+		
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
-			event.setJoinMessage(utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
+			event.setJoinMessage(Utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
+		} else {
+			event.setJoinMessage(null);
 		}
 		
 		if (Main.getInstance().getConfig().getBoolean("tablist.enabled")) {
@@ -65,5 +70,16 @@ public class PlayerJoinEvents implements Listener {
 		}
 		items.giveItems(player);
 		builder.loadNPCsFor(player);
+	}
+	
+	private Config config = new PluginConfig();
+	
+	public void sendJoinMessage(Player player) {
+		if (!config.getSection("join-motd").getBoolean("enabled")) {
+			return;
+		}
+		for (String motd : config.getSection("join-motd").getStringList("message")) {
+			Messages.send(motd.replaceAll("%username%", player.getName()), player);
+		}
 	}
 }

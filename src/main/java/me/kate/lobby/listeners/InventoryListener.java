@@ -19,5 +19,4 @@ public class InventoryListener implements Listener {
 		if (item.equals(items.hide())) { event.setCancelled(true); }
 		if (item.equals(items.unHide())) { event.setCancelled(true); }
 	}
-	
 }

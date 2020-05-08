@@ -24,7 +24,6 @@ import org.bukkit.inventory.meta.SkullMeta;
  */
 public class ItemBuilder {
 	private ItemStack is;
-	private IUtils utils = new Utils();
 	
 	/**
 	 * Create a new ItemBuilder from scratch.
@@ -91,7 +90,7 @@ public class ItemBuilder {
 	 */
 	public ItemBuilder setName(String name) {
 		ItemMeta im = is.getItemMeta();
-		im.setDisplayName(utils.color(name));
+		im.setDisplayName(Utils.color(name));
 		is.setItemMeta(im);
 		return this;
 	}
@@ -193,7 +192,7 @@ public class ItemBuilder {
 	 */
 	public ItemBuilder setLore(List<String> lore) {
 		ItemMeta im = is.getItemMeta();
-		im.setLore(utils.colorParser(lore));
+		im.setLore(Utils.colorParser(lore));
 		is.setItemMeta(im);
 		return this;
 	}

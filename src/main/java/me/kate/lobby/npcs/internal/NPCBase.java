@@ -1,8 +1,17 @@
+/*
+ * Copyright (c) 2018 Jitse Boonstra
+ */
+
 package me.kate.lobby.npcs.internal;
 
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
@@ -24,19 +33,23 @@ import me.kate.lobby.npcs.api.skin.Skin;
 import me.kate.lobby.npcs.api.state.NPCSlot;
 import me.kate.lobby.npcs.api.state.NPCState;
 import me.kate.lobby.npcs.hologram.Hologram;
+import me.kate.lobby.utils.MathUtil;
 
 public abstract class NPCBase implements NPC, NPCPacketHandler {
 
-    protected final UUID uuid = UUID.randomUUID();
     protected final int entityId = Integer.MAX_VALUE - NPCManager.getAllNPCs().size();
-    protected final String name = uuid.toString().replace("-", "").substring(0, 10);
-    protected final GameProfile gameProfile = new GameProfile(uuid, name);
+    protected final Set<UUID> hasTeamRegistered = new HashSet<>();
+    protected final Set<NPCState> activeStates = EnumSet.noneOf(NPCState.class);
 
     private final Set<UUID> shown = new HashSet<>();
     private final Set<UUID> autoHidden = new HashSet<>();
 
     protected double cosFOV = Math.cos(Math.toRadians(60));
-    protected NPCState[] activeStates = new NPCState[]{};
+    // 12/4/20, JMB: Changed the UUID in order to enable LabyMod Emotes:
+    // This gives a format similar to: 528086a2-4f5f-2ec2-0000-000000000000
+    protected UUID uuid = new UUID(new Random().nextLong(), 0);
+    protected String name = uuid.toString().replace("-", "").substring(0, 10);
+    protected GameProfile gameProfile = new GameProfile(uuid, name);
 
     protected NPCLib instance;
     protected List<String> text;
@@ -44,8 +57,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     protected Skin skin;
     protected Hologram hologram;
 
-    // offHand support in 1.9 R1 and later.
-    protected ItemStack helmet, chestplate, leggings, boots, inHand, offHand;
+    protected final Map<NPCSlot, ItemStack> items = new EnumMap<>(NPCSlot.class);
 
     public NPCBase(NPCLib instance, List<String> text) {
         this.instance = instance;
@@ -56,6 +68,11 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     public NPCLib getInstance() {
         return instance;
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return uuid;
     }
 
     @Override
@@ -89,7 +106,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     }
 
     public void disableFOV() {
-        this.cosFOV = 0; // Or equals Math.cos(1/2 * Math.PI).
+        this.cosFOV = 0;
     }
 
     public void setFOV(double fov) {
@@ -138,6 +155,27 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     public void onLogout(Player player) {
         getAutoHidden().remove(player.getUniqueId());
         getShown().remove(player.getUniqueId()); // Don't need to use NPC#hide since the entity is not registered in the NMS server.
+        hasTeamRegistered.remove(player.getUniqueId());
+    }
+
+    public boolean inRangeOf(Player player) {
+        if (!player.getWorld().equals(location.getWorld())) {
+            // No need to continue our checks, they are in different worlds.
+            return false;
+        }
+
+        // If Bukkit doesn't track the NPC entity anymore, bypass the hiding distance variable.
+        // This will cause issues otherwise (e.g. custom skin disappearing).
+        double hideDistance = instance.getAutoHideDistance();
+        double distanceSquared = player.getLocation().distanceSquared(location);
+        double bukkitRange = Bukkit.getViewDistance() << 4;
+
+        return distanceSquared <= MathUtil.square(hideDistance) && distanceSquared <= MathUtil.square(bukkitRange);
+    }
+
+    public boolean inViewOf(Player player) {
+        Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
+        return dir.dot(player.getLocation().getDirection()) >= cosFOV;
     }
 
     @Override
@@ -152,44 +190,31 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             return;
         }
 
-        if (!canSeeNPC(player)) {
-            if (!auto) {
-                shown.add(player.getUniqueId());
-            }
-
-            autoHidden.add(player.getUniqueId());
-            return;
+        if (isShown(player)) {
+            throw new IllegalArgumentException("NPC is already shown to player");
         }
 
         if (auto) {
             sendShowPackets(player);
             sendMetadataPacket(player);
             sendEquipmentPackets(player);
+
+            // NPC is auto-shown now, we can remove the UUID from the set.
+            autoHidden.remove(player.getUniqueId());
         } else {
-            if (isShown(player)) {
-                throw new RuntimeException("Cannot call show method twice.");
-            }
-
-            if (shown.contains(player.getUniqueId())) {
-                return;
-            }
-
+            // Adding the UUID to the set.
             shown.add(player.getUniqueId());
 
-            if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location) <= instance.getAutoHideDistance()) {
+            if (inRangeOf(player) && inViewOf(player)) {
+                // The player can see the NPC and is in range, send the packets.
                 sendShowPackets(player);
                 sendMetadataPacket(player);
                 sendEquipmentPackets(player);
             } else {
+                // We'll wait until we can show the NPC to the player via auto-show.
                 autoHidden.add(player.getUniqueId());
             }
         }
-    }
-
-    private boolean canSeeNPC(Player player) {
-    	// Causes NPE at random
-        Vector dir = location.toVector().subtract(player.getEyeLocation().toVector()).normalize();
-        return dir.dot(player.getLocation().getDirection()) >= cosFOV;
     }
 
     @Override
@@ -204,19 +229,28 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             return;
         }
 
+        if (!shown.contains(player.getUniqueId())) {
+            throw new IllegalArgumentException("NPC cannot be hidden from player before calling NPC#show first");
+        }
+
         if (auto) {
-            sendHidePackets(player);
-        } else {
-            if (!shown.contains(player.getUniqueId())) {
-                throw new RuntimeException("Cannot call hide method without calling NPC#show.");
+            if (autoHidden.contains(player.getUniqueId())) {
+                throw new IllegalStateException("NPC cannot be auto-hidden twice");
             }
 
+            sendHidePackets(player);
+
+            // NPC is auto-hidden now, we will add the UUID to the set.
+            autoHidden.add(player.getUniqueId());
+        } else {
+            // Removing the UUID from the set.
             shown.remove(player.getUniqueId());
 
-            if (player.getWorld().equals(location.getWorld()) && player.getLocation().distance(location)
-                    <= instance.getAutoHideDistance()) {
+            if (inRangeOf(player)) {
+                // The player is in range of the NPC, send the packets.
                 sendHidePackets(player);
             } else {
+                // We don't have to send any packets, just don't let it auto-show again by removing the UUID from the set.
                 autoHidden.remove(player.getUniqueId());
             }
         }
@@ -224,47 +258,15 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public boolean getState(NPCState state) {
-        if (activeStates.length != 0) {
-            for (int i = 0; i < activeStates.length; i++) {
-                if (activeStates[i] == state) {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return activeStates.contains(state);
     }
-    
+
     @Override
     public NPC toggleState(NPCState state) {
-        int inActiveStatesIndex = -1;
-        if (activeStates.length == 0) { // If there're no active states, this is the first to be toggled (on).
-            activeStates = new NPCState[]{state};
-        } else { // Otherwise, there have been states that were toggled, check if we need to toggle something off.
-            for (int i = 0; i < activeStates.length; i++) {
-                if (activeStates[i] == state) { // If the state is to be toggled off, save the index so we can remove it.
-                    inActiveStatesIndex = i;
-                    break;
-                }
-            }
-
-            if (inActiveStatesIndex > -1) { // If there's a state to be toggled of, create a new array with all items but the one to be toggled off.
-                NPCState[] newArr = new NPCState[activeStates.length - 1];
-                for (int i = 0; i < newArr.length; i++) {
-                    if (inActiveStatesIndex == i) {
-                        continue;
-                    } else if (i < inActiveStatesIndex) {
-                        newArr[i] = activeStates[i];
-                    } else {
-                        newArr[i] = activeStates[i + 1];
-                    }
-                }
-                activeStates = newArr;
-            } else { // Else, we need to add a state by appending our state to the array.
-                NPCState[] newArr = new NPCState[activeStates.length + 1];
-                System.arraycopy(activeStates, 0, newArr, 0, activeStates.length);
-                newArr[activeStates.length] = state;
-                activeStates = newArr;
-            }
+        if (activeStates.contains(state)) {
+            activeStates.remove(state);
+        } else {
+            activeStates.add(state);
         }
 
         // Send a new metadata packet to all players that can see the NPC.
@@ -279,55 +281,16 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
 
     @Override
     public ItemStack getItem(NPCSlot slot) {
-        if (slot == null) {
-            throw new NullPointerException("Slot cannot be null");
-        }
-        switch (slot) {
-            case HELMET:
-                return this.helmet;
-            case CHESTPLATE:
-                return this.chestplate;
-            case LEGGINGS:
-                return this.leggings;
-            case BOOTS:
-                return this.boots;
-            case HAND:
-                return this.inHand;
-            case OFFHAND:
-                return this.offHand;
-            default:
-                throw new IllegalArgumentException("Entered an invalid inventory slot");
-        }
+        Objects.requireNonNull(slot, "Slot cannot be null");
+
+        return items.get(slot);
     }
-    
+
     @Override
     public NPC setItem(NPCSlot slot, ItemStack item) {
-        if (slot == null) {
-            throw new NullPointerException("Slot cannot be null");
-        }
+        Objects.requireNonNull(slot, "Slot cannot be null");
 
-        switch (slot) {
-            case HELMET:
-                this.helmet = item;
-                break;
-            case CHESTPLATE:
-                this.chestplate = item;
-                break;
-            case LEGGINGS:
-                this.leggings = item;
-                break;
-            case BOOTS:
-                this.boots = item;
-                break;
-            case HAND:
-                this.inHand = item;
-                break;
-            case OFFHAND:
-                this.offHand = item;
-                break;
-            default:
-                throw new IllegalArgumentException("Entered an invalid inventory slot");
-        }
+        items.put(slot, item);
 
         for (UUID shownUuid : shown) {
             Player player = Bukkit.getPlayer(shownUuid);
@@ -352,7 +315,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         this.text = text;
         return this;
     }
-    
+
     @Override
     public List<String> getText() {
         return text;

@@ -1,9 +1,10 @@
-package me.kate.lobby.tasks;
+package me.kate.lobby.tasks.bungee;
 
 public enum ServerStatus {
 
 	ONLINE,
 	OFFLINE,
+	WHITELISTED,
 	MAINTENANCE;
 	
 }

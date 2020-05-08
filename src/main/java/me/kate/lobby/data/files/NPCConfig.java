@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -78,5 +79,20 @@ public class NPCConfig extends Config {
 	
 	public ConfigurationSection getSection(String path) {
 		return npcConfiguration.getConfigurationSection(path);
+	}
+	
+	public String getServer(String name) {
+		return null;
+	}
+	
+	public Location getLocation(String name) {
+		final ConfigurationSection section = this.getSection("npcs." + name);
+		Location location = new Location(Bukkit.getWorld("world"), 
+				section.getDouble("location.x"),
+				section.getDouble("location.y"), 
+				section.getDouble("location.z"));
+		location.setPitch(section.getInt("location.pitch"));
+		location.setYaw(section.getInt("location.yaw"));
+		return location;
 	}
 }

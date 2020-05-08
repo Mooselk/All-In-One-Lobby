@@ -1,19 +1,29 @@
 package me.kate.lobby.cache;
 
-import me.kate.lobby.data.Config;
+import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.api.skin.Skin;
 import me.kate.lobby.utils.Logger;
 
 public class SkinCache {
 
-	private Config cache = new CacheStorage();
+	private CacheStorage cache = new CacheStorage();
 
-	public void toConfig(Skin skin, int skinId) {
+	public void cache(Skin skin, int skinId) {
 		if (cache.getSection(String.valueOf(skinId)) == null) {
 			cache.getConfig().set(String.valueOf(skinId), skin.serialize());
-			cache.save();
-			cache.reload();
+			this.refresh();
 		}
+	}
+	
+	public Skin getCachedSkin(int skinId) {
+	    if (isCached(skinId)) { 
+	    	return getSkin(skinId);
+	    } else {
+	    	MineSkinFetcher.fetchSkinFromIdAsync(skinId, skinCallback -> {
+				cache(skinCallback, skinId);
+			});
+	    }
+		return getSkin(skinId);
 	}
 	
 	public boolean isCached(int skinId) {
@@ -22,13 +32,19 @@ public class SkinCache {
 
 	public Skin getSkin(int skinId) {
 		if (cache.getSection(String.valueOf(skinId)) != null) {
-			String value = cache.getConfig().getString(skinId + ".value");
-			String signature = cache.getConfig().getString(skinId + ".signature");
-			return new Skin(value, signature);
+			return new Skin(
+					cache.getValue(skinId), 
+					cache.getSignature(skinId)
+				);	
 		} else {
 			Logger.severe("Couldn't load skin '" + skinId + "'");
 			Logger.severe("	- Skin was not found or failed to cache!");
 		}
 		return null;
+	}
+	
+	private void refresh() {
+		cache.save();
+		cache.reload();
 	}
 }

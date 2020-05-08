@@ -4,10 +4,12 @@
 
 package me.kate.lobby.npcs.smallprotocol;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.MapMaker;
-import io.netty.channel.*;
-import me.kate.lobby.npcs.NPCLib;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -20,14 +22,23 @@ import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import com.google.common.collect.Lists;
+import com.google.common.collect.MapMaker;
+import com.mojang.authlib.GameProfile;
+
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.ChannelInboundHandlerAdapter;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.ChannelPipeline;
+import me.kate.lobby.npcs.NPCLib;
 
 /**
  * Minimized version of TinyProtocol by Kristian suited for NPCLib.
  */
 public abstract class TinyProtocol {
-
     private static final AtomicInteger ID = new AtomicInteger(0);
 
     // Used in order to lookup a channel
@@ -41,13 +52,15 @@ public abstract class TinyProtocol {
     private static final Class<Object> serverConnectionClass = Reflection.getUntypedClass("{nms}.ServerConnection");
     private static final Reflection.FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
     private static final Reflection.FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
-    private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
+    // This depends on the arrangement of fields in the ServerConnection class, check in every new version for updates!
+    
+    @SuppressWarnings("rawtypes")
+	private static final Reflection.FieldAccessor<List> networkMarkers = Reflection.getField(serverConnectionClass, List.class, 1);
+//    private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
 
     // Packets we have to intercept
     private static final Class<?> PACKET_LOGIN_IN_START = Reflection.getMinecraftClass("PacketLoginInStart");
-    @SuppressWarnings("rawtypes")
-	private static final Reflection.FieldAccessor getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START,
-            Reflection.getClass("com.mojang.authlib.GameProfile"), 0);
+    private static final Reflection.FieldAccessor<GameProfile> getGameProfile = Reflection.getField(PACKET_LOGIN_IN_START, GameProfile.class, 0);
 
     // Speedup channel lookup
     private Map<String, Channel> channelLookup = new MapMaker().weakValues().makeMap();
@@ -87,7 +100,7 @@ public abstract class TinyProtocol {
             instance.getLogger().info("Attempting to inject into netty");
             registerChannelHandler();
             registerPlayers(plugin);
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException ex) {
             // Damn you, late bind
             instance.getLogger().warning("Attempting to delay injection");
 
@@ -117,9 +130,8 @@ public abstract class TinyProtocol {
                             channel.eventLoop().submit(() -> injectChannelInternal(channel));
                         }
                     }
-                } catch (Exception exception) {
-                    instance.getLogger().severe("Cannot inject incomming channel " + channel + ". Message: "
-                            + exception.getMessage());
+                } catch (Exception e) {
+                    instance.getLogger().severe("Cannot inject incomming channel " + channel, e);
                 }
             }
 
@@ -128,9 +140,8 @@ public abstract class TinyProtocol {
         // This is executed before Minecraft's channel handler
         beginInitProtocol = new ChannelInitializer<Channel>() {
 
-            @SuppressWarnings("all")
             @Override
-            protected void initChannel(Channel channel) throws Exception {
+            protected void initChannel(Channel channel) {
                 channel.pipeline().addLast(endInitProtocol);
             }
 
@@ -138,9 +149,8 @@ public abstract class TinyProtocol {
 
         serverChannelHandler = new ChannelInboundHandlerAdapter() {
 
-            @SuppressWarnings("all")
             @Override
-            public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            public void channelRead(ChannelHandlerContext ctx, Object msg) {
                 Channel channel = (Channel) msg;
 
                 // Prepare to initialize ths channel
@@ -154,8 +164,7 @@ public abstract class TinyProtocol {
     private void registerBukkitEvents() {
         listener = new Listener() {
 
-            @SuppressWarnings("unused")
-            @EventHandler(priority = EventPriority.LOWEST)
+            @EventHandler(priority = EventPriority.MONITOR)
             public final void onPlayerLogin(PlayerLoginEvent e) {
                 if (closed)
                     return;
@@ -168,7 +177,6 @@ public abstract class TinyProtocol {
                 }
             }
 
-            @SuppressWarnings("unused")
             @EventHandler
             public final void onPluginDisable(PluginDisableEvent e) {
                 if (e.getPlugin().equals(plugin)) {
@@ -188,7 +196,10 @@ public abstract class TinyProtocol {
         boolean looking = true;
 
         // We need to synchronize against this list
-        networkManagers = (List<Object>) getNetworkMarkers.invoke(null, serverConnection);
+        // Update 8/3/20 JMB: Fetch from field, the method doesn't exist...
+        // The field getter should do the job, though I'll leave the old code here for now.
+        networkManagers = (List<Object>) networkMarkers.get(serverConnection);
+//        networkManagers = (List<Object>) getNetworkMarkers.invoke(null, serverConnection);
         createServerChannelHandler();
 
         // Find the correct list, or implicitly throw an exception
@@ -251,9 +262,8 @@ public abstract class TinyProtocol {
                 channel.pipeline().addBefore("packet_handler", handlerName, interceptor);
                 uninjectedChannels.remove(channel);
             }
-
             return interceptor;
-        } catch (IllegalArgumentException exception) {
+        } catch (IllegalArgumentException e) {
             // Try again
             return (PacketInterceptor) channel.pipeline().get(handlerName);
         }
@@ -295,6 +305,11 @@ public abstract class TinyProtocol {
         }
     }
 
+    // Keeping this here for testing purposes:
+//    public Object onPacketOutAsync(Player receiver, Channel channel, Object packet) {
+//        return packet;
+//    }
+
     private final class PacketInterceptor extends ChannelDuplexHandler {
         // Updated by the login event
         public volatile Player player;
@@ -307,8 +322,8 @@ public abstract class TinyProtocol {
 
             try {
                 msg = onPacketInAsync(player, msg);
-            } catch (Exception exception) {
-                instance.getLogger().severe("Error in onPacketInAsync(). Message: " + exception.getMessage());
+            } catch (Exception e) {
+                instance.getLogger().severe("Error in onPacketInAsync().", e);
             }
 
             if (msg != null) {
@@ -316,10 +331,24 @@ public abstract class TinyProtocol {
             }
         }
 
+        // Keeping this here for testing purposes:
+//        @Override
+//        public void write(ChannelHandlerContext ctx, Object msg, ChannelPromise promise) throws Exception {
+//            try {
+//                msg = onPacketOutAsync(player, ctx.channel(), msg);
+//            } catch (Exception e) {
+//                instance.getLogger().severe("Error in onPacketOutAsync().", e);
+//            }
+//
+//            if (msg != null) {
+//                super.write(ctx, msg, promise);
+//            }
+//        }
+
         private void handleLoginStart(Channel channel, Object packet) {
             if (PACKET_LOGIN_IN_START.isInstance(packet)) {
-                Object profile = getGameProfile.get(packet);
-                channelLookup.put((String) Reflection.getMethod(profile.getClass(), "getName").invoke(profile), channel);
+                GameProfile profile = getGameProfile.get(packet);
+                channelLookup.put(profile.getName(), channel);
             }
         }
     }

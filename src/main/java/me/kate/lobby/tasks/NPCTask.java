@@ -30,9 +30,9 @@ public class NPCTask extends Task {
 	@Override
 	public void start() {
 		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
-			if (npcConfig.getSection("npcs") == null) { return; }
+			if (npcConfig.getSection("npcs") == null) { return; }/
 			for (String server : ServerManager.getServers()) {
-				String npcname = Utils.getValue(Main.getRegistry().getAssociation(), server);
+				String npcname = Utils.getValue(ServerManager.getAssociation(), server);
 				if (npcname == null) { continue; }
 				holotext.updateText(server, npcname);
 			}

@@ -80,4 +80,12 @@ public class CacheStorage extends Config {
 	public ConfigurationSection getSection(String section) {
 		return getConfig().getConfigurationSection(section);
 	}
+	
+	public String getValue(int skinId) {
+		return getConfig().getString(skinId + ".value");
+	}
+	
+	public String getSignature(int skinId) {
+		return getConfig().getString(skinId + ".signature");
+	}
 }
