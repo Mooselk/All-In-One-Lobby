@@ -1,16 +1,5 @@
 package me.kate.lobby.npcs;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.bukkit.Bukkit;
-
-import me.kate.lobby.npcs.api.NPC;
-import me.kate.lobby.npcs.internal.NPCManager;
-import me.kate.lobby.utils.Logger;
-import me.kate.lobby.utils.Utils;
-
 public class NPCRegistry {
 	
 //	/**

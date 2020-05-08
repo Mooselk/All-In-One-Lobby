@@ -61,15 +61,26 @@ public class ServerManager {
 	public static Set<String> getServers() {
 		return servers;
 	}
+	
+	/**
+	 * Gets specific server @returns MineStat object
+	 */
+	public MineStat getServer(String server) {
+		return serverInfo.get(server);
+	}
 
 	/**
 	 * Puts server name and MineStat object into a map from configuration
 	 */
+	
+	private void clear(Map<?, ?> map) {
+		if (!map.isEmpty()) {
+			map.clear();
+		}
+	}
 
 	public void loadServers() {
-		if (!serverInfo.isEmpty()) {
-			this.clearServers();
-		}
+		clear(getServerInfo());
 		for (String key : config.get("servers.")) {
 			final ConfigurationSection section = config.getSection("servers." + key);
 			String serverName = key;
@@ -88,12 +99,7 @@ public class ServerManager {
 	 */
 
 	public void loadNPCAssosiation() {
-		if (!getAssociation().isEmpty()) {
-			getAssociation().clear();
-		}
-		if (npcConfig.getSection("npcs") == null) {
-			return;
-		}
+		clear(getAssociation());
 		for (final String name : npcConfig.get("npcs")) {
 			final ConfigurationSection section = npcConfig.getSection("npcs." + name + ".server");
 			if (section.getBoolean("live-player-count")) {
@@ -104,32 +110,11 @@ public class ServerManager {
 		}
 	}
 
-	public void loadNPCAssosiation(String npc) {
-		if (npcConfig.getSection("npcs") == null) {
-			return;
-		}
-		final ConfigurationSection section = npcConfig.getSection("npcs." + npc + ".server");
+	public void loadNPCAssosiation(String npcName) {
+		final ConfigurationSection section = npcConfig.getSection("npcs." + npcName + ".server");
 		if (section.getBoolean("live-player-count")) {
 			String serverName = section.getString("server-name");
-			String npcName = npc;
-//			if (getAssociation().containsKey(npcName)) {
-//				getAssociation().remove(npcName);
-//			}
 			getAssociation().put(npcName, serverName);
 		}
-	}
-
-	/**
-	 * Clear map
-	 */
-	public void clearServers() {
-		serverInfo.clear();
-	}
-
-	/**
-	 * Gets specific server @returns MineStat object
-	 */
-	public MineStat getServer(String server) {
-		return serverInfo.get(server);
 	}
 }

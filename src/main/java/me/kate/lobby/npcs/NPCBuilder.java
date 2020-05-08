@@ -122,14 +122,26 @@ public class NPCBuilder extends NPCRegistry {
 	
 	public void _reloadNPC(Player player, String npcName, boolean msg) {
 		npcConfig.reload();
-		this._destroy(npcName);
+		this.destroy(npcName);
 		this.buildNPC(npcName);
-		// servers.loadNPCAssosiation(npcName);
+		servers.loadNPCAssosiation(npcName);
 		
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			showAll(player);
 			if (msg) { Messages.send("&f[&6NPC&f] Reload complete!", player); }
 		}, 3);
+	}
+		
+		public void _reloadNPC(Player player, boolean msg) {
+			npcConfig.reload();
+			this.destroyAll();
+			this.buildNPC();
+			servers.loadServers();
+			
+			Bukkit.getScheduler().runTaskLater(plugin, () -> {
+				showAll(player);
+				if (msg) { Messages.send("&f[&6NPC&f] Reload complete!", player); }
+			}, 3);
 	}
 
 //	public void reloadNPCs(Player player, boolean msg) {
@@ -168,15 +180,7 @@ public class NPCBuilder extends NPCRegistry {
 		}
 	}
 
-//	public void destroy(String name) {
-//		if (Main.getRegistry().getNPCInfo().containsValue(name)) {
-//			NPC npcs = getNPCById(Utils.getValue(getNPCInfo(), name));
-//			remove(name);
-//			npcs.destroy();
-//		}
-//	}
-	
-	public void _destroy(String name) {
+	public void destroy(String name) {
 		LobbyNPC lobbyNPC = LobbyNPC.getByName(name);
 		NPC npc = lobbyNPC.getNPC();
 		
@@ -184,7 +188,7 @@ public class NPCBuilder extends NPCRegistry {
 		lobbyNPC.remove(lobbyNPC);
 	}
 
-	public void _destroyAll() {
+	public void destroyAll() {
 		for (NPC npc : NPCManager.getAllNPCs()) {
 			LobbyNPC lobbyNPC = LobbyNPC.getByID(npc.getId());
 			
@@ -193,24 +197,13 @@ public class NPCBuilder extends NPCRegistry {
 		}
 	}
 	
-//	public void destroyAll() {
-//		for (NPC npc : NPCManager.getAllNPCs()) {
-//			npc.destroy();
-//		}
-//		clearRegistry();
-//	}
-	
 	public List<String> listNPCs() {
 		npcList = new ArrayList<String>();
-		for (Map.Entry<String, NPC> npc : getNPCObjects().entrySet()) {
-			npcList.add(npc.getKey());
+		for (NPC npc : NPCManager.getAllNPCs()) {
+			npcList.add(LobbyNPC.getByID(npc.getId()).getName());
 		}
 		return npcList;
 	}
-
-//	public NPC getNPCByName(String name) {
-//		return getNPCObjects().get(name);
-//	}
 
 	public void showAll(Player player) {
 		for (Player online : Bukkit.getOnlinePlayers()) {
