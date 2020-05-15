@@ -12,13 +12,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import me.kate.lobby.modules.Spawn;
 
-public class TouchVoidEvent implements Listener {
+public class TouchVoidListener implements Listener {
 
 	private int timer;
 
 	private JavaPlugin plugin;
 
-	public TouchVoidEvent(JavaPlugin plugin) {
+	public TouchVoidListener(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 	

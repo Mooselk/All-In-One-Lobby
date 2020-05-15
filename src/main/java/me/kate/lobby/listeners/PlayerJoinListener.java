@@ -16,10 +16,11 @@ import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.modules.Items;
 import me.kate.lobby.modules.PlayerPotionEffects;
 import me.kate.lobby.modules.Spawn;
+import me.kate.lobby.modules.selector._Selector;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.Utils;
 
-public class PlayerJoinEvents implements Listener {
+public class PlayerJoinListener implements Listener {
 
 	private JavaPlugin plugin;
 	
@@ -29,7 +30,7 @@ public class PlayerJoinEvents implements Listener {
 	
 	private Items items = new Items();
 	
-	public PlayerJoinEvents(JavaPlugin plugin) {
+	public PlayerJoinListener(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 	
@@ -40,6 +41,19 @@ public class PlayerJoinEvents implements Listener {
 		effects.addEffect(player);
 		
 		// this.sendJoinMessage(player);
+		
+		_Selector s = new _Selector("e", 6, plugin);
+		s.addContents();
+		s.setup();
+		
+		
+		Bukkit.getScheduler().runTaskLater(plugin,  () -> {
+			s.open(player);
+		}, 10);
+		
+		Bukkit.getScheduler().runTaskLater(plugin,  () -> {
+			s.update();
+		}, 40);
 		
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
 			event.setJoinMessage(Utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));

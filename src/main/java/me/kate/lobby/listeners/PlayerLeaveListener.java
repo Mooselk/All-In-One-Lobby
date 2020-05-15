@@ -8,11 +8,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.utils.Utils;
 
-public class PlayerLeaveEvents implements Listener {
+public class PlayerLeaveListener implements Listener {
 	
 	private JavaPlugin plugin;
 	
-	public PlayerLeaveEvents(JavaPlugin plugin) {
+	public PlayerLeaveListener(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 	

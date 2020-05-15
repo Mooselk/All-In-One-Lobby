@@ -9,11 +9,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Messages;
 
-public class BlockRelatedEvent implements Listener {
+public class BlockRelatedListener implements Listener {
 
 	private JavaPlugin plugin;
 	
-	public BlockRelatedEvent(JavaPlugin plugin) {
+	public BlockRelatedListener(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 

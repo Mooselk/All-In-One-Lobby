@@ -15,11 +15,11 @@ import me.kate.lobby.modules.portals.utils.SendToServer;
 import me.kate.lobby.npcs.api.events.NPCInteractEvent;
 import me.kate.lobby.objects.LobbyNPC;
 
-public class InteractNPCEvent implements Listener {
+public class InteractNPCListener implements Listener {
 
 	private Config npcConfig = new NPCConfig();
 
-	public InteractNPCEvent(JavaPlugin plugin) {
+	public InteractNPCListener(JavaPlugin plugin) {
 		
 	}
 

@@ -6,11 +6,11 @@ import org.bukkit.event.block.BlockGrowEvent;
 import org.bukkit.event.block.BlockSpreadEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class PlantGrowthEvent implements Listener {
+public class PlantGrowthListener implements Listener {
 	
 	private JavaPlugin plugin;
 
-	public PlantGrowthEvent(JavaPlugin plugin) {
+	public PlantGrowthListener(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 	

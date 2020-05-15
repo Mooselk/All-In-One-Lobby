@@ -5,11 +5,11 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class WeatherBlockEvent implements Listener {
+public class WeatherBlockListener implements Listener {
 	
 	private JavaPlugin plugin;
 
-	public WeatherBlockEvent(JavaPlugin plugin) {
+	public WeatherBlockListener(JavaPlugin plugin) {
 		this.plugin = plugin;
 	}
 
