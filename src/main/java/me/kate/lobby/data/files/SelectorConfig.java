@@ -93,4 +93,8 @@ public class SelectorConfig extends Config {
 	public int getSlot() {
 		return getConfig().getInt("selector.options.slot");
 	}
+	
+	public String getPath() {
+		return "selector.items.";
+	}
 }
