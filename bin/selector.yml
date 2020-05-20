@@ -2,7 +2,7 @@ selector:
   options:
     enabled: true
     # Number of menu rows
-    rows: 6
+    rows: 5
     
     # Selector item
     material: "COMPASS"
@@ -15,509 +15,127 @@ selector:
       - "&8Selects server"
     
     # Name at the top of menu
-    name: "&4&lExample &8&l>> &cServers"
+    title: "&8Server Selector"
     
     # Slot item appears in inventory
-    slot: 0
-    
-  19:
-    online:
-      name: '&8* &cExample ass &7(HCF) &8*'
-      material: "TNT"
-      byte: 0
-      enchanted: false
-      lore:
-        - '&8&m&l|-&r &cDescription'
-        - '&8&m&l|&r &7&o"Hardcore factions when you'
-        - '&8&m&l|&r &7&odie you are banned for'
-        - '&8&m&l|&r &7&oset about of time!"'
-        - '&8&m&l|-&r &cStatistics'
-        - '&8&m&l|&r &fSupported: &71.7.10 - 1.13'
-        - '&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9'
-        - '&8&m&l|&r &fONLINE: &7%online%/%max%'
-        - '&8&m&l|&r &fMAP: &7#1'
-        - '&8&m&l|&r &8- &aONLINE &8-'
-        - '&8&m&l|-&r'
+    slot: 4
+  items:
+    20:
+      online:
+        name: '&6&l* &e&lHeroic Factions &6&l*'
+        material: "TNT"
+        byte: 0
+        enchanted: false
+        lore:
+        - ' '
+        - '&7&oCreate your own faction'
+        - '&7&oand fight others to become the'
+        - '&7&obest faction on the server'
+        - ''
+        - '&f&lFEATURES'
+        - '&f&l* &eCustom Enchants'
+        - '&f&l* &eGod Kits'
+        - '&f&l* &ePlayer levels'
+        - '&f&l* &eConstant Events'
+        - '&7&oand so much more to explore..'
+        - ''
+        - '&f&lSTATISTICS'
+        - '&f&l* &ePlayers &f%online%&8/&f256'
+        - '&f&l* &eStatus &a&lActive'
+        - ''
+        - '&7&o(( Check &f&n&oDiscord&7&o for updates! ))'
       
-    offline:
-      name: '&8* &cFactions Hell &7(HCF) &8*'
-      material: "WOOL"
-      byte: 14
-      enchanted: false
-      lore:
-        - " "
-        - "&7- &cOFFLINE &7-"
-        - " "
+      offline:
+        name: '&6&l* &e&lHeroic Factions &6&l*'
+        material: "WOOL"
+        byte: 14
+        enchanted: false
+        lore:
+          - " "
+          - "&7- &cOFFLINE &7-"
+          - " "
+      server:
+        server-id: Heroic
+        ping-server: true
+
+      message: none
+    
+    24:
+      online:
+        name: '&0&l* &4&lDemonic Factions &0&l*'
+        material: "BLAZE_POWDER"
+        byte: 0
+        enchanted: false
+        lore:
+        - ' ' 
+        - '&7&oCreate your empire and'
+        - '&7&oconquer the world!'
+        - ''
+        - '&f&lFEATURES'
+        - '&f&l* &4Custom Enchantments'
+        - '&f&l* &4Custom Bosses'
+        - '&f&l* &4Player levels'
+        - '&f&l* &4Constant Events'
+        - '&7&oand so much more to explore!'
+        - ''
+        - '&f&lSTATISTICS'
+        - '&f&l* &4Players &f%online%/&f100'
+        - '&f&l* &4Status &f&lWHITELISTED'
+        - ''
+        - '&7&o(( Check &f&n&oDiscord&7&o for updates! ))'
       
-    server:
-      server-id: hypixel
-      ping-server: true
-      ip: me.hypixel.net
-      port: 25565
-      external-query: true
-      ping-timeout: 10
+      offline:
+        name: '&0&l* &4&lDemonic Factions &0&l*'
+        material: "WOOL"
+        byte: 14
+        enchanted: false
+        lore:
+          - " "
+          - "&7- &cOFFLINE &7-"
+          - " "
       
-    connect: "factions"
-    message: "&f[&6Lobby&f] Sending you to 'factions'!"
-    
-  21:
-    online:
-      name: '&8* &5Factions Void &7(Cannoning) &8*'
-      material: "DIAMOND_SWORD"
-      byte: 0
-      enchanted: false
-      lore:
-        - '&8&m&l|-&r &5Description'
-        - '&8&m&l|&r &7&o"Cannon your eveny bases'
-        - '&8&m&l|&r &7&oraid all there loot'
-        - '&8&m&l|&r &7&oand become the top of the server!"'
-        - '&8&m&l|-&r &5Statistics'
-        - '&8&m&l|&r &fSupported: &71.7.10 - 1.13'
-        - '&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9'
-        - '&8&m&l|&r &fONLINE: &7%online%/%max%'
-        - '&8&m&l|&r &fMAP: &7#1'
-        - '&8&m&l|&r &8- &aONLINE &8-'
-        - '&8&m&l|-&r'
-        
-    offline:
-      name: '&8* &5Factions Void &7(Cannoning) &8*'
-      material: "WOOL"
-      byte: 14
-      enchanted: false
-      lore:
-        - " "
-        - "&7- &cOFFLINE &7-"
-        - " "
-        
-    server:
-      server-id: mineplex
-      ping-server: true
-      external-query: true
-      ping-timeout: 10
+      server:
+        server-id: Demonic
+        ping-server: true
+
+      message: none
+
+    22:
+      online:
+        name: '&2&l* &a&lPirate Skyblock &2&l*'
+        material: "GRASS"
+        byte: 0
+        enchanted: false
+        lore:
+        - ' '
+        - '&7&oCreate your very own island'
+        - '&7&oand conquer the skies against'
+        - '&7&oother islands for the top'
+        - ''
+        - '&f&lFEATURES'
+        - '&f&l* &aMob Coins'
+        - '&f&l* &aGenerators'
+        - '&f&l* &aCustom Enchants'
+        - '&7&oand so much more to explore..'
+        - '&f'
+        - '&f&lSTATISTICS'
+        - '&f&l* &aPlayers &f%online%&8/&f256'
+        - '&f&l* &aStatus &f&lWHITELISTED'
+        - ''
+        - '&7&o(( Check &f&n&oDiscord&7&o for updates! ))'
       
-    connect: "pvp"
-    message: "&f[&6Lobby&f] Sending you to 'pvp'!"
-    
-    
-  23:
-    online:
-      name: '&8* &dFactions Rose &7(Survival) &8*'
-      material: "GRASS"
-      byte: 0
-      enchanted: false
-      lore:
-        - '&8&m&l|-&r &dDescription'
-        - '&8&8&m&l|&r &7&o"Build a Grate faction'
-        - '&8&8&m&l|&r &7&oraid and pvp with out'
-        - '&8&8&m&l|&r &7&ofear of losing your faction!"'
-        - '&8&m&l|-&r &dStatistics'
-        - '&8&8&m&l|&r &fSupported: &71.7.10 - 1.13 '
-        - '&8&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9 &8(&7PvP&8)'
-        - '&8&8&m&l|&r &fRecommended: &71.12 - 1.13 &8(&7Building&8)'
-        - '&8&8&m&l|&r &fONLINE: &7%online%/%max%'
-        - '&8&8&m&l|&r &fMAP: &7#1'
-        - '&8&8&m&l|&r &8- &aONLINE &8-'
-        - '&8&m&l|-&r'
-        
-    offline:
-      name: '&8* &dFactions Rose &7(Survival) &8*'
-      material: "WOOL"
-      byte: 14
-      enchanted: false
-      lore:
-        - " "
-        - "&7- &cOFFLINE &7-"
-        - " "
-        
-    server:
-      server-id: ruthless
-      ping-server: true
-      external-query: true
-      ping-timeout: 10
-    
-    connect: "skyblock"
-    message: "&f[&6Lobby&f] Sending you to 'skyblock'!"
-    
-    
-  25:
-    online:
-      name: '&8* &5Cannon Testing &8*'
-      material: "FURNACE"
-      byte: 0
-      enchanted: false
-      lore:
-       - '&8&8&m&l|-&r &5Description'
-       - '&8&8&m&l|&r &7&o"Test your cannons &'
-       - '&8&8&m&l|&r &7&oBases to see if they '
-       - '&8&8&m&l|&r &7&owill work on our Servers"'
-       - '&8&m&l|-&r &5Statistics'
-       - '&8&8&m&l|&r &fPatched Cannoning'
-       - '&8&8&m&l|&r &fSupported: &71.7.10 - 1.13 '
-       - '&8&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9'
-       - '&8&8&m&l|&r &fONLINE: &7%online%/%max%'
-       - '&8&8&m&l|&r &8- &aONLINE &8-'
-       - '&8&m&l|-&r'
-        
-    offline:
-      name: '&8* &5Cannon Testing &8*'
-      material: "WOOL"
-      byte: 14
-      enchanted: false
-      lore:
-        - " "
-        - "&7- &cOFFLINE &7-"
-        - " "
-        
-    server:
-      server-id: dev
-      ping-server: true
-      external-query: true
-      ping-timeout: 10
-    
-    connect: "skyblock"
-    message: "ass"
-    
-  29:
-    online:
-      name: '&8* &6Invalid &8*'
-      material: "WORKBENCH"
-      byte: 0
-      enchanted: false
-      lore:
-        - "&8Sample server"
-        - " "
-        - "&a&l> Click to Connect"
-        - "&7%online%/%max% currently online!"
-        - " "
-        
-    offline:
-      name: '&8* &6Invalid &8*'
-      material: "WOOL"
-      byte: 14
-      enchanted: false
-      lore:
-        - " "
-        - "&7- &cOFFLINE &7-"
-        - " "
-        
-    server:
-      server-id: placeholder
-      ping-server: true
-      ip: localhost
-      port: 25565
-      external-query: true
-      ping-timeout: 10
-    
-    connect: "none"
-    message: "none"
-    
-  31:
-    online:
-      name: '&8* &6Practice &8*'
-      material: "IRON_FENCE"
-      byte: 0
-      enchanted: false
-      lore:
-       - '&8&m&l|-&r &6Description'
-       - '&8&8&m&l|&r &7&o"Practice your PvP Skills'
-       - '&8&8&m&l|&r &7&oin 1v1s / 2v2 / join or make '
-       - '&8&8&m&l|&r &7&oa team and pvp with friends!'
-       - '&8&m&l|-&r &6Statistics'
-       - '&8&8&m&l|&r &fSupported: &71.7.10 - 1.13 '
-       - '&8&8&m&l|&r &fRecommended: &71.7.10 - 1.8.9 &8(&7PvP&8)'
-       - '&8&8&m&l|&r &fONLINE: &7%online%/%max%'
-       - '&8&8&m&l|&r &8- &aONLINE &8-'
-       - '&8&m&l|-&r'
-       
-    offline:
-      name: '&8* &6Practice &8*'
-      material: "WOOL"
-      byte: 14
-      enchanted: false
-      lore:
-        - " "
-        - "&7- &cOFFLINE &7-"
-        - " "
-    
-    server:
-      server-id: placeholder2
-      ping-server: true
-      ip: localhost
-      port: 25565
-      external-query: true
-      ping-timeout: 10
-    
-    connect: "none"
-    message: "none"
-    
-  33:
-    online:
-      name: '&8* &6Invalid &8*'
-      material: "BOOKSHELF"
-      byte: 0
-      enchanted: false
-      lore:
-        - "&8Sample server"
-        - " "
-        - "&a&l> Click to Connect"
-        - "&7%online%/%max% currently online!"
-        - " "
-        
-    offline:
-      name: '&8* &6Invalid &8*'
-      material: "WOOL"
-      byte: 14
-      enchanted: false
-      lore:
-        - " "
-        - "&7- &cOFFLINE &7-"
-        - " "
-    
-    server:
-      server-id: placeholder3
-      ping-server: true
-      ip: localhost
-      port: 25565
-      external-query: true
-      ping-timeout: 10
-    
-    connect: "none"
-    message: "none"
+      offline:
+        name: '&2&l* &a&lPirate Skyblock &2&l*'
+        material: "WOOL"
+        byte: 14
+        enchanted: false
+        lore:
+          - " "
+          - "&7- &cOFFLINE &7-"
+          - " "
       
-  45:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 0
-    
-  53:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 0
-    
-  0:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 0
-  1:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
-  2:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  3:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  4:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  5:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  6:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  7:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
-  8:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 0
-  9:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
-  10:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  11:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  12:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  13:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  14:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  15:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  16:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  17:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
-  18:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  20:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  22:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  24:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  26:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  27:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  28:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  30:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  32:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  34:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  35:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  36:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
-  37:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  38:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  39:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  40:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  41:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  42:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  43:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  44:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
-  46:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
-  47:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  48:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  49:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  50:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  51:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 7
-  52:
-    decoration: true
-    name: " "
-    material: "STAINED_GLASS_PANE"
-    byte: 2
+      server:
+        server-id: Pirate
+        ping-server: true
+
+      message: none
