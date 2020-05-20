@@ -2,6 +2,9 @@ package me.kate.lobby.data.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -13,6 +16,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
+import me.kate.lobby.utils.LocationUtils;
 
 public class NPCConfig extends Config {
 	
@@ -73,26 +77,56 @@ public class NPCConfig extends Config {
 	 * @return Set<String>
 	 * Get configuration keys
 	 */
+	private Set<String> empty = new HashSet<String>();
+	
 	public Set<String> get(String path) {
-		return npcConfiguration.getConfigurationSection(path).getKeys(false);
+		
+		if (getConfig().getConfigurationSection(path) == null) {
+			return empty;
+		}
+		
+		return getConfig().getConfigurationSection(path).getKeys(false);
 	}
 	
 	public ConfigurationSection getSection(String path) {
-		return npcConfiguration.getConfigurationSection(path);
+		return getConfig().getConfigurationSection(path);
 	}
 	
-	public String getServer(String name) {
-		return null;
+	public List<String> getEquipment(String path) {
+		return getConfig().getStringList("npcs." + path + ".equipment");
+	}
+	
+	public List<String> getText(String path) {
+		return getConfig().getStringList("npcs." + path + ".holotext");
+	}
+	
+	public List<String> getMessages(String path) {
+		return getConfig().getStringList("npcs." + path + ".messages");
 	}
 	
 	public Location getLocation(String name) {
 		final ConfigurationSection section = this.getSection("npcs." + name);
-		Location location = new Location(Bukkit.getWorld("world"), 
-				section.getDouble("location.x"),
-				section.getDouble("location.y"), 
-				section.getDouble("location.z"));
-		location.setPitch(section.getInt("location.pitch"));
-		location.setYaw(section.getInt("location.yaw"));
-		return location;
+		return LocationUtils.fromString(section.getString("location"));
+	}
+	
+	public void refresh() {
+		this.save();
+		this.reload();
+	}
+	
+	private final boolean live = false;
+	private final List<String> defaultHoloText = Arrays.asList("Edit this text in NPC config!", "Players: %players%");
+	private final List<String> defaultMessages = Arrays.asList("&3Default message!", "&9Second line!");
+	private final List<String> equipmentExample = Arrays.asList("helmet:IRON_HELMET:true", "hand:STONE_SWORD");
+	
+	public void toConfig(int skinId, Location location, String npcName) {
+		this.getConfig().set(npcName + ".skin", skinId);
+		this.getConfig().set(npcName + ".holotext", defaultHoloText);
+		this.getConfig().set(npcName + ".messages", defaultMessages);
+		this.getConfig().set(npcName + ".equipment", equipmentExample);
+		this.getConfig().set(npcName + ".server.live-player-count", live);
+		this.getConfig().set(npcName + ".server.server-name", "example");
+		this.getConfig().set(npcName + ".location", LocationUtils.toString(location));
+		this.refresh();
 	}
 }
