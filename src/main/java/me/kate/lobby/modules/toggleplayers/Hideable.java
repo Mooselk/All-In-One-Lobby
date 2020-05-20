@@ -5,8 +5,6 @@ import org.bukkit.entity.Player;
 
 public interface Hideable {
 	
-	boolean isHidden(Player p);
-	
 	void hide(Player p, ConfigurationSection section);
 	
 	void unhide(Player p, ConfigurationSection section);

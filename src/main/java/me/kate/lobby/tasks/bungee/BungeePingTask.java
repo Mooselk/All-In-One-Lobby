@@ -8,7 +8,7 @@ import org.bukkit.scheduler.BukkitTask;
 import me.kate.lobby.Main;
 import me.kate.lobby.tasks.Task;
 
-public class BungeePingTask extends Task {
+public class BungeePingTask implements Task {
 
 	private Main plugin;
 	

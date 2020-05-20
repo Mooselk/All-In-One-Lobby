@@ -15,33 +15,31 @@ import me.kate.lobby.commands.NPCCommand;
 import me.kate.lobby.commands.PortalCommand;
 import me.kate.lobby.data.files.JumpPadConfig;
 import me.kate.lobby.data.files.NPCConfig;
-import me.kate.lobby.data.files.PlayerSettingsConfig;
 import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
-import me.kate.lobby.gui.listeners.SettingsGUIListener;
-import me.kate.lobby.listeners.InteractNPCEvent;
+import me.kate.lobby.listeners.InteractNPCListener;
 import me.kate.lobby.listeners.InventoryListener;
-import me.kate.lobby.listeners.PlayerJoinEvents;
-import me.kate.lobby.listeners.PlayerLeaveEvents;
-import me.kate.lobby.listeners.world.BlockRelatedEvent;
-import me.kate.lobby.listeners.world.MobSpawnEvent;
-import me.kate.lobby.listeners.world.PlantGrowthEvent;
-import me.kate.lobby.listeners.world.TouchVoidEvent;
-import me.kate.lobby.listeners.world.WeatherBlockEvent;
+import me.kate.lobby.listeners.PlayerJoinListener;
+import me.kate.lobby.listeners.PlayerLeaveListener;
+import me.kate.lobby.listeners.world.BlockRelatedListener;
+import me.kate.lobby.listeners.world.MobSpawnListener;
+import me.kate.lobby.listeners.world.PlantGrowthListener;
+import me.kate.lobby.listeners.world.TouchVoidListener;
+import me.kate.lobby.listeners.world.WeatherBlockListener;
 import me.kate.lobby.modules.jumppads.JumpPadInteractEvent;
 import me.kate.lobby.modules.portals.Portal;
 import me.kate.lobby.modules.portals.events.PlayerPortalEvent;
 import me.kate.lobby.modules.portals.events.WandInteractEvent;
 import me.kate.lobby.modules.portals.utils.Cuboid;
-import me.kate.lobby.modules.selector.events.SelectorClickEvent;
-import me.kate.lobby.modules.selector.events.SelectorGuiEvents;
+import me.kate.lobby.modules.selector.Selector;
+import me.kate.lobby.modules.selector.gui.listeners.SelectorGUIListener;
+import me.kate.lobby.modules.selector.listeners.SelectorInteractListener;
 import me.kate.lobby.modules.tablist.TabList;
 import me.kate.lobby.modules.toggleplayers.events.TogglePlayersEvent;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.npcs.NPCLib;
-import me.kate.lobby.npcs.NPCRegistry;
 import me.kate.lobby.npcs.nms.v1_10_R1.TabList_v1_10_R1;
 import me.kate.lobby.npcs.nms.v1_11_R1.TabList_v1_11_R1;
 import me.kate.lobby.npcs.nms.v1_12_R1.TabList_v1_12_R1;
@@ -54,6 +52,7 @@ import me.kate.lobby.npcs.nms.v1_9_R1.TabList_v1_9_R1;
 import me.kate.lobby.npcs.nms.v1_9_R2.TabList_v1_9_R2;
 import me.kate.lobby.servers.Servers;
 import me.kate.lobby.tasks.NPCTask;
+import me.kate.lobby.tasks.SelectorUpdateTask;
 import me.kate.lobby.tasks.Task;
 import me.kate.lobby.tasks.bungee.BungeeMessenger;
 import me.kate.lobby.tasks.bungee.BungeePingTask;
@@ -64,7 +63,6 @@ public class Main extends JavaPlugin {
 	/*
 	 * * * * * TO-DO * * * * *
 	 * 
-	 * NPC setskin
 	 * Edit NPCs with commands
 	 * 
 	 * * * * * * * * * * * *
@@ -74,16 +72,17 @@ public class Main extends JavaPlugin {
 
 	private static Main instance;
 	private static NPCLib npclib;
-	private static NPCRegistry registry;
 	private TabList tablist;
 	private Portal portals;
+	private Selector selector;
+	private SelectorUpdateTask task;
 	
 	private final Map<String, Map<String, Object>> placeholders = new HashMap<>();
 	
 	private final Map<UUID, BukkitTask> tasks = new HashMap<>();
 	
 	public static final ExecutorService threadPool = Executors.newSingleThreadExecutor();
-	public static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
+	
 	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
 	public final Map<String, Cuboid> portal = new HashMap<>();
@@ -94,10 +93,6 @@ public class Main extends JavaPlugin {
 	
 	public static NPCLib getNPCLib() {
 		return npclib;
-	}
-	
-	public static NPCRegistry getRegistry() {
-		return registry;
 	}
 	
 	public TabList getTabList() {
@@ -116,17 +111,16 @@ public class Main extends JavaPlugin {
 		return portal;
 	}
 	
+	public Selector getSelector() {
+		return selector;
+	}
 	
 	@Override
 	public void onEnable() {
-		final String version = getServer()
-				.getClass()
-				.getPackage()
-				.getName()
-				.split("\\.")[3];
+		
 		instance = this;
-		registry = new NPCRegistry();
 		npclib = new NPCLib(this);
+		
 		this.loadConfigs();
 		this.registerEvents();
 		this.registerCommands();
@@ -134,42 +128,53 @@ public class Main extends JavaPlugin {
 		this.registerChannel();
 		this.setupServers();
 		this.startTasks();
+		
 		portals = new Portal();
 		portals.load(false);
-		if (this.getConfig().getBoolean("tablist.enabled")) {
+		
+		selector = new Selector();
+		
+		selector.addContents();
+		selector.setupContents();
+		selector.update();
+		
+		task = new SelectorUpdateTask(this);
+		task.start();
+		
+		if (getConfig().getBoolean("tablist.enabled")) {
 			if (setupTablist()) {
-				Logger.info("[Lobby] Loaded TabList for version " + version);
+				Logger.info("[Lobby] Loaded TabList for version " + getVersion());
 			} else {
-				Logger.severe("[Lobby] Failed to load tablist for " + version + " unsupported version.");
+				Logger.severe("[Lobby] Failed to load tablist for " + getVersion() + " unsupported version.");
 			}
 		}
-		getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessenger());
-		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+		
 	}
 
 	@Override
 	public void onDisable() {
 		instance = null;
+		task.stop();
 	}
 
 	private void registerEvents() {
-		this.getServer().getPluginManager().registerEvents(new PlayerJoinEvents(this), this);
-		this.getServer().getPluginManager().registerEvents(new TouchVoidEvent(this), this);
-		this.getServer().getPluginManager().registerEvents(new BlockRelatedEvent(this), this);
-		this.getServer().getPluginManager().registerEvents(new MobSpawnEvent(this), this);
-		this.getServer().getPluginManager().registerEvents(new SelectorGuiEvents(), this);
-		this.getServer().getPluginManager().registerEvents(new SelectorClickEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerJoinListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new TouchVoidListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new BlockRelatedListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new MobSpawnListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new SelectorInteractListener(), this);
 		this.getServer().getPluginManager().registerEvents(new TogglePlayersEvent(this), this);
-		this.getServer().getPluginManager().registerEvents(new InteractNPCEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new InteractNPCListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerPortalEvent(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerLeaveEvents(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerLeaveListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new WandInteractEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new WeatherBlockEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new WeatherBlockListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(), this);
-		this.getServer().getPluginManager().registerEvents(new PlantGrowthEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlantGrowthListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
-		this.getServer().getPluginManager().registerEvents(new SettingsGUIListener(), this);
+		this.getServer().getPluginManager().registerEvents(new SelectorGUIListener(), this);
 	}
+	
 	private void registerCommands() {
 		this.getCommand("lobby").setExecutor(new LobbyCommand());
 		this.getCommand("npc").setExecutor(new NPCCommand(this));
@@ -183,48 +188,50 @@ public class Main extends JavaPlugin {
 		new JumpPadConfig().create();
 		new NPCConfig().create();
 		new PluginConfig().create();
-		new PlayerSettingsConfig().create();
 		new ToggleConfig().create();
 	}
 	
 	private void loadNPCs() {
-		final NPCBuilder builder = new NPCBuilder(this);
+		NPCBuilder builder = new NPCBuilder(this);
 		builder.buildNPC();
 	}
 
 	private void setupServers() {
-		final Servers servers = new Servers();
+		Servers servers = new Servers();
 		servers.loadServers();
 	}
 	
 	private void startTasks() {
-		final Task npctask = new NPCTask(this);
-		final Task bungee = new BungeePingTask(this);
+		Task npctask = new NPCTask(this);
+		Task bungee = new BungeePingTask(this);
 		bungee.start();
 		npctask.start();
 	}
 	
 	private void registerChannel() {
-		
+		getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", new BungeeMessenger());
+		getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+	}
+	
+	public String getVersion() {
+		return getServer()
+				.getClass()
+				.getPackage()
+				.getName()
+				.split("\\.")[3];
 	}
 	
 	private boolean setupTablist() {
-		String versionName;
-		try {
-			versionName = this.getServer().getClass().getPackage().getName().split("\\.")[3];
-        } catch (ArrayIndexOutOfBoundsException e) {
-            return false;
-        }
-		if (versionName.equals("v1_8_R2")) { tablist = new TabList_v1_8_R2(); }
-		if (versionName.equals("v1_8_R3")) { tablist = new TabList_v1_8_R3(); }
-		if (versionName.equals("v1_9_R1")) { tablist = new TabList_v1_9_R1(); }
-		if (versionName.equals("v1_9_R2")) { tablist = new TabList_v1_9_R2(); }
-		if (versionName.equals("v1_10_R1")) { tablist = new TabList_v1_10_R1(); }
-		if (versionName.equals("v1_11_R1")) { tablist = new TabList_v1_11_R1(); }
-		if (versionName.equals("v1_12_R1")) { tablist = new TabList_v1_12_R1(); }
-		if (versionName.equals("v1_13_R1")) { tablist = new TabList_v1_13_R1(); }
-		if (versionName.equals("v1_13_R2")) { tablist = new TabList_v1_13_R2(); }
-		if (versionName.equals("v1_14_R1")) { tablist = new TabList_v1_14_R1(); }
+		if (getVersion().equals("v1_8_R2")) { tablist = new TabList_v1_8_R2(); }
+		if (getVersion().equals("v1_8_R3")) { tablist = new TabList_v1_8_R3(); }
+		if (getVersion().equals("v1_9_R1")) { tablist = new TabList_v1_9_R1(); }
+		if (getVersion().equals("v1_9_R2")) { tablist = new TabList_v1_9_R2(); }
+		if (getVersion().equals("v1_10_R1")) { tablist = new TabList_v1_10_R1(); }
+		if (getVersion().equals("v1_11_R1")) { tablist = new TabList_v1_11_R1(); }
+		if (getVersion().equals("v1_12_R1")) { tablist = new TabList_v1_12_R1(); }
+		if (getVersion().equals("v1_13_R1")) { tablist = new TabList_v1_13_R1(); }
+		if (getVersion().equals("v1_13_R2")) { tablist = new TabList_v1_13_R2(); }
+		if (getVersion().equals("v1_14_R1")) { tablist = new TabList_v1_14_R1(); }
 		return tablist != null;
 	}
 }

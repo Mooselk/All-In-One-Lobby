@@ -7,8 +7,11 @@ import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
 
+import com.google.common.collect.Maps;
+
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.data.files.PluginConfig;
+import me.kate.lobby.objects.Server;
 import me.kate.lobby.ping.MineStat;
 
 public class ServerManager {
@@ -23,6 +26,8 @@ public class ServerManager {
 	private static Map<String, String> addresses = new HashMap<>();
 
 	private static final Map<String, String> SERVER_ASSOCIATION = new HashMap<>();
+	
+	public static final Map<String, Server> SERVER = Maps.newHashMap();
 	
 	
 	/**
@@ -81,7 +86,7 @@ public class ServerManager {
 
 	public void loadServers() {
 		clear(getServerInfo());
-		for (String key : config.get("servers.")) {
+		config.get("servers.").forEach(key -> {
 			final ConfigurationSection section = config.getSection("servers." + key);
 			String serverName = key;
 			String ip = section.getString("ip");
@@ -89,7 +94,9 @@ public class ServerManager {
 			String address = ip + ":" + port;
 			servers.add(serverName);
 			addresses.put(serverName, address);
-		}
+			
+			SERVER.put(serverName, new Server(serverName, ip, port));
+		});
 		this.loadNPCAssosiation();
 	}
 
@@ -100,14 +107,14 @@ public class ServerManager {
 
 	public void loadNPCAssosiation() {
 		clear(getAssociation());
-		for (final String name : npcConfig.get("npcs")) {
+		npcConfig.get("npcs").forEach(name -> {
 			final ConfigurationSection section = npcConfig.getSection("npcs." + name + ".server");
 			if (section.getBoolean("live-player-count")) {
 				String serverName = section.getString("server-name");
 				String npcName = name;
 				getAssociation().put(npcName, serverName);
 			}
-		}
+		});
 	}
 
 	public void loadNPCAssosiation(String npcName) {

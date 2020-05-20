@@ -89,6 +89,11 @@ public class ItemBuilder {
 	 * @param name The name to change it to.
 	 */
 	public ItemBuilder setName(String name) {
+		
+		if (name == null) {
+			name = " ";
+		}
+		
 		ItemMeta im = is.getItemMeta();
 		im.setDisplayName(Utils.color(name));
 		is.setItemMeta(im);
@@ -190,7 +195,7 @@ public class ItemBuilder {
 	 * 
 	 * @param lore The lore to set it to.
 	 */
-	public ItemBuilder setLore(List<String> lore) {
+	public ItemBuilder setLore(List<String> lore) {	
 		ItemMeta im = is.getItemMeta();
 		im.setLore(Utils.colorParser(lore));
 		is.setItemMeta(im);

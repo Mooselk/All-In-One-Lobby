@@ -28,7 +28,7 @@ public class TouchVoidListener implements Listener {
 			final Player player = (Player) event.getEntity();
 			if (event.getCause() == DamageCause.VOID) {
 				event.setCancelled(true);
-				player.teleport(Spawn.toSpawn());
+				player.teleport(Spawn.getSpawn());
 			}
 			if (event.getCause() == DamageCause.FALL) {
 				event.setCancelled(true);
@@ -40,7 +40,7 @@ public class TouchVoidListener implements Listener {
 	public void onMove(final PlayerMoveEvent event) {
 		final Player player = event.getPlayer();
 		if (player.getLocation().getBlockY() < 1) {
-			player.teleport(Spawn.toSpawn());
+			player.teleport(Spawn.getSpawn());
 			timer = 0;
 			new BukkitRunnable() {
 				@Override

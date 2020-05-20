@@ -77,4 +77,9 @@ public class PortalsConfig extends Config {
 	public String getName() {
 		return "Portals";
 	}
+	
+	public void refresh() {
+		this.save();
+		this.reload();
+	}
 }

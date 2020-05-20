@@ -9,6 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import me.kate.lobby.Main;
+
 public abstract class GUI {
 
 	public static Map<UUID, GUI> inventoriesByUUID = new HashMap<>();
@@ -17,25 +19,24 @@ public abstract class GUI {
 	private Inventory inventory;
 	private Map<Integer, GUIAction> actions;
 	private UUID uuid;
+	private Main main;
 	
 	public GUI(int invSize, String invName) {
 		uuid = UUID.randomUUID();
 		inventory = Bukkit.createInventory(null, invSize * 9, invName);
 		actions = new HashMap<>();
 		inventoriesByUUID.put(getUuid(), this);
+		main = Main.getInstance();
 	}
 	
 	public void open(Player player) {
 		player.openInventory(inventory);
         openInventories.put(player.getUniqueId(), getUuid());
-        // to-do
-        // start update task
+        main.getSelector().update();
     }
 	
 	public void close(Player player) {
 		player.closeInventory();
-		// to-do
-		// stop update task
 	}
 	
 	public void delete() {

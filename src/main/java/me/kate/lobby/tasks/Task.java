@@ -2,14 +2,14 @@ package me.kate.lobby.tasks;
 
 import java.util.UUID;
 
-public abstract class Task {
+public interface Task {
 
-	public abstract void start();
+	public void start();
 	
-	public abstract void stop();
+	public void stop();
 	
-	public abstract boolean isRunning();
+	public boolean isRunning();
 	
-	public abstract UUID getTaskID();
+	public UUID getTaskID();
 	
 }

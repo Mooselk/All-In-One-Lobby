@@ -12,7 +12,7 @@ public class Spawn {
 
 	private static FileConfiguration config = Main.getInstance().getConfig();
 	
-	public static Location toSpawn() {
+	public static Location getSpawn() {
 		double x = config.getDouble("spawn.x");
 		double y = config.getDouble("spawn.y");
 		double z = config.getDouble("spawn.z");

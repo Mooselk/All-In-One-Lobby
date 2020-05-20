@@ -41,15 +41,12 @@ tablist:
   - second line
   - third line
 servers:
-  Skyblock:
+  Pirate:
     ip: localhost
     port: 25569
-  Factions-2:
+  Demonic:
     ip: localhost
     port: 25568
-  Factions:
+  Heroic:
     ip: localhost
     port: 25567
-  Lobby:
-    ip: localhost
-    port: 25566

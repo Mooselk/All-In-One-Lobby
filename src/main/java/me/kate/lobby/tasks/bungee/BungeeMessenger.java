@@ -2,7 +2,6 @@ package me.kate.lobby.tasks.bungee;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,14 +16,12 @@ import me.kate.lobby.Main;
 import me.kate.lobby.servers.ServerManager;
 import me.kate.lobby.utils.Logger;
 
-public class BungeeMessenger extends ServerManager implements PluginMessageListener {
+public class BungeeMessenger implements PluginMessageListener {
 	
 	public static void getPlayerCounts() {
-		if (Bukkit.getOnlinePlayers().isEmpty()) {
+		if (Bukkit.getOnlinePlayers().isEmpty())
 			return;
-		}
-		
-		for (String server : getServers()) {
+		for (String server : ServerManager.getServers()) {
 			ByteArrayDataOutput out = ByteStreams.newDataOutput();
 			out.writeUTF("PlayerCount");
 			out.writeUTF(server);
@@ -33,9 +30,8 @@ public class BungeeMessenger extends ServerManager implements PluginMessageListe
 	}
 
 	public static void getPlayerCountFor(String server) {
-		if (Bukkit.getOnlinePlayers().isEmpty()) {
+		if (Bukkit.getOnlinePlayers().isEmpty())
 			return;
-		}
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("PlayerCount");
 		out.writeUTF(server);
@@ -44,9 +40,8 @@ public class BungeeMessenger extends ServerManager implements PluginMessageListe
 	
 	@Override
 	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
-		if (!channel.equals("BungeeCord")) {
+		if (!channel.equals("BungeeCord"))
 			return;
-		}
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
 		int playerCount = 0;
 		String serverName = "null";
@@ -59,30 +54,31 @@ public class BungeeMessenger extends ServerManager implements PluginMessageListe
 				playerCount = in.readInt();
 			}
 			
-		} catch (IOException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Map<String, Object> serverInfo = new HashMap<>();
 		// Must be final or effectively final my ass
 		String count = String.valueOf(playerCount);
 		String server = serverName;
-		if (getServerAddress().get(serverName) == null) {
+		if (ServerManager.getServerAddress().get(serverName) == null) {
 			Logger.debug("ServerName " + serverName + " is null in server address hashmap");
 			Logger.debug("WHERE 'ALL' COMMING FROM");
 			return;
 		}
-		String[] address = getServerAddress().get(serverName).split(":");
+		String[] address = ServerManager.getServerAddress().get(serverName).split(":");
 		HeartBeat.fetchServerStatusFromAsync(address[0], Integer.valueOf(address[1]), status -> {
-			//System.out.println("Server " + server + " is " + status.toString());
-				serverInfo.put("isOnline", status.equals(ServerStatus.ONLINE));
-				serverInfo.put("online", String.valueOf(count));
-				//System.out.println("ServerInfo" + serverInfo);
-				Main.getInstance().getPlaceholders().put(server, serverInfo);
-				Logger.debug("PlaceHolders- " + server + ": " + Main.getInstance().getPlaceholders());
+//			System.out.println("Server " + server + " is " + status.toString());
 				
+			serverInfo.put("isOnline", status.equals(ServerStatus.ONLINE));
+			serverInfo.put("online", String.valueOf(count));
+				
+//			System.out.println("ServerInfo" + serverInfo);
+			Main.getInstance().getPlaceholders().put(server, serverInfo);
+//			Logger.debug("PlaceHolders- " + server + ": " + Main.getInstance().getPlaceholders());
 			}
 		);
-		//System.out.println("Placeholders outside heartbeat: " + Main.getInstance().getPlaceholders());
+//		 System.out.println("Placeholders outside heartbeat: " + Main.getInstance().getPlaceholders());
 	}
 	
 }

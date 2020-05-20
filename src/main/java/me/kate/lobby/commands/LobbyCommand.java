@@ -23,6 +23,8 @@ public class LobbyCommand implements CommandExecutor {
 	private Config mainConfig = new PluginConfig();
 	private ToggleConfig togglePlayersConfig = new ToggleConfig();
 	
+	private Selector selector = Main.getInstance().getSelector();
+	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		final Player player = (Player) sender;
@@ -54,7 +56,7 @@ public class LobbyCommand implements CommandExecutor {
 				}
 				if (args[0].equalsIgnoreCase("spawn")) {
 					if (player.hasPermission("lobby.spawn")) {
-						player.teleport(Spawn.toSpawn());
+						player.teleport(Spawn.getSpawn());
 						Messages.send("&f[&6Lobby&f] Teleporting to spawn...", player);
 					} else {
 						Messages.noPermission(player);
@@ -70,7 +72,8 @@ public class LobbyCommand implements CommandExecutor {
 								break;
 							case "selector":
 								Utils.reloadConfig(selectorConfig, player);
-								new Selector().setup();
+								selector.delete();
+								selector.reload();
 								break;
 							case "config":
 								Utils.reloadConfig(mainConfig, player);

@@ -1,5 +1,7 @@
 package me.kate.lobby.managers;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
@@ -7,9 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import me.kate.lobby.Main;
-
 public class CooldownManager {
+	
+	private static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
 	
 	public static final int DEFAULT_COOLDOWN = 1;
 	
@@ -21,14 +23,14 @@ public class CooldownManager {
 	
 	public void setCooldown(UUID player, int time) {
 		if (time < 1) {
-			Main.COOLDOWNS.remove(player);
+			COOLDOWNS.remove(player);
 		} else {
-			Main.COOLDOWNS.put(player, time);
+			COOLDOWNS.put(player, time);
 		}
 	}
 
 	public int getCooldown(UUID player) {
-		return Main.COOLDOWNS.getOrDefault(player, 0);
+		return COOLDOWNS.getOrDefault(player, 0);
 	}
 	
 	public void startCooldown(Player player, int cooldown) {
