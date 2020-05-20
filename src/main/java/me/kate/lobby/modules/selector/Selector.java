@@ -1,131 +1,149 @@
 package me.kate.lobby.modules.selector;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import com.google.common.collect.Maps;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
+import me.kate.lobby.modules.portals.utils.SendToServer;
+import me.kate.lobby.modules.selector.gui.GUI;
+import me.kate.lobby.objects.MenuObject;
 import me.kate.lobby.utils.ItemBuilder;
-import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Utils;
 
-public class Selector {
+public class Selector extends GUI {
 
-	protected SelectorConfig config = new SelectorConfig();
+	private static final Map<String, MenuObject> CONTENTS = Maps.newHashMap();
 
-	private Inventory inventory = Bukkit.createInventory(null, 
-			config.getConfig().getInt("selector.options.rows") * 9, 
-			ChatColor.translateAlternateColorCodes('&', 
-			config.getConfig().getString("selector.options.name")));
-	
-	private Map<Integer, ItemStack> itemsOnline = new HashMap<>();
-	private Map<Integer, ItemStack> itemsOffline = new HashMap<>();
+	private static SelectorConfig selectorConfig = new SelectorConfig();
+	private String path;
 
 	public Selector() {
-		this.setup();
+		super(selectorConfig.getRows(), selectorConfig.getInvTitle());
+		this.path = "selector.items.";
 	}
 
-	public void open(Player player) {
-		this.update(player);
-		player.openInventory(inventory);
-		player.updateInventory();
-	}
-
-	public void close(Player player) {
-		player.closeInventory();
-	}
-	
-	public boolean isServerOnline(int slot) {
-		boolean isOnline = false;
-		final ConfigurationSection section = config.getSection("selector." + slot);
-		if (section.getBoolean("server.ping-server")) {
-			String serverName = section.getString("server.server-id");
-			Map<String, Object> placeholders = null;
-			if (Main.getInstance().getPlaceholders().containsKey(serverName)) {
-				placeholders = Main.getInstance().getPlaceholders().get(serverName);
-				isOnline = (boolean) placeholders.get("isOnline");
-			}
-		}
-		Logger.debug("Online?: " + isOnline + " Slot: " + slot);
-		return isOnline;
-	}
-	
-	public void setup() {
-		for (final String key : config.getConfig().getConfigurationSection("selector").getKeys(false)) {
-			final ConfigurationSection section = config.getConfig().getConfigurationSection("selector." + key);
-			if (key.equals("options")) { continue; }
-			if (section.getBoolean("decoration")) {
-				inventory.setItem(Integer.valueOf(key), createItem("selector." + key));
+	public void update() {
+		CONTENTS.entrySet().forEach(content -> {
+			MenuObject mObj = content.getValue();
+			
+			if (mObj.isDecoration())
+				return;
+			
+			if (mObj.isLive() && mObj.serverIsOnline()) {
+				
+				MenuObject online = CONTENTS.get(mObj.getInvSlot() + ":online");
+				
+				online.setDisplayName(Utils.replace(
+						online.getDisplayName(), 
+						online.getPlayerCount()));
+				
+				online.setLore(Utils.replaceLore(
+						online.getLore(), 
+						online.getPlayerCount()));	
+				
+				setItem(online.getInvSlot(), online.getItemStack(), player -> {
+					
+					if (!online.getServer().equals("none"))
+						SendToServer.send(player, online.getServer());
+					if (!online.getMessage().equals("none"))
+						player.sendMessage(online.getMessage());
+					
+				});
+				
 			} else {
-				itemsOnline.put(Integer.valueOf(key), createItem("selector." + key + ".online"));
 				
-				itemsOffline.put(Integer.valueOf(key), createItem("selector." + key + ".offline"));
+				MenuObject offline = CONTENTS.get(mObj.getInvSlot() + ":offline");
+				
+				setItem(offline.getInvSlot(), offline.getItemStack(), player -> {
+					
+					if (!offline.getServer().equals("none"))
+						SendToServer.send(player, offline.getServer());
+					if (!offline.getMessage().equals("none"))
+						player.sendMessage(offline.getMessage());
+					
+				});
+				
 			}
-		}
+		});
+		
 	}
-	
-	private void update(Player player) {
-		for (Map.Entry<Integer, ItemStack> map : itemsOnline.entrySet()) {
-			int slot = map.getKey();
-			ItemStack itemstack = map.getValue();
-			ItemMeta meta = itemstack.getItemMeta();
+
+	public void setupContents() {
+		CONTENTS.entrySet().forEach(mObj -> {
+			MenuObject menuObject = MenuObject.getBySlot(mObj.getKey());
 			
-			String displayName = meta.getDisplayName();
+			if (menuObject == null) 
+				return;
+			if (menuObject.getType().equals("offline"))
+				return;
 			
-			final ConfigurationSection section = config.getSection("selector." + slot);
-			
-			List<String> lore = section.getStringList("online.lore");
-			
-			if (section.getBoolean("server.ping-server")) {
-				String serverName = section.getString("server.server-id");
-				Map<String, Object> placeholders = null;
-				boolean isOnline = false;
+			setItem(menuObject.getInvSlot(), menuObject.getItemStack(), player -> {
 				
-				if (Main.getInstance().getPlaceholders().containsKey(serverName)) {
-					placeholders = Main.getInstance().getPlaceholders().get(serverName);
-					isOnline = (boolean) placeholders.get("isOnline");
-				}
+				if (menuObject.isDecoration())
+					return;
 				
-				if (isOnline) {
-					String onlineplayers = (String) placeholders.get("online");
-					int online = Integer.valueOf(onlineplayers);
-					meta.setLore(Utils.replaceLore(lore, online));
-					meta.setDisplayName(Utils.replace(displayName, online));
-					player.updateInventory();
-					itemstack.setItemMeta(meta);
-					inventory.setItem(slot, itemstack);
-				}
-				if (!isOnline) {
-					ItemStack offline = itemsOffline.get(slot);
-					inventory.setItem(slot, offline);
-				}
+				Bukkit.getLogger().info("toString: " + menuObject.getLore());
+				
+				if (!menuObject.getServer().equals("none"))
+					SendToServer.send(player, menuObject.getServer());
+				if (!menuObject.getMessage().equals("none"))
+					player.sendMessage(menuObject.getMessage());
+				
+			});
+		});
+	}
+
+	public Map<String, MenuObject> getContents() {
+		return CONTENTS;
+	}
+
+	public void addContents() {
+		for (String keys : selectorConfig.get(path)) {
+
+			ConfigurationSection section = selectorConfig.getSection(path + keys);
+			
+			if (section.getBoolean("decoration")) {
+				createItem(path + keys, keys + ":decoration", section);
+				continue;
 			}
+			
+			String slotKeyOnline = keys + ":online";
+			createItem(path + keys + ".online", slotKeyOnline, section);
+			
+			String slotKeyOffline = keys + ":offline";
+			createItem(path + keys + ".offline", slotKeyOffline, section);
 		}
+		
 	}
-	
-	private ItemStack createItem(String path) {
-		final ConfigurationSection section = config.getSection(path);
-		String name = section.getString("name");
-		Material material = Material.getMaterial(section.getString("material"));
-		List<String> lore = section.getStringList("lore");
-		short data = (short) section.getInt("byte");
-		boolean enchanted = section.getBoolean("enchanted");
-		ItemStack item = new ItemBuilder(material)
-				.setName(name)
-				.setDurability(data)
-				.setLore(lore)
-				.setEnchanted(enchanted)
+
+	private void createItem(String path, String slot, ConfigurationSection extras) {
+		ConfigurationSection section = selectorConfig.getSection(path);
+		
+		ItemStack item = new ItemBuilder(
+				Material.getMaterial(section.getString("material")))
+				.setName(section.getString("name"))
+				.setDurability((short) section.getInt("byte"))
+				.setLore(section.getStringList("lore"))
+				.setEnchanted(section.getBoolean("enchanted"))
 				.toItemStack();
-		return item;
+		
+		CONTENTS.put(slot, new MenuObject(slot, item, 
+				extras.getBoolean("decoration"),
+				extras.getString("message"),
+				extras.getString("server.server-id"), 
+				extras.getBoolean("server.ping-server"),
+				slot.split(":")[1]));
 	}
+	
+	public void reload() {
+		this.clearInventory();
+		this.addContents();
+		this.setupContents();
+	}
+
 }

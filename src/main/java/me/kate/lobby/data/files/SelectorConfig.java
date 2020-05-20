@@ -2,6 +2,7 @@ package me.kate.lobby.data.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -13,6 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
+import me.kate.lobby.utils.Utils;
 
 public class SelectorConfig extends Config {
 
@@ -90,8 +92,32 @@ public class SelectorConfig extends Config {
 		return Material.getMaterial(getConfig().getString("selector.options.material"));
 	}
 	
-	public int getSlot() {
+	public boolean isEnabled() {
+		return getConfig().getBoolean("selector.options.enabled");
+	}
+	
+	public String getInvTitle() {
+		return Utils.color(getConfig().getString("selector.options.title"));
+	}
+	
+	public String getItemName() {
+		return getConfig().getString("selector.options.item-name");
+	}
+	
+	public List<String> getItemLore() {
+		return getConfig().getStringList("selector.options.lore");
+	}
+	
+	public List<String> getItemLore(String path) {
+		return getConfig().getStringList("selector." + path + ".lore");
+	}
+	
+	public int getInvSlot() {
 		return getConfig().getInt("selector.options.slot");
+	}
+	
+	public int getRows() {
+		return getConfig().getInt("selector.options.rows");
 	}
 	
 	public String getPath() {

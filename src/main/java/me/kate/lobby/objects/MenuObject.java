@@ -22,6 +22,8 @@ public class MenuObject {
 	private boolean isLive;
 	private String type;
 	
+	private List<String> lore;
+	
 	public MenuObject(String slot, ItemStack itemStack, boolean isDecoration, String message, String server, boolean isLive, String type) {
 		this.slot = slot;
 		this.itemStack = itemStack;
@@ -30,6 +32,8 @@ public class MenuObject {
 		this.server = server;
 		this.isLive = isLive;
 		this.type = type;
+		
+		lore = itemStack.getItemMeta().getLore();
 		ITEM_BY_SLOT.put(slot, this);
 	}
 	
@@ -58,7 +62,7 @@ public class MenuObject {
 	}
 	
 	public List<String> getLore() {
-		return this.getItemMeta().getLore();
+		return lore;
 	}
 	
 	public String getServer() {
