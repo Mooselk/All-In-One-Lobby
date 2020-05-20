@@ -1,7 +1,5 @@
 package me.kate.lobby.listeners;
 
-import org.bukkit.Bukkit;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,12 +9,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
-import me.kate.lobby.data.files.PlayerSettingsConfig;
 import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.modules.Items;
 import me.kate.lobby.modules.PlayerPotionEffects;
 import me.kate.lobby.modules.Spawn;
-import me.kate.lobby.modules.selector._Selector;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.utils.Utils;
 
@@ -25,7 +21,6 @@ public class PlayerJoinListener implements Listener {
 	private JavaPlugin plugin;
 	
 	private NPCBuilder builder = new NPCBuilder(plugin);
-	private PlayerSettingsConfig playerSettings = new PlayerSettingsConfig();
 	private PlayerPotionEffects effects = new PlayerPotionEffects();
 	
 	private Items items = new Items();
@@ -42,19 +37,6 @@ public class PlayerJoinListener implements Listener {
 		
 		// this.sendJoinMessage(player);
 		
-		_Selector s = new _Selector("e", 6, plugin);
-		s.addContents();
-		s.setup();
-		
-		
-		Bukkit.getScheduler().runTaskLater(plugin,  () -> {
-			s.open(player);
-		}, 10);
-		
-		Bukkit.getScheduler().runTaskLater(plugin,  () -> {
-			s.update();
-		}, 40);
-		
 		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
 			event.setJoinMessage(Utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
 		} else {
@@ -64,24 +46,8 @@ public class PlayerJoinListener implements Listener {
 		if (Main.getInstance().getConfig().getBoolean("tablist.enabled")) {
 			Main.getInstance().getTabList().sendHeaderFooter(player);
 		}
-
-		if (!playerSettings.sectionExists(player.getUniqueId().toString())) {
-			playerSettings.createSection(player.getUniqueId().toString());
-			playerSettings.getSection(player.getUniqueId().toString()).set("hidden", false);
-			playerSettings.save();
-			playerSettings.reload();
-		}
 		
-		player.teleport(Spawn.toSpawn());
-		
-		for (final Player players : Bukkit.getOnlinePlayers()) {
-			ConfigurationSection hideSection = playerSettings.getSection(players.getUniqueId().toString());
-			if (hideSection != null) {
-				if (hideSection.getBoolean("hidden")) {
-					players.hidePlayer(player);
-				}
-			}
-		}
+		player.teleport(Spawn.getSpawn());
 		items.giveItems(player);
 		builder.loadNPCsFor(player);
 	}
