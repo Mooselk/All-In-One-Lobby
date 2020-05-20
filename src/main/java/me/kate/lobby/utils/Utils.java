@@ -1,23 +1,16 @@
 package me.kate.lobby.utils;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
-import me.kate.lobby.data.files.NPCConfig;
 
 public class Utils {
-
-	private static final Config npcConfig = new NPCConfig();
-	
 	
 	public static String replacePlayer(String in, Player player) {
 		String out = in.replaceAll("%player%", player.getName());
@@ -64,39 +57,6 @@ public class Utils {
 		}
 		return newList;
 	}
-	
-	// Test first
-	
-	public static void toConfig(Location location, FileConfiguration config, String path) {
-		config.set(path + ".x", location.getBlockX());
-		config.set(path + ".y", location.getBlockY());
-		config.set(path + ".z", location.getBlockZ());
-		config.set(path + ".pitch", location.getPitch());
-		config.set(path + ".yaw", location.getYaw());
-	}
-	
-	private static final boolean live = false;
-	private static final List<String> defaultHoloText = Arrays.asList("Edit this text in NPC config!", "Players: %players%");
-	private static final List<String> defaultMessages = Arrays.asList("&3Default message!", "&9Second line!");
-	private static final List<String> equipmentExample = Arrays.asList("helmet:IRON_HELMET:true", "hand:STONE_SWORD");
-	
-	public static void npcToConfig(Location location, FileConfiguration config, String npcName, int skinId) {
-		config.set(npcName + ".id", npcName);
-		config.set(npcName + ".skin", skinId);
-		config.set(npcName + ".holotext", defaultHoloText);
-		config.set(npcName + ".messages", defaultMessages);
-		config.set(npcName + ".equipment", equipmentExample);
-		config.set(npcName + ".server.live-player-count", live);
-		config.set(npcName + ".server.server-name", "example");
-		config.set(npcName + ".location.x", location.getBlockX());
-		config.set(npcName + ".location.y", location.getBlockY());
-		config.set(npcName + ".location.z", location.getBlockZ());
-		config.set(npcName + ".location.pitch", location.getPitch());
-		config.set(npcName + ".location.yaw", location.getYaw());
-		npcConfig.save();
-		npcConfig.reload();
-	}
-	
 	
 	public static List<String> replaceText(List<String> list, String players) {
 		List<String> text = null;
@@ -149,7 +109,7 @@ public class Utils {
 	public static List<String> replaceHoloText(List<String> list, String players) {
 		List<String> text = new ArrayList<String>();
 		for (String in : list) {
-			text.add(ChatColor.translateAlternateColorCodes('&', in.replace("%players%", players)));
+			text.add(color(in.replace("%players%", players)));
 		}
 		return text;
 	}

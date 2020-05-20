@@ -1,77 +1,56 @@
 package me.kate.lobby.modules.portals;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.modules.portals.select.Selections;
 import me.kate.lobby.modules.portals.utils.Cuboid;
-import me.kate.lobby.utils.Utils;
+import me.kate.lobby.utils.LocationUtils;
 
 public class Portal extends Selections {
 	
-	private Config portalConfig = new PortalsConfig();
+	private PortalsConfig portalConfig = new PortalsConfig();
 	
 	public void load(boolean reload) {
-		if (!Main.getInstance().getPortals().isEmpty() && reload) { Main.getInstance().getPortals().clear(); }
-		if (portalConfig.getSection("portals") != null) {
-			for (String key : portalConfig.get("portals")) {
-				final ConfigurationSection section = portalConfig.getSection("portals." + key);
-				final Location loc1 = new Location(Bukkit.getWorld(
-						section.getString("world")),
-						section.getInt("loc-1.x"),
-						section.getInt("loc-1.y"),
-						section.getInt("loc-1.z"));
-				final Location loc2 = new Location(Bukkit.getWorld(
-						section.getString("world")),
-						section.getInt("loc-2.x"),
-						section.getInt("loc-2.y"),
-						section.getInt("loc-2.z"));
-				Main.getInstance().getPortals().put(key, new Cuboid(loc1, loc2));
-			}
+		if (!Main.getInstance().getPortals().isEmpty() && reload) 
+			Main.getInstance().getPortals().clear();
+		if (portalConfig.getSection("portals") == null)
+			return;
+		for (String key : portalConfig.get("portals")) {
+			ConfigurationSection section = portalConfig.getSection("portals." + key);
+			Location loc1 = LocationUtils.fromString(section.getString("loc-1"));
+			Location loc2 = LocationUtils.fromString(section.getString("loc-2"));
+			Main.getInstance().getPortals().put(key, new Cuboid(loc1, loc2));
 		}
 	}
 	
 	public void reloadAll() {
-		if (!Main.getInstance().getPortals().isEmpty()) {
+		if (!Main.getInstance().getPortals().isEmpty())
 			Main.getInstance().getPortals().clear();
-		}
 		for (String key : portalConfig.get("portals")) {
-			final ConfigurationSection section = portalConfig.getSection("portals." + key);
-				final Location loc1 = new Location(Bukkit.getWorld(
-						section.getString("world")),
-						section.getInt("loc-1.x"),
-						section.getInt("loc-1.y"),
-						section.getInt("loc-1.z"));
-				final Location loc2 = new Location(Bukkit.getWorld(
-						section.getString("world")),
-						section.getInt("loc-2.x"),
-						section.getInt("loc-2.y"),
-						section.getInt("loc-2.z"));
-				Main.getInstance().getPortals().put(key, new Cuboid(loc1, loc2));
-			}
+			ConfigurationSection section = portalConfig.getSection("portals." + key);
+			Location loc1 = LocationUtils.fromString(section.getString("loc-1"));
+			Location loc2 = LocationUtils.fromString(section.getString("loc-2"));
+			Main.getInstance().getPortals().put(key, new Cuboid(loc1, loc2));
 		}
+	}
 	
-	public void create(Location pos1, Location pos2, String name, String world, String server, Player player) {
-		Utils.toConfig(pos1, portalConfig.getConfig(), "portals." + name + ".loc-1");
-		Utils.toConfig(pos1, portalConfig.getConfig(), "portals." + name + ".loc-2");
-		
+	public void create(Location pos1, Location pos2, String name, String world, String server, Player player) {		
+		portalConfig.getConfig().set("portals." + name + ".loc-1", LocationUtils.toString(pos1));
+		portalConfig.getConfig().set("portals." + name + ".loc-2", LocationUtils.toString(pos2));
 		portalConfig.getConfig().set("portals." + name + ".world", world);
 		portalConfig.getConfig().set("portals." + name + ".server", server);
-		portalConfig.save();
-		portalConfig.reload();
+		portalConfig.refresh();
 		load(true);
 		clearSelection(player);
 	}
 	
 	public void delete(String name) {
 		portalConfig.getConfig().set("portals." + name, null);
-		portalConfig.save();
-		portalConfig.reload();
+		portalConfig.refresh();
 		this.reloadAll();
 	}
 }
