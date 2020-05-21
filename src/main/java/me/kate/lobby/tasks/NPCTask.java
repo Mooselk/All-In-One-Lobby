@@ -6,7 +6,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.npcs.hologram.HoloTextHandler;
 import me.kate.lobby.servers.ServerManager;
 import me.kate.lobby.utils.Utils;
@@ -37,12 +36,12 @@ public class NPCTask implements Task {
 				holotext.updateText(server, npcname);
 			}
 		}, DELAY * 20, DELAY * 20);
-		Main.getInstance().getTasks().put(taskID, refreshTimer);
+		Task.getTasks().put(taskID, refreshTimer);
 	}
 
 	@Override
 	public void stop() {
-		BukkitTask refreshTimer = Main.getInstance().getTasks().remove(taskID);
+		BukkitTask refreshTimer = Task.getTasks().remove(taskID);
 		if (refreshTimer != null) {
 			refreshTimer.cancel();
 		}
@@ -50,7 +49,7 @@ public class NPCTask implements Task {
 
 	@Override
 	public boolean isRunning() {
-		return Main.getInstance().getTasks().containsKey(taskID);
+		return Task.getTasks().containsKey(taskID);
 	}
 
 	@Override

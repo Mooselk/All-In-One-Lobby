@@ -2,13 +2,10 @@ package me.kate.lobby;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitTask;
-
 import me.kate.lobby.cache.CacheStorage;
 import me.kate.lobby.commands.LobbyCommand;
 import me.kate.lobby.commands.NPCCommand;
@@ -79,11 +76,7 @@ public class Main extends JavaPlugin {
 	
 	private final Map<String, Map<String, Object>> placeholders = new HashMap<>();
 	
-	private final Map<UUID, BukkitTask> tasks = new HashMap<>();
-	
 	public static final ExecutorService threadPool = Executors.newSingleThreadExecutor();
-	
-	public static final Map<String, BukkitTask> ALTTASKS = new HashMap<>();
 
 	public final Map<String, Cuboid> portal = new HashMap<>();
 	
@@ -97,10 +90,6 @@ public class Main extends JavaPlugin {
 	
 	public TabList getTabList() {
 		return tablist;
-	}
-
-	public Map<UUID, BukkitTask> getTasks() {
-		return tasks;
 	}
 	
 	public Map<String, Map<String, Object>> getPlaceholders() {

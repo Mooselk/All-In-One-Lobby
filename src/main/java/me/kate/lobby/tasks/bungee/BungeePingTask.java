@@ -24,12 +24,12 @@ public class BungeePingTask implements Task {
 		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			BungeeMessenger.getPlayerCounts();
 		}, DELAY * 20, DELAY * 20);
-		Main.getInstance().getTasks().put(taskID, refreshTimer);
+		Task.getTasks().put(taskID, refreshTimer);
 	}
 
 	@Override
 	public void stop() {
-		BukkitTask bukkitTask = Main.getInstance().getTasks().remove(taskID);
+		BukkitTask bukkitTask = Task.getTasks().remove(taskID);
 		if (bukkitTask != null) {
 			bukkitTask.cancel();
 		}
@@ -37,7 +37,7 @@ public class BungeePingTask implements Task {
 
 	@Override
 	public boolean isRunning() {
-		return Main.getInstance().getTasks().containsKey(taskID);
+		return Task.getTasks().containsKey(taskID);
 	}
 
 	@Override
