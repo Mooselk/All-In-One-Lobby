@@ -4,11 +4,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
-import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.modules.Items;
 import me.kate.lobby.modules.PlayerPotionEffects;
@@ -18,47 +16,50 @@ import me.kate.lobby.utils.Utils;
 
 public class PlayerJoinListener implements Listener {
 
-	private JavaPlugin plugin;
+	private Main plugin;
+	private Items items;
+	private PluginConfig config;
+	private NPCBuilder builder;
+	private PlayerPotionEffects effects;
 	
-	private NPCBuilder builder = new NPCBuilder(plugin);
-	private PlayerPotionEffects effects = new PlayerPotionEffects();
-	
-	private Items items = new Items();
-	
-	public PlayerJoinListener(JavaPlugin plugin) {
+	public PlayerJoinListener(Main plugin) {
 		this.plugin = plugin;
+		this.items = new Items();
+		this.config = new PluginConfig();
+		this.builder = new NPCBuilder(plugin);
+		this.effects = new PlayerPotionEffects();
 	}
 	
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
 		
-		effects.addEffect(player);
+		String joinMSG = plugin.getConfig().getString("options.custom-joinmsg");
+		
+		if (joinMSG.equals("none") || joinMSG.equals("")) {
+			event.setJoinMessage(null);
+		} else {
+			event.setJoinMessage(Utils.replacePlayer(joinMSG, player));
+		}
+		
+		if (plugin.getConfig().getBoolean("tablist.enabled")) {
+			plugin.getTabList().sendHeaderFooter(player);
+		}
 		
 		// this.sendJoinMessage(player);
 		
-		if (!Main.getInstance().getConfig().getString("options.custom-joinmsg").equals("none")) {
-			event.setJoinMessage(Utils.replacePlayer(Main.getInstance().getConfig().getString("options.custom-joinmsg"), player));
-		} else {
-			event.setJoinMessage(null);
-		}
-		
-		if (Main.getInstance().getConfig().getBoolean("tablist.enabled")) {
-			Main.getInstance().getTabList().sendHeaderFooter(player);
-		}
-		
 		player.teleport(Spawn.getSpawn());
+		
 		items.giveItems(player);
+		effects.addEffect(player);
 		builder.loadNPCsFor(player);
+		
 	}
 	
-	private Config config = new PluginConfig();
-	
 	public void sendJoinMessage(Player player) {
-		if (!config.getSection("join-motd").getBoolean("enabled")) {
+		if (!config.motdIsEnabled())
 			return;
-		}
-		for (String motd : config.getSection("join-motd").getStringList("message")) {
+		for (String motd : config.getJoinMOTD()) {
 			Messages.send(motd.replaceAll("%username%", player.getName()), player);
 		}
 	}

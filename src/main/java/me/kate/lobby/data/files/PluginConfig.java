@@ -2,6 +2,7 @@ package me.kate.lobby.data.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.configuration.ConfigurationSection;
@@ -59,5 +60,13 @@ public class PluginConfig extends Config {
 	
 	public ConfigurationSection getSection(String section) {
 		return this.getConfig().getConfigurationSection(section);
+	}
+	
+	public boolean motdIsEnabled() {
+		return this.getSection("join-motd").getBoolean("enabled");
+	}
+	
+	public List<String> getJoinMOTD() {
+		return this.getSection("join-motd").getStringList("message");
 	}
 }
