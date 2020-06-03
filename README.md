@@ -62,14 +62,14 @@ tablist:
     
 servers:
   factions:
-    ip: play.hypixel.net
-    port: 25565
+    ip: localhost
+    port: 25566
   skyblock:
-    ip: us.mineplex.com
-    port: 25565
+    ip: localhost
+    port: 25567
   some-other-server:
-    ip: ruthlesspvp.us
-    port: 25565
+    ip: localhost
+    port: 25568
 ```
 
 ### Commands
