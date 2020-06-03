@@ -91,9 +91,6 @@ cooldown: 2
  # NPC name
  mooselk:
  
-    # Internal NPC id (must match name)
-    id: mooselk
-    
     # SkinIds can be obtained from MineSkin.org
     skin: 2100230944
     
@@ -245,15 +242,6 @@ selector:
       
       # Ping server for live info
       ping-server: true
-      
-      # IP to get data from 
-      ip: me.hypixel.net
-      
-      # Port
-      port: 25565
-      
-      # false for local host, true for external server
-      external-query: true
       
       # Ping timeout
       ping-timeout: 10
