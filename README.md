@@ -120,12 +120,7 @@ cooldown: 2
       server-name: skyblock
     
     # NPCS location
-    location:
-      x: -0.5
-      y: 63
-      z: -14.5
-      yaw: -5
-      pitch: 0
+    location: world:0:6:-12.5:0:0
 ```
 
 ### Commands
