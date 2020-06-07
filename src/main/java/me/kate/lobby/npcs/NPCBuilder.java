@@ -1,7 +1,6 @@
 package me.kate.lobby.npcs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.bukkit.Bukkit;
@@ -49,7 +48,7 @@ public class NPCBuilder {
 		String server = section.getString("server.server-name");
 
 		Bukkit.getScheduler().runTask(plugin, () -> {
-			NPC npc = Main.getNPCLib().createNPC(Arrays.asList("Loading.."));
+			NPC npc = Main.getNPCLib().createNPC(Utils.replaceText(section.getStringList("holotext"), "0"));
 			applyItems(npc, name);
 
 			npc.setSkin(skinCache.getCachedSkin(skinId));
@@ -89,9 +88,8 @@ public class NPCBuilder {
 	public void applyItems(NPC npc, String name) {
 		npcConfig.getEquipment(name).forEach(items -> {
 			
-			if (!items.contains(":true")) {
+			if (!items.contains(":true"))
 				items = items + ":false";
-			}
 			
 			String[] parts = items.split(":");
 			
@@ -100,6 +98,7 @@ public class NPCBuilder {
 					.getMaterial(parts[1]))
 					.setEnchanted(parts[2].equals("true"))
 					.toItemStack());
+			
 		});
 	}
 
@@ -113,8 +112,7 @@ public class NPCBuilder {
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			
 			showAll(player);
-			if (msg) 
-				Messages.send("&f[&6NPC&f] Reload complete!", player);
+			if (msg) Messages.send("&f[&6NPC&f] Reload complete!", player);
 			
 		}, 3);
 	}
@@ -129,8 +127,7 @@ public class NPCBuilder {
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			
 			showAll(player);
-			if (msg) 
-				Messages.send("&f[&6NPC&f] Reload complete!", player);
+			if (msg) Messages.send("&f[&6NPC&f] Reload complete!", player);
 		
 		}, 3);
 	}
@@ -170,14 +167,14 @@ public class NPCBuilder {
 
 	public void destroyAll() {
 		NPCManager.getAllNPCs().forEach(npc -> {
-			LobbyNPC.getByID(npc.getId()).remove();;
+			LobbyNPC.getById(npc.getId()).remove();
 			npc.destroy();
 		});
 	}
 
 	public List<String> listNPCs() {
 		npcList = new ArrayList<String>();
-		NPCManager.getAllNPCs().forEach(npc -> npcList.add(LobbyNPC.getByID(npc.getId()).getName()));
+		NPCManager.getAllNPCs().forEach(npc -> npcList.add(LobbyNPC.getById(npc.getId()).getName()));
 		return npcList;
 	}
 
