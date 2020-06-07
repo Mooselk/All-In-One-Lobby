@@ -6,6 +6,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
 import me.kate.lobby.cache.CacheStorage;
 import me.kate.lobby.commands.LobbyCommand;
 import me.kate.lobby.commands.NPCCommand;
@@ -47,7 +48,7 @@ import me.kate.lobby.npcs.nms.v1_8_R2.TabList_v1_8_R2;
 import me.kate.lobby.npcs.nms.v1_8_R3.TabList_v1_8_R3;
 import me.kate.lobby.npcs.nms.v1_9_R1.TabList_v1_9_R1;
 import me.kate.lobby.npcs.nms.v1_9_R2.TabList_v1_9_R2;
-import me.kate.lobby.servers.Servers;
+import me.kate.lobby.servers.ServerManager;
 import me.kate.lobby.tasks.NPCTask;
 import me.kate.lobby.tasks.SelectorUpdateTask;
 import me.kate.lobby.tasks.Task;
@@ -186,7 +187,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupServers() {
-		Servers servers = new Servers();
+		ServerManager servers = new ServerManager();
 		servers.loadServers();
 	}
 	

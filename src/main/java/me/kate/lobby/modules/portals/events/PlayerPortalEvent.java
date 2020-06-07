@@ -14,8 +14,8 @@ import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.managers.CooldownManager;
 import me.kate.lobby.modules.portals.utils.Cuboid;
-import me.kate.lobby.modules.portals.utils.SendToServer;
 import me.kate.lobby.utils.Logger;
+import me.kate.lobby.utils.Utils;
 
 public class PlayerPortalEvent implements Listener {
 	
@@ -48,7 +48,7 @@ public class PlayerPortalEvent implements Listener {
 				int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 				if (timeLeft == 0) {
 					cooldownManager.startCooldown(player, 3);
-					SendToServer.send(player, server);
+					Utils.send(player, server);
 					Logger.debug("In portal " + key);
 				}
 				return true;

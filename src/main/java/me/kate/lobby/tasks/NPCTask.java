@@ -35,6 +35,7 @@ public class NPCTask implements Task {
 				
 				holotext.updateText(server, npcname);
 			}
+			
 		}, DELAY * 20, DELAY * 20);
 		Task.getTasks().put(taskID, refreshTimer);
 	}

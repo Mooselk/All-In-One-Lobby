@@ -120,7 +120,7 @@ public class SelectorConfig extends Config {
 		return getConfig().getInt("selector.options.rows");
 	}
 	
-	public String getPath() {
+	public String getItemsPath() {
 		return "selector.items.";
 	}
 }

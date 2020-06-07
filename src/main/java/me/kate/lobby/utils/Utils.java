@@ -1,12 +1,16 @@
 package me.kate.lobby.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
 
@@ -14,7 +18,7 @@ public class Utils {
 	
 	public static String replacePlayer(String in, Player player) {
 		String out = in.replaceAll("%player%", player.getName());
-		out = ChatColor.translateAlternateColorCodes('&', out);
+		out = color(out);
 		return out;
 	}
 
@@ -25,7 +29,7 @@ public class Utils {
 			if (l.contains("%online%")) {
 				out = out.replaceAll("%online%", String.valueOf(online));
 			}
-			mlore.add(ChatColor.translateAlternateColorCodes('&', out));
+			mlore.add(color(out));
 		}
 		return mlore;
 	}
@@ -41,11 +45,11 @@ public class Utils {
 				out = out.replaceAll("%online%", "0");
 			}
 		}
-		return ChatColor.translateAlternateColorCodes('&', out);
+		return color(out);
 	}
 	
 	public static String color(String color) {
-		return ChatColor.translateAlternateColorCodes('&', color);
+		return color(color);
 	}
 	
 	
@@ -53,7 +57,7 @@ public class Utils {
 		ArrayList<String> newList = null;
 		newList = new ArrayList<String>();
 		for (String line : list) {
-			newList.add(ChatColor.translateAlternateColorCodes('&', line));
+			newList.add(color(line));
 		}
 		return newList;
 	}
@@ -62,7 +66,7 @@ public class Utils {
 		List<String> text = null;
 		text = new ArrayList<String>();
 		for (String in : list) {
-			text.add(ChatColor.translateAlternateColorCodes('&', in.replace("%players%", players)));
+			text.add(color(in.replace("%players%", players)));
 		}
 		return text;
 	}
@@ -75,7 +79,7 @@ public class Utils {
 			text.add(in.replace("%player%", player.getName()));
 		}
 		String out = String.join("\n&r", text);	
-		return ChatColor.translateAlternateColorCodes('&', out);
+		return color(out);
 	}
 	
 	public static String getValue(Map<String, String> map, String value) {
@@ -112,5 +116,18 @@ public class Utils {
 			text.add(color(in.replace("%players%", players)));
 		}
 		return text;
+	}
+	
+	public static void send(Player player, String server) {
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+		DataOutputStream out = new DataOutputStream(byteStream);
+		try {
+			out.writeUTF("Connect");
+			out.writeUTF(server);
+		} catch (IOException | NullPointerException e) {
+			Bukkit.getLogger().severe("Error sending player to server, are you not running bungeecord?");
+			e.printStackTrace();
+		}
+		Bukkit.getPlayer(player.getName()).sendPluginMessage(Main.getInstance(), "BungeeCord", byteStream.toByteArray());
 	}
 }

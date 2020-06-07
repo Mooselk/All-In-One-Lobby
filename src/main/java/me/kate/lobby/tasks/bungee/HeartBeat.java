@@ -28,8 +28,8 @@ public class HeartBeat {
     }
 	
 	private static ServerStatus checkServerStatus(String SERVER_ADDRESS, int TCP_SERVER_PORT) {
-	    try (Socket s = new Socket(SERVER_ADDRESS, TCP_SERVER_PORT)) {
-	    	s.close();
+	    try (Socket socket = new Socket(SERVER_ADDRESS, TCP_SERVER_PORT)) {
+	    	socket.close();
 	        return ServerStatus.ONLINE;
 	    } catch (IOException ex) { /* ignore */ }
 	    return ServerStatus.OFFLINE;
