@@ -11,16 +11,16 @@ import me.kate.lobby.Messages;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.managers.CooldownManager;
-import me.kate.lobby.modules.portals.utils.SendToServer;
 import me.kate.lobby.npcs.api.events.NPCInteractEvent;
 import me.kate.lobby.objects.LobbyNPC;
+import me.kate.lobby.utils.Utils;
 
 public class InteractNPCListener implements Listener {
 
-	private Config npcConfig = new NPCConfig();
+	private Config npcConfig;
 
 	public InteractNPCListener(JavaPlugin plugin) {
-		
+		this.npcConfig = new NPCConfig();
 	}
 
 	private CooldownManager cooldownManager = new CooldownManager(Main.getInstance());
@@ -29,33 +29,20 @@ public class InteractNPCListener implements Listener {
 	public void onNPCInteract(NPCInteractEvent event) {
 
 		Player player = event.getWhoClicked().getPlayer();
-		LobbyNPC lobbyNPC = LobbyNPC.getByID(event.getNPC().getId());
-
-		String npcName = lobbyNPC.getName();
-		String npcServer = lobbyNPC.getServer();
+		LobbyNPC lobbyNPC = LobbyNPC.getById(event.getNPC().getId());
 
 		int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 		
 		if (timeLeft == 0) {
 			
 			cooldownManager.startCooldown(player, npcConfig.getConfig().getInt("cooldown"));
-			final ConfigurationSection section = npcConfig.getSection("npcs." + npcName);
+			final ConfigurationSection section = npcConfig.getSection("npcs." + lobbyNPC.getName());
 			
-			player.sendMessage(npcName);
+			Messages.sendList(player, section);
 			
-			sendMessages(player, section);
+			if (!lobbyNPC.getServer().equalsIgnoreCase("none"))
+				Utils.send(player, lobbyNPC.getServer());
 			
-			if (!npcServer.equalsIgnoreCase("none")) {
-				SendToServer.send(player, npcServer);
-			}
-		}
-	}
-
-	private void sendMessages(Player player, ConfigurationSection section) {
-		for (String message : section.getStringList("messages")) {
-			if (!message.equals("none"))
-				Messages.send(message, player);
-			else break;
 		}
 	}
 }
