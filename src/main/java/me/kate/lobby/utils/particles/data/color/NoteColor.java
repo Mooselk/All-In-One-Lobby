@@ -26,7 +26,6 @@
 
 package me.kate.lobby.utils.particles.data.color;
 
-
 import me.kate.lobby.utils.particles.ParticleEffect;
 import me.kate.lobby.utils.particles.data.ParticleData;
 import me.kate.lobby.utils.particles.utils.MathUtils;

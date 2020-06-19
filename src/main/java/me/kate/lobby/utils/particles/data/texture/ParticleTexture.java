@@ -27,7 +27,6 @@
 package me.kate.lobby.utils.particles.data.texture;
 
 import org.bukkit.Material;
-
 import me.kate.lobby.utils.particles.PropertyType;
 import me.kate.lobby.utils.particles.data.ParticleData;
 

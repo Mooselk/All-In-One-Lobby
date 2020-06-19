@@ -31,7 +31,6 @@ import static me.kate.lobby.utils.particles.ParticleEffect.NOTE;
 import static me.kate.lobby.utils.particles.ParticleEffect.REDSTONE;
 
 import java.lang.reflect.Constructor;
-
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 

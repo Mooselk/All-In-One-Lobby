@@ -23,7 +23,6 @@
  * SOFTWARE.
  *
  */
-
 package me.kate.lobby.utils.particles.data.color;
 
 import me.kate.lobby.utils.particles.PropertyType;

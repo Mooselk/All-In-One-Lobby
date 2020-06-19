@@ -26,7 +26,6 @@
 
 package me.kate.lobby.utils.particles.data;
 
-
 import me.kate.lobby.utils.particles.ParticleEffect;
 
 /**

@@ -27,9 +27,7 @@
 package me.kate.lobby.utils.particles.data.texture;
 
 import java.lang.reflect.Field;
-
 import org.bukkit.Material;
-
 import me.kate.lobby.utils.particles.ParticleConstants;
 import me.kate.lobby.utils.particles.PropertyType;
 import me.kate.lobby.utils.particles.data.ParticleData;

@@ -27,7 +27,6 @@
 package me.kate.lobby.utils.particles.utils;
 
 import java.util.Random;
-
 import me.kate.lobby.utils.particles.data.ParticleData;
 
 /**

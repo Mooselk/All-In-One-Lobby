@@ -4,11 +4,9 @@ import java.awt.Color;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.function.Predicate;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-
 import me.kate.lobby.utils.particles.data.ParticleData;
 import me.kate.lobby.utils.particles.data.color.RegularColor;
 import me.kate.lobby.utils.particles.utils.ReflectionUtils;

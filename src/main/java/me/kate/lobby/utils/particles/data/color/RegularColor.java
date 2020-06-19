@@ -27,7 +27,6 @@
 package me.kate.lobby.utils.particles.data.color;
 
 import java.awt.Color;
-
 import me.kate.lobby.utils.particles.ParticleConstants;
 import me.kate.lobby.utils.particles.ParticleEffect;
 import me.kate.lobby.utils.particles.PropertyType;

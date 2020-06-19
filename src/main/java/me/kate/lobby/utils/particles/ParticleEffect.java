@@ -29,7 +29,6 @@ package me.kate.lobby.utils.particles;
 import static me.kate.lobby.utils.particles.ParticleConstants.PARTICLE_TYPE_REGISTRY;
 import static me.kate.lobby.utils.particles.ParticleConstants.REGISTRY_GET_METHOD;
 import static me.kate.lobby.utils.particles.PropertyType.*;
-
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;

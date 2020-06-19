@@ -25,7 +25,6 @@
  */
 
 package me.kate.lobby.utils.particles;
-
 /**
  * {@link Enum} to easily define which properties are supported by specific
  * {@link ParticleEffect ParticleEffects}.
