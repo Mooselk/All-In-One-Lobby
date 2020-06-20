@@ -2,14 +2,13 @@ package me.kate.lobby.modules.selector;
 
 import java.util.Map;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.inventory.ItemStack;
+
 import com.google.common.collect.Maps;
 
 import me.kate.lobby.data.files.SelectorConfig;
-import me.kate.lobby.modules.portals.utils.SendToServer;
 import me.kate.lobby.modules.selector.gui.GUI;
 import me.kate.lobby.objects.MenuObject;
 import me.kate.lobby.utils.ItemBuilder;
@@ -24,19 +23,16 @@ public class Selector extends GUI {
 
 	public Selector() {
 		super(selectorConfig.getRows(), selectorConfig.getInvTitle());
-		this.path = "selector.items.";
+		this.path = selectorConfig.getItemsPath();
 	}
 
 	public void update() {
-		CONTENTS.entrySet().forEach(content -> {
-			MenuObject mObj = content.getValue();
-			
+		CONTENTS.values().forEach(mObj -> {
 			if (mObj.isDecoration())
 				return;
 			
 			if (mObj.isLive() && mObj.serverIsOnline()) {
-				
-				MenuObject online = CONTENTS.get(mObj.getInvSlot() + ":online");
+				MenuObject online = CONTENTS.get(mObj.getInvSlot() + mObj.getOnlineKey());
 				
 				online.setDisplayName(Utils.replace(
 						online.getDisplayName(), 
@@ -47,35 +43,28 @@ public class Selector extends GUI {
 						online.getPlayerCount()));	
 				
 				setItem(online.getInvSlot(), online.getItemStack(), player -> {
-					
 					if (!online.getServer().equals("none"))
-						SendToServer.send(player, online.getServer());
+						Utils.send(player, online.getServer());
 					if (!online.getMessage().equals("none"))
 						player.sendMessage(online.getMessage());
-					
 				});
-				
 			} else {
-				
-				MenuObject offline = CONTENTS.get(mObj.getInvSlot() + ":offline");
-				
+				MenuObject offline = CONTENTS.get(mObj.getInvSlot() + mObj.getOfflineKey());
 				setItem(offline.getInvSlot(), offline.getItemStack(), player -> {
-					
 					if (!offline.getServer().equals("none"))
-						SendToServer.send(player, offline.getServer());
+						Utils.send(player, offline.getServer());
 					if (!offline.getMessage().equals("none"))
 						player.sendMessage(offline.getMessage());
-					
 				});
-				
 			}
 		});
 		
 	}
 
 	public void setupContents() {
-		CONTENTS.entrySet().forEach(mObj -> {
-			MenuObject menuObject = MenuObject.getBySlot(mObj.getKey());
+		CONTENTS.values().forEach(menuObject -> {
+		// CONTENTS.entrySet().forEach(mObj -> {
+			// MenuObject menuObject = MenuObject.getBySlot(mObj.getKey());
 			
 			if (menuObject == null) 
 				return;
@@ -83,17 +72,12 @@ public class Selector extends GUI {
 				return;
 			
 			setItem(menuObject.getInvSlot(), menuObject.getItemStack(), player -> {
-				
 				if (menuObject.isDecoration())
 					return;
-				
-				Bukkit.getLogger().info("toString: " + menuObject.getLore());
-				
 				if (!menuObject.getServer().equals("none"))
-					SendToServer.send(player, menuObject.getServer());
+					Utils.send(player, menuObject.getServer());
 				if (!menuObject.getMessage().equals("none"))
 					player.sendMessage(menuObject.getMessage());
-				
 			});
 		});
 	}
