@@ -10,7 +10,6 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.managers.CooldownManager;
@@ -20,15 +19,15 @@ import me.kate.lobby.modules.toggleplayers.TogglePlayers;
 
 public class TogglePlayersEvent implements Listener {
 
-	private Hideable playerToggle = new TogglePlayers();
-	private CooldownManager cooldownManager = new CooldownManager(Main.getInstance());
-	private Items items = new Items();
-
-	private ToggleConfig playerToggleConfig = new ToggleConfig();
-	private FileConfiguration hideConfig = playerToggleConfig.getConfig();
+	private Hideable playerToggle;
+	private CooldownManager cooldownManager;
+	private Items items;
+	private ToggleConfig playerToggleConfig;
+	private Messages messages;
 	
-	private ConfigurationSection hideSection = hideConfig.getConfigurationSection("item.hide");
-	private ConfigurationSection unhideSection = hideConfig.getConfigurationSection("item.unhide");
+	private FileConfiguration hideConfig;
+	private ConfigurationSection hideSection;
+	private ConfigurationSection unhideSection;
 
 	private static final long MESSAGE_THRESHOLD = 1000 * 1;
 	private static final long MESSAGE_ENABLE_THRESHOLD = 1000 * 1;
@@ -36,6 +35,15 @@ public class TogglePlayersEvent implements Listener {
 	private long lastEnableMessage;
 
 	public TogglePlayersEvent(JavaPlugin plugin) {
+		this.playerToggle = new TogglePlayers();
+		this.cooldownManager = new CooldownManager(plugin);
+		this.items = new Items();
+		this.playerToggleConfig = new ToggleConfig();
+		this.messages = new Messages();
+		
+		this.hideConfig = playerToggleConfig.getConfig();
+		this.hideSection = hideConfig.getConfigurationSection("item.hide");
+		this.unhideSection = hideConfig.getConfigurationSection("item.unhide");
 	}
 	
 	@EventHandler
@@ -53,12 +61,12 @@ public class TogglePlayersEvent implements Listener {
 					player.getInventory().setItem(playerToggleConfig.getSlot(), items.unHide());
 					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 						lastMessage = now;
-						Messages.send(playerToggleConfig.getHideMessage(), player);
+						messages.send(playerToggleConfig.getHideMessage(), player);
 					}
 				} else {
 					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 						lastMessage = now;
-						Messages.send(playerToggleConfig.getCooldownMessage(timeLeft), player);
+						messages.send(playerToggleConfig.getCooldownMessage(timeLeft), player);
 					}
 				}
 				event.setCancelled(true);
@@ -75,13 +83,13 @@ public class TogglePlayersEvent implements Listener {
 					long nowEnable = System.currentTimeMillis();
 					if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
 						lastEnableMessage = nowEnable;
-						Messages.send(playerToggleConfig.getUnhideMessage(), player);
+						messages.send(playerToggleConfig.getUnhideMessage(), player);
 					}
 				} else {
 					long now = System.currentTimeMillis();
 					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 						lastMessage = now;
-						Messages.send(playerToggleConfig.getCooldownMessage(timeLeft), player);
+						messages.send(playerToggleConfig.getCooldownMessage(timeLeft), player);
 					}
 				}
 				event.setCancelled(true);
