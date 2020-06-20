@@ -4,8 +4,6 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="lib" path="C:/Libraries/spigot-1.8.8-R0.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="C:/Libraries/spigot-1.7.10-SNAPSHOT-b1657.jar"/>
-	<classpathentry kind="lib" path="C:/Libraries/spigot-1.8-R0.1-SNAPSHOT-latest.jar"/>
 	<classpathentry kind="lib" path="C:/Libraries/spigot-1.9.4-R0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Libraries/spigot-1.10.2-R0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="C:/Libraries/spigot-1.11.2-R0.1-SNAPSHOT.jar"/>
