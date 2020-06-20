@@ -135,7 +135,7 @@ public class ReflectionUtils {
      * @param parameterTypes the parameterTypes of the {@link Method}
      * @return if found the target {@link Method}. If not found null.
      */
-    public static Method getMethodOrNull(Class targetClass, String methodName, Class<?>... parameterTypes) {
+    public static Method getMethodOrNull(Class<?> targetClass, String methodName, Class<?>... parameterTypes) {
         try {
             return targetClass.getMethod(methodName, parameterTypes);
         } catch (Exception ex) {
@@ -151,7 +151,7 @@ public class ReflectionUtils {
      * @param declared    defines if the target {@link Field} is private
      * @return if found the target {@link Field}. If not found null.
      */
-    public static Field getFieldOrNull(Class targetClass, String fieldName, boolean declared) {
+    public static Field getFieldOrNull(Class<?> targetClass, String fieldName, boolean declared) {
         try {
             return declared ? targetClass.getDeclaredField(fieldName) : targetClass.getField(fieldName);
         } catch (Exception ex) {
@@ -166,7 +166,7 @@ public class ReflectionUtils {
      * @param parameterTypes the parameterTypes of the {@link Constructor}
      * @return if found the target {@link Constructor}. If not found null.
      */
-    public static Constructor getConstructorOrNull(Class targetClass, Class... parameterTypes) {
+    public static Constructor<?> getConstructorOrNull(Class<?> targetClass, Class<?>... parameterTypes) {
         try {
             return targetClass.getConstructor(parameterTypes);
         } catch (Exception ex) {
@@ -200,7 +200,7 @@ public class ReflectionUtils {
      * @param object      the {@link Object} from which the specified {@link Field Fields} value is to be extracted.
      * @return the extracted value of the specified {@link Field} in the specified {@link Object}.
      */
-    public static Object readField(Class targetClass, String fieldName, Object object) {
+    public static Object readField(Class<?> targetClass, String fieldName, Object object) {
         if (targetClass == null || fieldName == null)
             return null;
         return readField(getFieldOrNull(targetClass, fieldName, false), object);
@@ -234,7 +234,7 @@ public class ReflectionUtils {
      * @param object      the {@link Object} from which the specified {@link Field Fields} value is to be extracted.
      * @return the extracted value of the specified {@link Field} in the specified {@link Object}.
      */
-    public static Object readDeclaredField(Class targetClass, String fieldName, Object object) {
+    public static Object readDeclaredField(Class<?> targetClass, String fieldName, Object object) {
         if (targetClass == null || fieldName == null)
             return null;
         return readDeclaredField(getFieldOrNull(targetClass, fieldName, true), object);
@@ -269,7 +269,7 @@ public class ReflectionUtils {
      * @param object      the {@link Object} whose {@link Field Fields} value should be changed.
      * @param value       the value which should be set in the specified {@link Field}.
      */
-    public static void writeDeclaredField(Class targetClass, String fieldName, Object object, Object value) {
+    public static void writeDeclaredField(Class<?> targetClass, String fieldName, Object object, Object value) {
         if (targetClass == null || fieldName == null)
             return;
         writeDeclaredField(getFieldOrNull(targetClass, fieldName, true), object, value);
@@ -303,7 +303,7 @@ public class ReflectionUtils {
      * @param object      the {@link Object} whose {@link Field Fields} value should be changed.
      * @param value       the value which should be set in the specified {@link Field}.
      */
-    public static void writeField(Class targetClass, String fieldName, Object object, Object value) {
+    public static void writeField(Class<?> targetClass, String fieldName, Object object, Object value) {
         if (targetClass == null || fieldName == null)
             return;
         writeField(getFieldOrNull(targetClass, fieldName, false), object, value);

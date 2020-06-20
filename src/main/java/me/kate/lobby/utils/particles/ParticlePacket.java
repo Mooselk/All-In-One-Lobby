@@ -248,7 +248,8 @@ public class ParticlePacket {
         try {
             ParticleData data = getParticleData();
             ParticleEffect effect = getParticle();
-            Constructor packetConstructor = PACKET_PLAY_OUT_WORLD_PARTICLES_CONSTRUCTOR;
+            @SuppressWarnings("unused")
+			Constructor<?> packetConstructor = PACKET_PLAY_OUT_WORLD_PARTICLES_CONSTRUCTOR;
             int version = ReflectionUtils.MINECRAFT_VERSION;
             if (effect == null || effect.getFieldName().equals("NONE"))
                 return null;
@@ -311,7 +312,7 @@ public class ParticlePacket {
      * @return A PacketPlayOutWorldParticles instance with the given data or {@code null} if an error occurs.
      */
     private Object createPacket(Object param, float locationX, float locationY, float locationZ, float offsetX, float offsetY, float offsetZ, float speed, int amount, int[] data) {
-        Constructor packetConstructor = PACKET_PLAY_OUT_WORLD_PARTICLES_CONSTRUCTOR;
+        Constructor<?> packetConstructor = PACKET_PLAY_OUT_WORLD_PARTICLES_CONSTRUCTOR;
         try {
             if (ReflectionUtils.MINECRAFT_VERSION < 13)
                 return packetConstructor.newInstance(param, true, locationX, locationY, locationZ, offsetX, offsetY, offsetZ, speed, amount, data);

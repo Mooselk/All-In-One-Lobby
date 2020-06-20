@@ -21,6 +21,7 @@ public class PlayerJoinListener implements Listener {
 	private PluginConfig config;
 	private NPCBuilder builder;
 	private PlayerPotionEffects effects;
+	private Messages messages;
 	
 	public PlayerJoinListener(Main plugin) {
 		this.plugin = plugin;
@@ -28,6 +29,7 @@ public class PlayerJoinListener implements Listener {
 		this.config = new PluginConfig();
 		this.builder = new NPCBuilder(plugin);
 		this.effects = new PlayerPotionEffects();
+		this.messages = new Messages();
 	}
 	
 	@EventHandler
@@ -59,8 +61,9 @@ public class PlayerJoinListener implements Listener {
 	public void sendJoinMessage(Player player) {
 		if (!config.motdIsEnabled())
 			return;
+		
 		for (String motd : config.getJoinMOTD()) {
-			Messages.send(motd.replaceAll("%username%", player.getName()), player);
+			messages.send(motd.replaceAll("%username%", player.getName()), player);
 		}
 	}
 }

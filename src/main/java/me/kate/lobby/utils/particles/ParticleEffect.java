@@ -1162,7 +1162,7 @@ public enum ParticleEffect {
      * @param color    the {@link ParticleColor} the particle should have.
      * @param filter   a {@link Predicate} to filter out specific {@link Player Players}.
      */
-    public void display(Location location, ParticleColor color, Predicate filter) {
+    public void display(Location location, ParticleColor color, Predicate<Player> filter) {
         display(location, 0f, 0f, 0f, 1f, 0, color, filter);
     }
 
@@ -1173,7 +1173,7 @@ public enum ParticleEffect {
      * @param color    the {@link Color} the particle should have.
      * @param filter   a {@link Predicate} to filter out  specific {@link Player Players}.
      */
-    public void display(Location location, Color color, Predicate filter) {
+    public void display(Location location, Color color, Predicate<Player> filter) {
         display(location, new RegularColor(color), filter);
     }
 
@@ -1235,7 +1235,7 @@ public enum ParticleEffect {
      * @param location the {@link Location} at which the particle should be displayed.
      * @param filter   a {@link Predicate} to filter out specific {@link Player Players}.
      */
-    public void display(Location location, Predicate filter) {
+    public void display(Location location, Predicate<Player> filter) {
         display(location, 0f, 0f, 0f, 0f, 1, null, filter);
     }
 
@@ -1284,7 +1284,7 @@ public enum ParticleEffect {
      * @param data     the {@link ParticleData} the particle  should have.
      * @param filter   a {@link Predicate} to filter out specific {@link Player Players}.
      */
-    public void display(Location location, Vector vector, float speed, int amount, ParticleData data, Predicate filter) {
+    public void display(Location location, Vector vector, float speed, int amount, ParticleData data, Predicate<Player> filter) {
         display(location, (float) vector.getX(), (float) vector.getY(), (float) vector.getZ(), speed, amount, data, filter);
     }
 

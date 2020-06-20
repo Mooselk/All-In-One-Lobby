@@ -8,11 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
-import me.kate.lobby.Messages;
-import me.kate.lobby.data.Config;
 
 public class Utils {
 	
@@ -49,11 +48,20 @@ public class Utils {
 	}
 	
 	public static String color(String color) {
-		return color(color);
+		return ChatColor.translateAlternateColorCodes('&', color);
 	}
 	
 	
 	public static ArrayList<String> colorParser(List<String> list) {
+		ArrayList<String> newList = null;
+		newList = new ArrayList<String>();
+		for (String line : list) {
+			newList.add(color(line));
+		}
+		return newList;
+	}
+	
+	public static ArrayList<String> colorParser(String[] list) {
 		ArrayList<String> newList = null;
 		newList = new ArrayList<String>();
 		for (String line : list) {
@@ -90,14 +98,6 @@ public class Utils {
 			}
 		}
 		return null;
-	}
-	
-	public static void reloadConfig(Config config, Player player) {
-		if (config.reload()) {
-			Messages.send("&f[&6Lobby&f] Successfully reloaded &6" + config.getName() + "&f!", player);
-		} else {
-			Messages.send("&f[&6Lobby&f] Failed to reload &6" + config.getName() + "&f!", player);
-		}
 	}
 	
 	private static final String ERROR = color("&4&lERROR");

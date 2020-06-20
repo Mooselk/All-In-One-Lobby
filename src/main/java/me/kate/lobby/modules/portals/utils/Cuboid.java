@@ -40,7 +40,7 @@ public class Cuboid {
 		this.zMaxCentered = this.zMax + 0.5;
 	}
 
-	// Changed from iterator, will probably throw and error
+	// Changed from iterator, will probably throw an error
 	public ArrayList<Block> blockList() {
 		final ArrayList<Block> bL = new ArrayList<>(this.getTotalBlockSize());
 		for (int x = this.xMin; x <= this.xMax; ++x) {
@@ -110,9 +110,12 @@ public class Cuboid {
 	}
 
 	public boolean isInWithMarge(final Location loc, final double marge) {
-		return loc.getWorld() == this.world && loc.getX() >= this.xMinCentered - marge
-				&& loc.getX() <= this.xMaxCentered + marge && loc.getY() >= this.yMinCentered - marge
-				&& loc.getY() <= this.yMaxCentered + marge && loc.getZ() >= this.zMinCentered - marge
+		return loc.getWorld() == this.world 
+				&& loc.getX() >= this.xMinCentered - marge
+				&& loc.getX() <= this.xMaxCentered + marge 
+				&& loc.getY() >= this.yMinCentered - marge
+				&& loc.getY() <= this.yMaxCentered + marge 
+				&& loc.getZ() >= this.zMinCentered - marge
 				&& loc.getZ() <= this.zMaxCentered + marge;
 	}
 }

@@ -18,9 +18,11 @@ import me.kate.lobby.utils.Utils;
 public class InteractNPCListener implements Listener {
 
 	private Config npcConfig;
-
+	private Messages messages;
+	
 	public InteractNPCListener(JavaPlugin plugin) {
 		this.npcConfig = new NPCConfig();
+		this.messages = new Messages();
 	}
 
 	private CooldownManager cooldownManager = new CooldownManager(Main.getInstance());
@@ -38,7 +40,7 @@ public class InteractNPCListener implements Listener {
 			cooldownManager.startCooldown(player, npcConfig.getConfig().getInt("cooldown"));
 			final ConfigurationSection section = npcConfig.getSection("npcs." + lobbyNPC.getName());
 			
-			Messages.sendList(player, section);
+			messages.sendList(player, section);
 			
 			if (!lobbyNPC.getServer().equalsIgnoreCase("none"))
 				Utils.send(player, lobbyNPC.getServer());

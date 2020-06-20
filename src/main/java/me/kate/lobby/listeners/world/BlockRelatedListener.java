@@ -12,9 +12,11 @@ import me.kate.lobby.Messages;
 public class BlockRelatedListener implements Listener {
 
 	private JavaPlugin plugin;
+	private Messages messages;
 	
 	public BlockRelatedListener(JavaPlugin plugin) {
 		this.plugin = plugin;
+		this.messages = Messages.get();
 	}
 
 	@EventHandler
@@ -22,7 +24,7 @@ public class BlockRelatedListener implements Listener {
 		final Player player = (Player) event.getPlayer();
 		if (plugin.getConfig().getConfigurationSection("options.build").getBoolean("disable-block-place")) {
 			if (!player.hasPermission(plugin.getConfig().getConfigurationSection("options.build").getString("break-bypass-permission")) || !player.isOp()) {
-				Messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-break-msg"), player);
+				messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-break-msg"), player);
 				event.setCancelled(true);
 			}
 		}
@@ -33,7 +35,7 @@ public class BlockRelatedListener implements Listener {
 		final Player player = (Player) event.getPlayer();
 		if (plugin.getConfig().getConfigurationSection("options.build").getBoolean("disable-block-break")) {
 			if (!player.hasPermission(plugin.getConfig().getConfigurationSection("options.build").getString("place-bypass-permission")) || !player.isOp()) {
-				Messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-place-msg"), player);
+				messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-place-msg"), player);
 				event.setCancelled(true);
 			}
 		}

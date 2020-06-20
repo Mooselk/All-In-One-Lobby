@@ -9,10 +9,10 @@ import com.google.common.collect.Maps;
 
 public interface Task {
 
-	static final Map<UUID, BukkitTask> tasks = Maps.newHashMap();
+	static final Map<UUID, BukkitTask> TASKS = Maps.newHashMap();
 	
 	public static Map<UUID, BukkitTask> getTasks() {
-		return tasks;
+		return TASKS;
 	}
 	
 	public void start();

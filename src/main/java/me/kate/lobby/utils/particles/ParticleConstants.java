@@ -46,75 +46,75 @@ public class ParticleConstants {
     /**
      * Represents the ItemStack class.
      */
-    public static final Class ITEM_STACK_CLASS;
+    public static final Class<?> ITEM_STACK_CLASS;
     /**
      * Represents the Packet class.
      */
-    public static final Class PACKET_CLASS;
+    public static final Class<?> PACKET_CLASS;
     /**
      * Represents the PacketPlayOutWorldParticles class.
      */
-    public static final Class PACKET_PLAY_OUT_WORLD_PARTICLES_CLASS;
+    public static final Class<?> PACKET_PLAY_OUT_WORLD_PARTICLES_CLASS;
     /**
      * Represents the EnumParticle enum.
      */
-    public static final Class PARTICLE_ENUM;
+    public static final Class<?> PARTICLE_ENUM;
     /**
      * Represents the Particle class.
      */
-    public static final Class PARTICLE_CLASS;
+    public static final Class<?> PARTICLE_CLASS;
     /**
      * Represents the MiencraftKey class.
      */
-    public static final Class MINECRAFT_KEY_CLASS;
+    public static final Class<?> MINECRAFT_KEY_CLASS;
     /**
      * Represents the abstract IRegistry class.
      */
-    public static final Class REGISTRY_CLASS;
+    public static final Class<?> REGISTRY_CLASS;
     /**
      * Represents the Block class.
      */
-    public static final Class BLOCK_CLASS;
+    public static final Class<?> BLOCK_CLASS;
     /**
      * Represents the IBLockData interface.
      */
-    public static final Class BLOCK_DATA_INTERFACE;
+    public static final Class<?> BLOCK_DATA_INTERFACE;
     /**
      * Represents the Blocks class.
      */
-    public static final Class BLOCKS_CLASS;
+    public static final Class<?> BLOCKS_CLASS;
     /**
      * Represents the EntityPlayer class.
      */
-    public static final Class ENTITY_PLAYER_CLASS;
+    public static final Class<?> ENTITY_PLAYER_CLASS;
     /**
      * Represents the PlayerConnection class.
      */
-    public static final Class PLAYER_CONNECTION_CLASS;
+    public static final Class<?> PLAYER_CONNECTION_CLASS;
     /**
      * Represents the CraftPlayer class.
      */
-    public static final Class CRAFT_PLAYER_CLASS;
+    public static final Class<?> CRAFT_PLAYER_CLASS;
     /**
      * Represents the CraftItemStack class.
      */
-    public static final Class CRAFT_ITEM_STACK_CLASS;
+    public static final Class<?> CRAFT_ITEM_STACK_CLASS;
     /**
      * Represents the ParticleParam class.
      */
-    public static final Class PARTICLE_PARAM_CLASS;
+    public static final Class<?> PARTICLE_PARAM_CLASS;
     /**
      * Represents the ParticleParamRedstone class.
      */
-    public static final Class PARTICLE_PARAM_REDSTONE_CLASS;
+    public static final Class<?> PARTICLE_PARAM_REDSTONE_CLASS;
     /**
      * Represents the ParticleParamBlock class.
      */
-    public static final Class PARTICLE_PARAM_BLOCK_CLASS;
+    public static final Class<?> PARTICLE_PARAM_BLOCK_CLASS;
     /**
      * Represents the ParticleParamItem class.
      */
-    public static final Class PARTICLE_PARAM_ITEM_CLASS;
+    public static final Class<?> PARTICLE_PARAM_ITEM_CLASS;
 
     /* ---------------- Methods ---------------- */
 
@@ -151,23 +151,23 @@ public class ParticleConstants {
     /**
      * Represents the PacketPlayOutWorldParticles constructor.
      */
-    public static final Constructor PACKET_PLAY_OUT_WORLD_PARTICLES_CONSTRUCTOR;
+    public static final Constructor<?> PACKET_PLAY_OUT_WORLD_PARTICLES_CONSTRUCTOR;
     /**
      * Represents the MinecraftKey constructor.
      */
-    public static final Constructor MINECRAFT_KEY_CONSTRUCTOR;
+    public static final Constructor<?> MINECRAFT_KEY_CONSTRUCTOR;
     /**
      * Represents the ParticleParamRedstone constructor.
      */
-    public static final Constructor PARTICLE_PARAM_REDSTONE_CONSTRUCTOR;
+    public static final Constructor<?> PARTICLE_PARAM_REDSTONE_CONSTRUCTOR;
     /**
      * Represents the ParticleParamBlock constructor.
      */
-    public static final Constructor PARTICLE_PARAM_BLOCK_CONSTRUCTOR;
+    public static final Constructor<?> PARTICLE_PARAM_BLOCK_CONSTRUCTOR;
     /**
      * Represents the ParticleParamItem constructor.
      */
-    public static final Constructor PARTICLE_PARAM_ITEM_CONSTRUCTOR;
+    public static final Constructor<?> PARTICLE_PARAM_ITEM_CONSTRUCTOR;
 
     /* ---------------- Object constants ---------------- */
 

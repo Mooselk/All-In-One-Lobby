@@ -6,6 +6,7 @@ import java.util.List;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -29,6 +30,7 @@ public class NPCBuilder {
 	private SkinCache skinCache;
 	private ServerManager servers;
 	private JavaPlugin plugin;
+	private Messages messages;
 	private List<String> npcList = null;
 
 	public NPCBuilder(JavaPlugin plugin) {
@@ -36,6 +38,7 @@ public class NPCBuilder {
 		this.npcConfig = new NPCConfig();
 		this.skinCache = new SkinCache();
 		this.servers = new ServerManager();
+		this.messages = new Messages();
 	}
 
 	public void create(int skinId, String name, Location location) {
@@ -89,7 +92,7 @@ public class NPCBuilder {
 		npcConfig.getEquipment(name).forEach(items -> {
 			
 			if (!items.contains(":true"))
-				items = items + ":false";
+				items = items.concat(":false");
 			
 			String[] parts = items.split(":");
 			
@@ -111,13 +114,13 @@ public class NPCBuilder {
 
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			
-			showAll(player);
-			if (msg) Messages.send("&f[&6NPC&f] Reload complete!", player);
+			showAll();
+			if (msg) messages.send("&f[&6NPC&f] Reload complete!", player);
 			
 		}, 3);
 	}
 
-	public void reloadNPC(Player player, boolean msg) {
+	public void reloadNPC(CommandSender sender, boolean msg) {
 		
 		npcConfig.reload();
 		this.destroyAll();
@@ -126,8 +129,8 @@ public class NPCBuilder {
 
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			
-			showAll(player);
-			if (msg) Messages.send("&f[&6NPC&f] Reload complete!", player);
+			showAll();
+			if (msg) messages.send("&f[&6NPC&f] Reload complete!", sender);
 		
 		}, 3);
 	}
@@ -141,13 +144,13 @@ public class NPCBuilder {
 		
 			npc.updateSkin(newSkin);
 			player.sendMessage("Changed skin for NPC " + lobbyNPC.getName() + ".");
-		
+			
 		}, 5);
 	}
 
 	public void move(Location location, String name, Player player) {
 		// todo
-		Messages.send("Moved NPC " + name, player);
+		messages.send("Moved NPC " + name, player);
 	}
 
 	public void loadNPCsFor(Player player) {
@@ -178,7 +181,7 @@ public class NPCBuilder {
 		return npcList;
 	}
 
-	public void showAll(Player player) {
+	public void showAll() {
 		Bukkit.getOnlinePlayers().forEach(online -> {
 			NPCManager.getAllNPCs().forEach(npc -> {
 				if (!npc.isShown(online))

@@ -22,11 +22,11 @@ public abstract class GUI {
 	private Main main;
 	
 	public GUI(int invSize, String invName) {
-		uuid = UUID.randomUUID();
-		inventory = Bukkit.createInventory(null, invSize * 9, invName);
-		actions = new HashMap<>();
+		this.uuid = UUID.randomUUID();
+		this.inventory = Bukkit.createInventory(null, invSize * 9, invName);
+		this.actions = new HashMap<>();
+		this.main = Main.getInstance();
 		inventoriesByUUID.put(getUuid(), this);
-		main = Main.getInstance();
 	}
 	
 	public void open(Player player) {

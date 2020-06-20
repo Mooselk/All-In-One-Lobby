@@ -61,6 +61,7 @@ public class MineSkinFetcher {
         void call(Skin skinData);
 
         default void failed() {
+        	
         }
     }
 }
