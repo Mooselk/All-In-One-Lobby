@@ -14,7 +14,7 @@ import me.kate.lobby.modules.selector.gui.GUI;
 public class SelectorGUIListener implements Listener {
 
 	@EventHandler
-	public void onClick(InventoryClickEvent event) {
+	public void onClick(final InventoryClickEvent event) {
 
 		if (!(event.getWhoClicked() instanceof Player)) {
 			return;
@@ -37,7 +37,7 @@ public class SelectorGUIListener implements Listener {
 	}
 
 	@EventHandler
-	public void onClose(InventoryCloseEvent event) {
+	public void onClose(final InventoryCloseEvent event) {
 
 		Player player = (Player) event.getPlayer();
 		UUID playerUUID = player.getUniqueId();
@@ -46,7 +46,7 @@ public class SelectorGUIListener implements Listener {
 	}
 
 	@EventHandler
-	public void onQuit(PlayerQuitEvent event) {
+	public void onQuit(final PlayerQuitEvent event) {
 		
 		Player player = event.getPlayer();
 		UUID playerUUID = player.getUniqueId();

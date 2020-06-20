@@ -18,7 +18,7 @@ import me.kate.lobby.utils.Utils;
 public class PlayerPortalListener implements Listener {
 	
 	private Main plugin;
-	private final CooldownManager cooldownManager;
+	private CooldownManager cooldownManager;
 	private PortalsConfig portalConfig;
 	
 	public PlayerPortalListener(Main plugin) {
@@ -34,7 +34,7 @@ public class PlayerPortalListener implements Listener {
 		Location from = event.getFrom();
 		if (from.getX() != to.getX() || from.getY() != to.getY() || from.getZ() != to.getZ()) {
 			if (isInCuboid(player)) {
-				// send message
+				// call custom event
 			}
 		}
 	}

@@ -42,6 +42,7 @@ public class BungeeMessenger implements PluginMessageListener {
 	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
 		if (!channel.equals("BungeeCord"))
 			return;
+		
 		DataInputStream in = new DataInputStream(new ByteArrayInputStream(message));
 		int playerCount = 0;
 		String serverName = "null";
@@ -57,13 +58,15 @@ public class BungeeMessenger implements PluginMessageListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 		Map<String, Object> serverInfo = new HashMap<>();
 		// Must be final or effectively final my ass
 		String count = String.valueOf(playerCount);
 		String server = serverName;
+		
 		if (ServerManager.getServerAddress().get(serverName) == null) {
 			Logger.debug("ServerName " + serverName + " is null in server address hashmap");
-			Logger.debug("WHERE 'ALL' COMMING FROM");
+			Logger.debug("WHERE 'ALL' is COMMING FROM");
 			return;
 		}
 		String[] address = ServerManager.getServerAddress().get(serverName).split(":");
