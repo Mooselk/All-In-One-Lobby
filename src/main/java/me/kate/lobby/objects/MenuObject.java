@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.utils.Utils;
 
 public class MenuObject {
 	
@@ -21,7 +21,6 @@ public class MenuObject {
 	private String server;
 	private boolean isLive;
 	private String type;
-	
 	private List<String> lore;
 	
 	public MenuObject(String slot, ItemStack itemStack, boolean isDecoration, String message, String server, boolean isLive, String type) {
@@ -33,13 +32,13 @@ public class MenuObject {
 		this.isLive = isLive;
 		this.type = type;
 		
-		lore = itemStack.getItemMeta().getLore();
+		this.lore = itemStack.getItemMeta().getLore();
 		ITEM_BY_SLOT.put(slot, this);
 	}
 	
-	public static MenuObject getBySlot(String slot) {
-		return ITEM_BY_SLOT.get(slot);
-	}
+//	public static MenuObject getBySlot(String slot) {
+//		return ITEM_BY_SLOT.get(slot);
+//	}
 	
 	public String getSlot() {
 		return this.slot;
@@ -66,23 +65,29 @@ public class MenuObject {
 	}
 	
 	public String getServer() {
-		if (server == null) {
+		if (server == null)
 			server = "none";
-		}
+		
 		return this.server;
 	}
 	
 	public String getMessage() {
-		if (message == null) {
+		if (message == null)
 			message = "none";
-		}
-		return ChatColor
-				.translateAlternateColorCodes(
-						'&', this.message);
+		
+		return Utils.color(this.message);
 	}
 	
 	public String getType() {
 		return this.type;
+	}
+	
+	public String getOnlineKey() {
+		return ":online";
+	}
+	
+	public String getOfflineKey() {
+		return ":offline";
 	}
 	
 	public boolean isDecoration() {
@@ -93,6 +98,10 @@ public class MenuObject {
 		return this.isLive;
 	}
 	
+	public boolean _serverIsOnline() {
+		return PlaceHolder.getPlaceHolders().get(server).isOnline();
+	}
+	
 	public boolean serverIsOnline() {
 		Map<String, Object> placeholders = null;
 		boolean isOnline = false;
@@ -101,6 +110,10 @@ public class MenuObject {
 			isOnline = (boolean) placeholders.get("isOnline");
 		}
 		return isOnline;
+	}
+	
+	public int _getPlayerCount() {	
+		return PlaceHolder.getPlaceHolders().get(server).getPlayerCount();
 	}
 	
 	public int getPlayerCount() {
