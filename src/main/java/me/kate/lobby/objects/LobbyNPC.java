@@ -15,12 +15,9 @@ public class LobbyNPC {
 	private NPC npc;
 	private String server;
 	private String name;
-	
 	private List<String> text;
 	
-	private static final Map<String, LobbyNPC> NPC_BY_ID = new HashMap<>();
-	private static final Map<String, LobbyNPC> NPC_BY_NAME = new HashMap<>();
-	private static final Map<String, LobbyNPC> NPC_BY_SERVER = new HashMap<>();
+	private static final Map<String, LobbyNPC> LOBBY_NPC_OBJECTS = new HashMap<>();
 	
 	public LobbyNPC(NPC npc, String name, String server) {
 		
@@ -29,35 +26,44 @@ public class LobbyNPC {
 		this.server = server;
 		this.text = new NPCConfig().getText(name);
 		
-		NPC_BY_ID.put(npc.getId(), this);
-		NPC_BY_NAME.put(name, this);
-		NPC_BY_SERVER.put(server, this);
+		LOBBY_NPC_OBJECTS.put(npc.getId(), this);
 	}
 	
-	public static LobbyNPC getByID(String npcID) {
-		return NPC_BY_ID.get(npcID);
+	
+	public static LobbyNPC getById(String npcId) {
+		for (LobbyNPC lobbyNpc : LOBBY_NPC_OBJECTS.values()) {
+			if (lobbyNpc.getID().equals(npcId))
+				return lobbyNpc;
+		}
+		return null;
 	}
 	
 	public static LobbyNPC getByName(String npcName) {
-		return NPC_BY_NAME.get(npcName);
+		for (LobbyNPC lobbyNpc : LOBBY_NPC_OBJECTS.values()) {
+			if (lobbyNpc.getName().equals(npcName))
+				return lobbyNpc;
+		}
+		return null;
+	}
+	
+	public static LobbyNPC getByServer(String npcServer) {
+		for (LobbyNPC lobbyNpc : LOBBY_NPC_OBJECTS.values()) {
+			if (lobbyNpc.getServer().equals(npcServer))
+				return lobbyNpc;
+		}
+		return null;
 	}
 	
 	public void remove(LobbyNPC lobbyNPC) {
-		NPC_BY_ID.remove(lobbyNPC.getID());
-		NPC_BY_NAME.remove(lobbyNPC.getName());
-		NPC_BY_SERVER.remove(lobbyNPC.getServer());
+		LOBBY_NPC_OBJECTS.remove(lobbyNPC.getID());
 	}
 	
 	public void remove() {
-		NPC_BY_ID.remove(getID());
-		NPC_BY_NAME.remove(getName());
-		NPC_BY_SERVER.remove(getServer());
+		LOBBY_NPC_OBJECTS.remove(this.getID());
 	}
 	
 	public void clear() {
-		NPC_BY_ID.clear();
-		NPC_BY_NAME.clear();
-		NPC_BY_SERVER.clear();
+		LOBBY_NPC_OBJECTS.clear();
 	}
 	
 	public NPC getNPC() {
