@@ -41,8 +41,8 @@ public class NPCBuilder {
 		this.messages = new Messages();
 	}
 
-	public void create(int skinId, String name, Location location) {
-		npcConfig.toConfig(skinId, location, "npcs." + name);
+	public void create(String skinId, String name, Location location) {
+		npcConfig.toConfig(Integer.valueOf(skinId), location, "npcs." + name);
 	}
 
 	public void buildNPC(String name) {
@@ -135,10 +135,10 @@ public class NPCBuilder {
 		}, 3);
 	}
 
-	public void setSkin(LobbyNPC lobbyNPC, int skinId, Player player) {
+	public void setSkin(LobbyNPC lobbyNPC, String skinId, Player player) {
 		
 		NPC npc = lobbyNPC.getNPC();
-		Skin newSkin = skinCache.getCachedSkin(skinId);
+		Skin newSkin = skinCache.getCachedSkin(Integer.valueOf(skinId));
 
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 		
