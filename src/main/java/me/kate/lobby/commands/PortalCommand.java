@@ -176,7 +176,7 @@ public class PortalCommand implements CommandExecutor {
 				messages.send("&f[&6Portal&f] Select two points with the portalwand first.", player);
 			}
 			
-			visualizer.setVis();
+			visualizer.setVisualizing();
 			
 			if (visualizer.isVisualizing()) {
 				

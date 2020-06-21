@@ -97,18 +97,18 @@ public class LobbyCommand implements CommandExecutor {
 				switch (args[1]) {
 
 				case "playerhider": {
-					togglePlayersConfig.reloadConfig(togglePlayersConfig, (Player) sender);
+					togglePlayersConfig.reloadConfig(togglePlayersConfig, sender);
 					break;
 				}
 
 				case "selector": {
-					selectorConfig.reloadConfig(selectorConfig, (Player) sender);
+					selectorConfig.reloadConfig(selectorConfig, sender);
 					selector.reload();
 					break;
 				}
 
 				case "config": {
-					mainConfig.reloadConfig(mainConfig, (Player) sender);
+					mainConfig.reloadConfig(mainConfig, sender);
 					if (mainConfig.getConfig().getBoolean("tablist.enabled"))
 						plugin.getTabList().update();
 					break;
