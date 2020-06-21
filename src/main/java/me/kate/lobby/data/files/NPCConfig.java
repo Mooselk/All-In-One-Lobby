@@ -92,6 +92,10 @@ public class NPCConfig extends Config {
 		return getConfig().getConfigurationSection(path);
 	}
 	
+	public ConfigurationSection getNPC(String name) {
+		return getConfig().getConfigurationSection("npcs." + name);
+	}
+	
 	public List<String> getEquipment(String path) {
 		return getConfig().getStringList("npcs." + path + ".equipment");
 	}
@@ -107,6 +111,17 @@ public class NPCConfig extends Config {
 	public Location getLocation(String name) {
 		final ConfigurationSection section = this.getSection("npcs." + name);
 		return LocationUtils.fromString(section.getString("location"));
+	}
+	
+	public boolean delete(String npc) {
+		
+		if (getNPC(npc) != null) {
+			getConfig().set("npcs." + npc, null);
+			refresh();
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public void refresh() {
