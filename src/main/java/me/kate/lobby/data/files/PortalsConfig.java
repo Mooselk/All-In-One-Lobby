@@ -2,6 +2,7 @@ package me.kate.lobby.data.files;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
@@ -76,6 +77,27 @@ public class PortalsConfig extends Config {
 	@Override
 	public String getName() {
 		return "Portals";
+	}
+	
+	public ConfigurationSection getPortal(String key) {
+		return getSection(key);
+	}
+	
+	public String getServer(String key) {
+		return getConfig().getString("portals." + key + ".server");
+	}
+	
+	public void setPositions(String key, String[] loc) {
+		getConfig().set("portals." + key + ".positions", loc);
+	}
+	
+	public void deletePositions(String key) {
+		getConfig().set("portals." + key + ".positions", null);
+	}
+	
+	public String[] getPositions(String key) {
+		List<String> list = getConfig().getStringList("portals." + key + ".positions");
+		return (String[]) list.toArray();
 	}
 	
 	public void refresh() {

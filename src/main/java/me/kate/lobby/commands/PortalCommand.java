@@ -43,7 +43,7 @@ public class PortalCommand implements CommandExecutor {
 		SelectionVisualizer visualizer = null;
 		
 		if (!cmd.getName().equalsIgnoreCase("portal")) {
-			return true;
+			return false;
 		}
 		
 		if (args.length == 0) {

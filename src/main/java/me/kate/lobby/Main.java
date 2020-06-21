@@ -20,7 +20,7 @@ import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.listeners.InteractNPCListener;
 import me.kate.lobby.listeners.InventoryListener;
 import me.kate.lobby.listeners.PlayerJoinListener;
-import me.kate.lobby.listeners.PlayerLeaveListener;
+import me.kate.lobby.listeners.PlayerQuitListener;
 import me.kate.lobby.listeners.world.BlockRelatedListener;
 import me.kate.lobby.listeners.world.MobSpawnListener;
 import me.kate.lobby.listeners.world.PlantGrowthListener;
@@ -28,8 +28,8 @@ import me.kate.lobby.listeners.world.TouchVoidListener;
 import me.kate.lobby.listeners.world.WeatherBlockListener;
 import me.kate.lobby.modules.jumppads.JumpPadInteractEvent;
 import me.kate.lobby.modules.portals.Portal;
-import me.kate.lobby.modules.portals.events.PlayerPortalEvent;
-import me.kate.lobby.modules.portals.events.WandInteractEvent;
+import me.kate.lobby.modules.portals.listeners.PlayerPortalListener;
+import me.kate.lobby.modules.portals.listeners.WandInteractListener;
 import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.modules.selector.Selector;
 import me.kate.lobby.modules.selector.gui.listeners.SelectorGUIListener;
@@ -38,6 +38,7 @@ import me.kate.lobby.modules.tablist.TabList;
 import me.kate.lobby.modules.toggleplayers.events.TogglePlayersEvent;
 import me.kate.lobby.npcs.NPCBuilder;
 import me.kate.lobby.npcs.NPCLib;
+import me.kate.lobby.npcs.internal.MinecraftVersion;
 import me.kate.lobby.npcs.nms.v1_10_R1.TabList_v1_10_R1;
 import me.kate.lobby.npcs.nms.v1_11_R1.TabList_v1_11_R1;
 import me.kate.lobby.npcs.nms.v1_12_R1.TabList_v1_12_R1;
@@ -105,6 +106,10 @@ public class Main extends JavaPlugin {
 		return selector;
 	}
 	
+	public MinecraftVersion getMCVersion() {
+		return MinecraftVersion.valueOf(getVersion().toUpperCase());
+	}
+	
 	@Override
 	public void onEnable() {
 		
@@ -155,9 +160,9 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new SelectorInteractListener(), this);
 		this.getServer().getPluginManager().registerEvents(new TogglePlayersEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new InteractNPCListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerPortalEvent(this), this);
-		this.getServer().getPluginManager().registerEvents(new PlayerLeaveListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new WandInteractEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerPortalListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
+		this.getServer().getPluginManager().registerEvents(new WandInteractListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new WeatherBlockListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(), this);
 		this.getServer().getPluginManager().registerEvents(new PlantGrowthListener(this), this);
@@ -166,9 +171,9 @@ public class Main extends JavaPlugin {
 	}
 	
 	private void registerCommands() {
-		this.getCommand("lobby").setExecutor(new LobbyCommand());
+		this.getCommand("lobby").setExecutor(new LobbyCommand(this));
 		this.getCommand("npc").setExecutor(new NPCCommand(this));
-		this.getCommand("portal").setExecutor(new PortalCommand());
+		this.getCommand("portal").setExecutor(new PortalCommand(this));
 	}
 	
 	private void loadConfigs() {

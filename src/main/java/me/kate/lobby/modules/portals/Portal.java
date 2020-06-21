@@ -6,17 +6,21 @@ import org.bukkit.entity.Player;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
-import me.kate.lobby.modules.portals.select.Selections;
 import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.utils.LocationUtils;
 
-public class Portal extends Selections {
+public class Portal {
 	
-	private PortalsConfig portalConfig = new PortalsConfig();
+	private PortalsConfig portalConfig;
+	
+	public Portal() {
+		this.portalConfig = new PortalsConfig();
+	}
 	
 	public void load(boolean reload) {
 		if (!Main.getInstance().getPortals().isEmpty() && reload) 
 			Main.getInstance().getPortals().clear();
+		
 		if (portalConfig.getSection("portals") == null)
 			return;
 		for (String key : portalConfig.get("portals")) {
@@ -42,10 +46,15 @@ public class Portal extends Selections {
 		portalConfig.getConfig().set("portals." + name + ".loc-1", LocationUtils.toString(pos1));
 		portalConfig.getConfig().set("portals." + name + ".loc-2", LocationUtils.toString(pos2));
 		portalConfig.getConfig().set("portals." + name + ".world", world);
+		
+		if (server == null) {
+			server = "none";
+		}
+		
 		portalConfig.getConfig().set("portals." + name + ".server", server);
 		portalConfig.refresh();
 		load(true);
-		clearSelection(player);
+		// clearSelection(player);
 	}
 	
 	public void delete(String name) {

@@ -1,5 +1,7 @@
 package me.kate.lobby.modules.portals.listeners;
 
+import java.util.UUID;
+
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -7,26 +9,28 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.modules.portals.select.Selection;
+import me.kate.lobby.modules.portals.select.SelectionVisualizer;
 import me.kate.lobby.modules.portals.utils.PortalWand;
 import me.kate.lobby.utils.Logger;
 
 public class WandInteractListener implements Listener {
 
-	@SuppressWarnings("unused")
-	private JavaPlugin plugin;
+	private Main plugin;
 	private Messages messages;
 	private Selection selection;
+	private SelectionVisualizer visualizer;
 
-	public WandInteractListener(JavaPlugin plugin) {
+	public WandInteractListener(Main plugin) {
 		this.plugin = plugin;
 		this.messages = new Messages();
 		this.selection = new Selection();
+		this.visualizer = new SelectionVisualizer();
 	}
-
+	
 	@EventHandler
 	public void onInteract(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
@@ -43,16 +47,25 @@ public class WandInteractListener implements Listener {
 			return;
 		}
 		
-		selection = selection.getSelections().get(player.getUniqueId());
+		final UUID uuid = player.getUniqueId();
+		
+		selection = selection.getSelection(uuid);
 		
 		if (selection == null) {
-			selection = new Selection(player.getUniqueId());
+			selection = new Selection(uuid);
+		}
+		
+		visualizer = visualizer.getIntance(uuid);
+		
+		if (visualizer == null) {
+			visualizer = new SelectionVisualizer(plugin, player);
 		}
 		
 		if (event.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
 			
 			Location pos1 = event.getClickedBlock().getLocation();
 			selection.setPos1(pos1);
+			visualizer.setCornerA(pos1);
 			
 			messages.send("Position &6#1 &fset to (&6" 
 			+ pos1.getBlockX() 
@@ -69,6 +82,7 @@ public class WandInteractListener implements Listener {
 			
 			Location pos2 = event.getClickedBlock().getLocation();
 			selection.setPos2(pos2);
+			visualizer.setCornerB(pos2);
 
 			messages.send("Position &6#2 &fset to (&6" 
 			+ pos2.getBlockX() 
@@ -80,24 +94,35 @@ public class WandInteractListener implements Listener {
 			
 			event.setCancelled(true);
 		}
+		
+		if (visualizer.isVisualizing()) {
+			visualizer.update();
+		}
 	}
 	
 	@EventHandler
 	public void test(PlayerToggleSneakEvent event) {
 		final Player player = event.getPlayer();
 		
-		final Selection selection = this.selection.getSelections().get(player.getUniqueId());
+		Selection selections = null;
 		
+		if (selection.getSelection(player.getUniqueId()) != null) {
+			selections = selection.getSelections().get(player.getUniqueId());
+		}
+		
+		if (selections == null) {
+			return;
+		}
 		
 		if (!player.isSneaking()) {
 			return;
 		}
 		
-		if (selection.getPos1() != null) {
+		if (selections.getPos1() != null) {
 			Logger.info("Pos1 != null for player " + player.getName());
 		}
 		
-		if (selection.getPos2() != null) {
+		if (selections.getPos2() != null) {
 			Logger.info("Pos2 != null for player " + player.getName());
 		}
 		
