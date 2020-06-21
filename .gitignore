@@ -3,3 +3,4 @@
 *.class
 bin/hideplayers.yml
 *.class
+src/main/java/me/kate/lobby/Test.java
