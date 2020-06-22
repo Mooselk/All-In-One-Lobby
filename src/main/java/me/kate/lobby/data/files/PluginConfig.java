@@ -69,4 +69,12 @@ public class PluginConfig extends Config {
 	public List<String> getJoinMOTD() {
 		return this.getSection("join-motd").getStringList("message");
 	}
+	
+	public String getIp(String key) {
+		return this.getSection("servers." + key).getString("ip");
+	}
+	
+	public int getPort(String key) {
+		return this.getSection("servers." + key).getInt("port");
+	}
 }

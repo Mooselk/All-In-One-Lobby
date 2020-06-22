@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -13,6 +14,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
+import me.kate.lobby.utils.LocationUtils;
 
 public class PortalsConfig extends Config {
 	
@@ -87,6 +89,20 @@ public class PortalsConfig extends Config {
 		return getConfig().getString("portals." + key + ".server");
 	}
 	
+	public void setServer(String key, String server) {
+		getConfig().set("portals." + key + ".server", server);
+		refresh();
+	}
+	
+	public boolean delete(String name) {
+		if (getPortal(name) != null) {
+			getConfig().set("portals." + name, null);
+			refresh();
+			return true;
+		}
+		return false;
+	}
+	
 	public void setPositions(String key, String[] loc) {
 		getConfig().set("portals." + key + ".positions", loc);
 	}
@@ -98,6 +114,13 @@ public class PortalsConfig extends Config {
 	public String[] getPositions(String key) {
 		List<String> list = getConfig().getStringList("portals." + key + ".positions");
 		return (String[]) list.toArray();
+	}
+	
+	public void toConfig(String name, Location pos1, Location pos2) {
+		getConfig().set("portals." + name + ".loc-1", LocationUtils.toString(pos1));
+		getConfig().set("portals." + name + ".loc-2", LocationUtils.toString(pos2));
+		getConfig().set("portals." + name + ".world", pos1.getWorld());
+		refresh();
 	}
 	
 	public void refresh() {
