@@ -19,6 +19,7 @@ public enum Permissions {
 	
 	PORTAL_HELP("lobby.portal.help"),
 	PORTAL_WAND("lobby.portal.wand"),
+	PORTAL_SELECT("lobby.portal.select"),
 	PORTAL_CREATE("lobby.portal.create"),
 	PORTAL_DELETE("lobby.portal.delete"),
 	PORTAL_CLEAR("lobby.portal.clear"),

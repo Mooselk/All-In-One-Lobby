@@ -12,6 +12,7 @@ import org.bukkit.event.player.PlayerToggleSneakEvent;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
+import me.kate.lobby.Permissions;
 import me.kate.lobby.modules.portals.select.Selection;
 import me.kate.lobby.modules.portals.select.SelectionVisualizer;
 import me.kate.lobby.modules.portals.utils.PortalWand;
@@ -35,7 +36,7 @@ public class WandInteractListener implements Listener {
 	public void onInteract(final PlayerInteractEvent event) {
 		final Player player = event.getPlayer();
 		
-		if (!player.hasPermission("lobby.portal.create") || !player.isOp()) {
+		if (!Permissions.PORTAL_SELECT.has(player) || !player.isOp()) {
 			return;
 		}
 		
