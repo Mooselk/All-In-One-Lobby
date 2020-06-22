@@ -4,7 +4,6 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import me.kate.lobby.utils.ItemBuilder;
-import me.kate.lobby.utils.Utils;
 
 public class PortalWand {
 	
@@ -12,6 +11,6 @@ public class PortalWand {
 	
 	private static final String[] LORE = { "&8A special portal-tool." };
 	
-	public static final ItemStack WAND = new ItemBuilder(Material.STICK).setName(Utils.color(NAME)).setLore(Utils.colorParser(LORE)).toItemStack();
+	public static final ItemStack WAND = new ItemBuilder(Material.STICK).setName(NAME).setLore(LORE).setUnstackable().toItemStack();
 	
 }

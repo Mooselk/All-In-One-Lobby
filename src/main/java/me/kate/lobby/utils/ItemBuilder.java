@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.bukkit.Color;
 import org.bukkit.DyeColor;
@@ -14,6 +15,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 import org.bukkit.inventory.meta.SkullMeta;
+
+import net.md_5.bungee.api.ChatColor;
 
 /**
  * Easily create itemstacks, without messing your hands. <i>Note that if you do
@@ -178,6 +181,35 @@ public class ItemBuilder {
 		return this;
 	}
 
+	
+	private String getSaltString() {
+		String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+		StringBuilder salt = new StringBuilder();
+		Random rnd = new Random();
+		while (salt.length() < 18) { // length of the random string.
+			int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+			salt.append(SALTCHARS.charAt(index));
+		}
+		String saltStr = salt.toString();
+		return saltStr;
+	}
+
+	private String getInvisibleString() {
+		String hidden = null;
+		for (char c : getSaltString().toCharArray())
+			hidden += ChatColor.COLOR_CHAR + "" + c;
+		return hidden;
+	}
+	
+	/**
+	 * Makes itemstack unstackable
+	 * 
+	 */
+	public ItemBuilder setUnstackable() {
+		addLoreLine(getInvisibleString());
+		return this;
+	}
+	
 	/**
 	 * Re-sets the lore.
 	 * 
