@@ -41,5 +41,15 @@ public enum Permissions {
 	public boolean has(CommandSender sender) {
 		return sender.hasPermission(this.get());
 	}
+	
+	public boolean hasPermission(CommandSender sender) {
+		
+		if (sender.hasPermission(this.get())) {
+			return true;
+		}
+		
+		Messages.get().noPermission(sender);
+		return false;
+	}
 
 }
