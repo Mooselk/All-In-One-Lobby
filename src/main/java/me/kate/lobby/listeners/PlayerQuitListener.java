@@ -6,6 +6,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.modules.portals.select.Selection;
 import me.kate.lobby.modules.portals.select.SelectionVisualizer;
 import me.kate.lobby.utils.Utils;
@@ -13,11 +14,13 @@ import me.kate.lobby.utils.Utils;
 public class PlayerQuitListener implements Listener {
 	
 	private JavaPlugin plugin;
+	private PluginConfig config;
 	private Selection selection;
 	private SelectionVisualizer visualizer;
 	
 	public PlayerQuitListener(JavaPlugin plugin) {
 		this.plugin = plugin;
+		this.config = new PluginConfig();
 		this.selection = new Selection();
 		this.visualizer = new SelectionVisualizer();
 	}
@@ -28,11 +31,7 @@ public class PlayerQuitListener implements Listener {
 		
 		selection.getSelections().remove(player.getUniqueId());
 		visualizer.getIntances().remove(player.getUniqueId());
+		event.setQuitMessage(Utils.replacePlayer(config.getLeaveMessage(), player));
 		
-		if (!plugin.getConfig().getString("options.custom-leavemsg").equals("none")) {
-			event.setQuitMessage(Utils.replacePlayer(plugin.getConfig().getString("options.custom-leavemsg"), player));
-		} else {
-			event.setQuitMessage(null);
-		}
 	}
 }

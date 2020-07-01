@@ -7,22 +7,53 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.data.files.PluginConfig;
+import me.kate.lobby.listeners.SpawnMode;
+
 public class MobSpawnListener implements Listener {
 
-	private JavaPlugin plugin;
-
+	private PluginConfig config;
+	
 	public MobSpawnListener(JavaPlugin plugin) {
-		this.plugin = plugin;
+		this.config = new PluginConfig();
 	}
 
 	@EventHandler
 	public void onMobSpawn(final CreatureSpawnEvent event) {
+		
 		if (event.getEntity().getType() != EntityType.PLAYER) {
-			if (event.getSpawnReason() != SpawnReason.CUSTOM || event.getSpawnReason() == SpawnReason.DEFAULT) {
-				if (plugin.getConfig().getBoolean("options.disable-mobSpawning")) {
-					event.setCancelled(true);
-				}
+			return;
+		}
+		
+		if (!config.disableMobSpawning()) {
+			return;
+		}
+		
+		final SpawnMode mode = config.getSpawnMode();
+		
+		switch (mode) {
+		
+		case NATURAL : {
+			if (event.getSpawnReason() == SpawnReason.NATURAL 
+					|| event.getSpawnReason() == SpawnReason.DEFAULT) {
+				event.setCancelled(true);
 			}
+			break;
+		}
+		
+		case ALL : {
+			if (event.getSpawnReason() == SpawnReason.NATURAL 
+					|| event.getSpawnReason() == SpawnReason.DEFAULT 
+					|| event.getSpawnReason() == SpawnReason.CUSTOM) {
+				event.setCancelled(true);
+			}
+			break;
+		}
+		
+		case OFF : {
+			break;
+		}
+		
 		}
 	}
 }

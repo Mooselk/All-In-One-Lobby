@@ -12,6 +12,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
+import me.kate.lobby.listeners.SpawnMode;
+import me.kate.lobby.utils.Utils;
 
 public class PluginConfig extends Config {
 
@@ -66,6 +68,10 @@ public class PluginConfig extends Config {
 		return this.getSection("join-motd").getBoolean("enabled");
 	}
 	
+	public boolean tablistIsEnabled() {
+		return getConfig().getBoolean("tablist.enabled");
+	}
+	
 	public List<String> getJoinMOTD() {
 		return this.getSection("join-motd").getStringList("message");
 	}
@@ -76,5 +82,35 @@ public class PluginConfig extends Config {
 	
 	public int getPort(String key) {
 		return this.getSection("servers." + key).getInt("port");
+	}
+	
+	public String getJoinMessage() {
+		String msg = getConfig().getString("options.custom-joinmsg");
+		
+		if (msg.equalsIgnoreCase("none") 
+				|| msg.equals("")) {
+			return null;
+		}
+		
+		return Utils.color(msg);
+	}
+	
+	public String getLeaveMessage() {
+		String msg = getConfig().getString("options.custom-leavemsg");
+		
+		if (msg.equalsIgnoreCase("none") 
+				|| msg.equals("")) {
+			return null;
+		}
+		
+		return Utils.color(msg);
+	}
+	
+	public boolean disableMobSpawning() {
+		return getConfig().getBoolean("options.mob-spawning.disable-mobSpawning");
+	}
+	
+	public SpawnMode getSpawnMode() {
+		return SpawnMode.getSpawnMode(getConfig().getString("options.mob-spawning.mode"));
 	}
 }

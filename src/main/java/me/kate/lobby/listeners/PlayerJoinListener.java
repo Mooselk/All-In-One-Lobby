@@ -35,20 +35,14 @@ public class PlayerJoinListener implements Listener {
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
+	
+		event.setJoinMessage(Utils.replacePlayer(config.getJoinMessage(), player));
 		
-		String joinMSG = plugin.getConfig().getString("options.custom-joinmsg");
-		
-		if (joinMSG.equals("none") || joinMSG.equals("")) {
-			event.setJoinMessage(null);
-		} else {
-			event.setJoinMessage(Utils.replacePlayer(joinMSG, player));
-		}
-		
-		if (plugin.getConfig().getBoolean("tablist.enabled")) {
+		if (config.tablistIsEnabled()) {
 			plugin.getTabList().sendHeaderFooter(player);
 		}
 		
-		// this.sendJoinMessage(player);
+		this.sendJoinMessage(player);
 		
 		player.teleport(Spawn.getSpawn());
 		
@@ -59,11 +53,11 @@ public class PlayerJoinListener implements Listener {
 	}
 	
 	public void sendJoinMessage(Player player) {
-		if (!config.motdIsEnabled())
-			return;
+		if (!config.motdIsEnabled()) return;
 		
-		for (String motd : config.getJoinMOTD()) {
+		config.getJoinMOTD().forEach(motd-> {
 			messages.send(motd.replaceAll("%username%", player.getName()), player);
-		}
+		});
+			
 	}
 }
