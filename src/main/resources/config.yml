@@ -12,7 +12,15 @@ options:
   disable-plantGrowth: true
   disable-weather: true
   disable-dayLightCycle: true
-  disable-mobSpawning: true
+  
+  mob-spawning:
+    disable-mobSpawning: true
+    # Modes: natural, all, off
+    # Natural stops all natural spawns
+    # All stops ALL mob spawns
+    # Off allows all mobs to spawn
+  	mode: natural
+  
   custom-joinmsg: ' '
   custom-leavemsg: ' '
   build:
@@ -40,6 +48,7 @@ tablist:
   - footer
   - second line
   - third line
+  
 servers:
   Pirate:
     ip: localhost
