@@ -30,7 +30,6 @@ import me.kate.lobby.modules.jumppads.JumpPadInteractEvent;
 import me.kate.lobby.modules.portals.Portal;
 import me.kate.lobby.modules.portals.listeners.PlayerPortalListener;
 import me.kate.lobby.modules.portals.listeners.WandInteractListener;
-import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.modules.selector.Selector;
 import me.kate.lobby.modules.selector.gui.listeners.SelectorGUIListener;
 import me.kate.lobby.modules.selector.listeners.SelectorInteractListener;
@@ -79,8 +78,6 @@ public class Main extends JavaPlugin {
 	private final Map<String, Map<String, Object>> placeholders = new HashMap<>();
 	
 	public static final ExecutorService threadPool = Executors.newSingleThreadExecutor();
-
-	public final Map<String, Cuboid> portal = new HashMap<>();
 	
 	public static Main getInstance() {
 		return instance;
@@ -96,10 +93,6 @@ public class Main extends JavaPlugin {
 	
 	public Map<String, Map<String, Object>> getPlaceholders() {
 		return placeholders;
-	}
-	
-	public Map<String, Cuboid> getPortals() {
-		return portal;
 	}
 	
 	public Selector getSelector() {

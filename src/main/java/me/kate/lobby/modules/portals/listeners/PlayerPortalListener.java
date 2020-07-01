@@ -11,20 +11,21 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.managers.CooldownManager;
+import me.kate.lobby.modules.portals.Portal;
 import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.utils.Logger;
 import me.kate.lobby.utils.Utils;
 
 public class PlayerPortalListener implements Listener {
 	
-	private Main plugin;
 	private CooldownManager cooldownManager;
 	private PortalsConfig portalConfig;
+	private Portal portal;
 	
 	public PlayerPortalListener(Main plugin) {
-		this.plugin = plugin;
 		this.cooldownManager = new CooldownManager(plugin);
 		this.portalConfig = new PortalsConfig();
+		this.portal = new Portal();
 	}
 	
 	@EventHandler
@@ -40,7 +41,7 @@ public class PlayerPortalListener implements Listener {
 	}
 
 	private boolean isInCuboid(final Player player) {
-		for (Map.Entry<String, Cuboid> entry : plugin.getPortals().entrySet()) {
+		for (Map.Entry<String, Cuboid> entry : portal.getPortals().entrySet()) {
 			Cuboid cube = entry.getValue();
 			if (cube.isIn(player)) {
 				String server = portalConfig.getServer(entry.getKey());
