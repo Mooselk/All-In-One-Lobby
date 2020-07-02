@@ -24,7 +24,11 @@ public enum Permissions {
 	PORTAL_DELETE("lobby.portal.delete"),
 	PORTAL_CLEAR("lobby.portal.clear"),
 	PORTAL_SHOW("lobby.portal.show"),
+	PORTAL_SET("lobby.portal.set"),
 	PORTAL_RELOAD("lobby.portal.reload"),
+	
+	LOBBY_BUILD_BREAK("lobby.build.break"),
+	LOBBY_BUILD_PLACE("lobby.build.place"),
 	
 	TEST_PERMISSION("lobby.test");
 	
