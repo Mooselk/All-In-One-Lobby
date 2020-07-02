@@ -13,7 +13,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.listeners.SpawnMode;
-import me.kate.lobby.utils.Utils;
 
 public class PluginConfig extends Config {
 
@@ -73,7 +72,7 @@ public class PluginConfig extends Config {
 	}
 	
 	public List<String> getJoinMOTD() {
-		return this.getSection("join-motd").getStringList("message");
+		return this.getSection("join-motd").getStringList("motd");
 	}
 	
 	public String getIp(String key) {
@@ -92,7 +91,7 @@ public class PluginConfig extends Config {
 			return null;
 		}
 		
-		return Utils.color(msg);
+		return color(msg);
 	}
 	
 	public String getLeaveMessage() {
@@ -103,7 +102,7 @@ public class PluginConfig extends Config {
 			return null;
 		}
 		
-		return Utils.color(msg);
+		return color(msg);
 	}
 	
 	public boolean disableMobSpawning() {
@@ -112,5 +111,21 @@ public class PluginConfig extends Config {
 	
 	public SpawnMode getSpawnMode() {
 		return SpawnMode.getSpawnMode(getConfig().getString("options.mob-spawning.mode"));
+	}
+	
+	public boolean blockPlaceIsDisabled() {
+		return getConfig().getBoolean("options.build.disable-block-place");
+	}
+	
+	public boolean blockBreakIsDisabled() {
+		return getConfig().getBoolean("options.build.disable-block-break");
+	}
+	
+	public String getBreakDenyMessage() {
+		return color(getConfig().getString("options.build.block-break-msg"));
+	}
+	
+	public String getPlaceDenyMessage() {
+		return color(getConfig().getString("options.build.block-place-msg"));
 	}
 }

@@ -7,37 +7,42 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import me.kate.lobby.Messages;
+import me.kate.lobby.Permissions;
+import me.kate.lobby.data.files.PluginConfig;
 
 public class BlockRelatedListener implements Listener {
-
-	private JavaPlugin plugin;
-	private Messages messages;
+	
+	private PluginConfig config;
 	
 	public BlockRelatedListener(JavaPlugin plugin) {
-		this.plugin = plugin;
-		this.messages = Messages.get();
+		this.config = new PluginConfig();
 	}
 
 	@EventHandler
 	public void onBlockBreak(final BlockBreakEvent event) {
 		final Player player = (Player) event.getPlayer();
-		if (plugin.getConfig().getConfigurationSection("options.build").getBoolean("disable-block-place")) {
-			if (!player.hasPermission(plugin.getConfig().getConfigurationSection("options.build").getString("break-bypass-permission")) || !player.isOp()) {
-				messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-break-msg"), player);
-				event.setCancelled(true);
-			}
+		
+		if (!config.blockBreakIsDisabled()) {
+			return;
+		}
+		
+		if (!Permissions.LOBBY_BUILD_BREAK.has(player)) {
+			player.sendMessage(config.getBreakDenyMessage());
+			event.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onBlockPlace(final BlockPlaceEvent event) {
 		final Player player = (Player) event.getPlayer();
-		if (plugin.getConfig().getConfigurationSection("options.build").getBoolean("disable-block-break")) {
-			if (!player.hasPermission(plugin.getConfig().getConfigurationSection("options.build").getString("place-bypass-permission")) || !player.isOp()) {
-				messages.send(plugin.getConfig().getConfigurationSection("options.build").getString("block-place-msg"), player);
-				event.setCancelled(true);
-			}
+		
+		if (!config.blockPlaceIsDisabled()) {
+			return;
+		}
+		
+		if (!Permissions.LOBBY_BUILD_PLACE.has(player)) {
+			player.sendMessage(config.getPlaceDenyMessage());
+			event.setCancelled(true);
 		}
 	}
 }
