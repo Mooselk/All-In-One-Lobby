@@ -7,8 +7,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import me.kate.lobby.npcs.hologram.HoloTextHandler;
-import me.kate.lobby.servers.ServerManager;
-import me.kate.lobby.utils.Utils;
+import me.kate.lobby.npcs.internal.NPCManager;
+import me.kate.lobby.objects.LobbyNPC;
 
 public class NPCTask implements Task {
 
@@ -16,7 +16,6 @@ public class NPCTask implements Task {
 	private static final int DELAY = 3;
 
 	private HoloTextHandler holotext;
-
 	private JavaPlugin plugin;
 
 	public NPCTask(JavaPlugin plugin) {
@@ -28,13 +27,12 @@ public class NPCTask implements Task {
 	public void start() {
 		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			
-			for (String server : ServerManager.getServers()) {
-				String npcname = Utils.getValue(ServerManager.getAssociation(), server);
-				if (npcname == null) 
-					continue;
+			NPCManager.getAllNPCs().forEach(npc -> {
+				LobbyNPC lobbyNPC = LobbyNPC.getById(npc.getId());
 				
-				holotext.updateText(server, npcname);
-			}
+				holotext.updateText(lobbyNPC);
+				
+			});
 			
 		}, DELAY * 20, DELAY * 20);
 		Task.getTasks().put(taskID, refreshTimer);

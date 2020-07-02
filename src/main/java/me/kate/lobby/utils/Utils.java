@@ -21,7 +21,7 @@ public class Utils {
 		return out;
 	}
 
-	public static List<String> replaceLore(List<String> lore, int online) {
+	public static List<String> replaceLore(List<String> lore, String online) {
 		ArrayList<String> mlore = null; mlore = new ArrayList<String>();
 		for (String l : lore) {
 			String out = l;
@@ -33,9 +33,9 @@ public class Utils {
 		return mlore;
 	}
 
-	public static String replace(String in, int online) {
+	public static String replace(String in, String online) {
 		String out = in;
-		if (online != 0) {
+		if (Integer.valueOf(online) != 0) {
 			if (in.contains("%online%")) {
 				out = out.replaceAll("%online%", String.valueOf(online));
 			}
@@ -129,5 +129,10 @@ public class Utils {
 			e.printStackTrace();
 		}
 		Bukkit.getPlayer(player.getName()).sendPluginMessage(Main.getInstance(), "BungeeCord", byteStream.toByteArray());
+	}
+	
+	public static void empty(Map<?,?> map) {
+		if (!map.isEmpty())
+			map.clear();
 	}
 }

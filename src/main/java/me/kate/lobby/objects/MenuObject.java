@@ -7,7 +7,6 @@ import java.util.Map;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.utils.Utils;
 
 public class MenuObject {
@@ -35,10 +34,6 @@ public class MenuObject {
 		this.lore = itemStack.getItemMeta().getLore();
 		ITEM_BY_SLOT.put(slot, this);
 	}
-	
-//	public static MenuObject getBySlot(String slot) {
-//		return ITEM_BY_SLOT.get(slot);
-//	}
 	
 	public String getSlot() {
 		return this.slot;
@@ -98,30 +93,26 @@ public class MenuObject {
 		return this.isLive;
 	}
 	
-	public boolean _serverIsOnline() {
-		return PlaceHolder.getPlaceHolders().get(server).isOnline();
-	}
-	
 	public boolean serverIsOnline() {
-		Map<String, Object> placeholders = null;
-		boolean isOnline = false;
-		if (Main.getInstance().getPlaceholders().containsKey(server)) {
-			placeholders = Main.getInstance().getPlaceholders().get(server);
-			isOnline = (boolean) placeholders.get("isOnline");
+		PlaceHolder placeholder = PlaceHolder.getPlaceHolders().get(server);
+		
+		if (placeholder == null) {
+			return false;
 		}
-		return isOnline;
+		
+		return placeholder.isOnline();
 	}
 	
-	public int _getPlayerCount() {	
-		return PlaceHolder.getPlaceHolders().get(server).getPlayerCount();
-	}
-	
-	public int getPlayerCount() {
-		Map<String, Object> placeholders = Main.getInstance().getPlaceholders().get(server);
-		String online = (String) placeholders.get("online");
-		return Integer.valueOf(online);
-	}
-	
+	public String getPlayerCount() {
+		
+		PlaceHolder placeholder = PlaceHolder.getPlaceHolders().get(server);
+		
+		if (placeholder == null) {
+			return "0";
+		}
+		
+		return placeholder.getPlayerCount();
+	}	
 	
 	public void setDisplayName(String displayName) {
 		ItemMeta meta = this.getItemMeta();

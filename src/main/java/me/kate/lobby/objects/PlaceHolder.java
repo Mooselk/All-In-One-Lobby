@@ -55,12 +55,12 @@ public class PlaceHolder {
 		return this.isOnline;
 	}
 	
-	public int getPlayerCount() {
-		return this.playerCount;
+	public String getPlayerCount() {
+		return String.valueOf(playerCount);
 	}
 	
-	public int getMaxPlayers() {
-		return this.maxPlayers;
+	public String getMaxPlayers() {
+		return String.valueOf(maxPlayers);
 	}
 	
 	public String getMotd() {
@@ -70,7 +70,7 @@ public class PlaceHolder {
 	public Type getType() {
 		return this.type;
 	}
-	
+
 	public enum Type {
 		
 		EXTERNAL,

@@ -13,14 +13,15 @@ import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.objects.PlaceHolder;
+import me.kate.lobby.objects.Server;
 import me.kate.lobby.servers.ServerManager;
 import me.kate.lobby.utils.Logger;
 
 public class BungeeMessenger implements PluginMessageListener {
 	
 	public static void getPlayerCounts() {
-		if (Bukkit.getOnlinePlayers().isEmpty())
-			return;
+		if (Bukkit.getOnlinePlayers().isEmpty()) return;
 		for (String server : ServerManager.getServers()) {
 			ByteArrayDataOutput out = ByteStreams.newDataOutput();
 			out.writeUTF("PlayerCount");
@@ -30,8 +31,7 @@ public class BungeeMessenger implements PluginMessageListener {
 	}
 
 	public static void getPlayerCountFor(String server) {
-		if (Bukkit.getOnlinePlayers().isEmpty())
-			return;
+		if (Bukkit.getOnlinePlayers().isEmpty()) return;
 		ByteArrayDataOutput out = ByteStreams.newDataOutput();
 		out.writeUTF("PlayerCount");
 		out.writeUTF(server);
@@ -64,24 +64,25 @@ public class BungeeMessenger implements PluginMessageListener {
 		String count = String.valueOf(playerCount);
 		String server = serverName;
 		
-		if (ServerManager.getServerAddress().get(serverName) == null) {
-			Logger.debug("ServerName " + serverName + " is null in server address hashmap");
-			Logger.debug("WHERE 'ALL' is COMMING FROM");
-			return;
-		}
+//		if (ServerManager.getServerAddress().get(serverName) == null) {
+//			Logger.debug("ServerName " + serverName + " is null in server address hashmap");
+//			Logger.debug("WHERE 'ALL' is COMMING FROM");
+//			return;
+//		}
+		
 		String[] address = ServerManager.getServerAddress().get(serverName).split(":");
 		HeartBeat.fetchServerStatusFromAsync(address[0], Integer.valueOf(address[1]), status -> {
-//			System.out.println("Server " + server + " is " + status.toString());
 				
 			serverInfo.put("isOnline", status.equals(ServerStatus.ONLINE));
 			serverInfo.put("online", String.valueOf(count));
-				
-//			System.out.println("ServerInfo" + serverInfo);
-			Main.getInstance().getPlaceholders().put(server, serverInfo);
-//			Logger.debug("PlaceHolders- " + server + ": " + Main.getInstance().getPlaceholders());
+			
+			PlaceHolder.getPlaceHolders().put(server, 
+					new PlaceHolder(Server.getServer(server), 
+					PlaceHolder.Type.BUNGEE));
+			
+			Logger.debug("PlaceHolders- " + server + ": " + PlaceHolder.getPlaceHolders());
 			}
 		);
-//		 System.out.println("Placeholders outside heartbeat: " + Main.getInstance().getPlaceholders());
 	}
 	
 }

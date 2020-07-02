@@ -1,7 +1,5 @@
 package me.kate.lobby;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -58,14 +56,6 @@ import me.kate.lobby.utils.Logger;
 
 public class Main extends JavaPlugin {
 
-	/*
-	 * * * * * TO-DO * * * * *
-	 * 
-	 * Edit NPCs with commands
-	 * 
-	 * * * * * * * * * * * *
-	 */
-
 	public static final boolean DEBUG = false;
 
 	private static Main instance;
@@ -74,8 +64,6 @@ public class Main extends JavaPlugin {
 	private Portal portals;
 	private Selector selector;
 	private SelectorUpdateTask task;
-	
-	private final Map<String, Map<String, Object>> placeholders = new HashMap<>();
 	
 	public static final ExecutorService threadPool = Executors.newSingleThreadExecutor();
 	
@@ -89,10 +77,6 @@ public class Main extends JavaPlugin {
 	
 	public TabList getTabList() {
 		return tablist;
-	}
-	
-	public Map<String, Map<String, Object>> getPlaceholders() {
-		return placeholders;
 	}
 	
 	public Selector getSelector() {
@@ -136,7 +120,6 @@ public class Main extends JavaPlugin {
 				Logger.severe("[Lobby] Failed to load tablist for " + getVersion() + " unsupported version.");
 			}
 		}
-		
 	}
 
 	@Override

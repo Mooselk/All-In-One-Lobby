@@ -21,6 +21,10 @@ public class Server {
 		SERVERS.put(serverName, this);
 	}
 	
+	public static Server getServer(String name) {
+		return SERVERS.get(name);
+	}
+	
 	public Map<String, Server> getServers() {
 		return SERVERS;
 	}
