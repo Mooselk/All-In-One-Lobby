@@ -25,17 +25,14 @@ public class NPCTask implements Task {
 
 	@Override
 	public void start() {
-		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+		Task.getTasks().put(taskID, Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			
 			NPCManager.getAllNPCs().forEach(npc -> {
 				LobbyNPC lobbyNPC = LobbyNPC.getById(npc.getId());
-				
 				holotext.updateText(lobbyNPC);
-				
 			});
 			
-		}, DELAY * 20, DELAY * 20);
-		Task.getTasks().put(taskID, refreshTimer);
+		}, DELAY * 20, DELAY * 20));
 	}
 
 	@Override

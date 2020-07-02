@@ -21,10 +21,9 @@ public class BungeePingTask implements Task {
 	
 	@Override
 	public void start() {
-		BukkitTask refreshTimer = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+		Task.getTasks().put(taskID, Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			BungeeMessenger.getPlayerCounts();
-		}, DELAY * 20, DELAY * 20);
-		Task.getTasks().put(taskID, refreshTimer);
+		}, DELAY * 20, DELAY * 20));
 	}
 
 	@Override
