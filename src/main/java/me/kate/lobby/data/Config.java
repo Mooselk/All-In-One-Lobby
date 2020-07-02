@@ -7,6 +7,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import me.kate.lobby.Messages;
+import me.kate.lobby.utils.Utils;
 
 public abstract class Config {
 
@@ -30,5 +31,14 @@ public abstract class Config {
 		} else {
 			Messages.get().send("&f[&6Lobby&f] Failed to reload &6" + config.getName() + "&f!", sender);
 		}
+	}
+	
+	public String color(String str) {
+		return Utils.color(str);
+	}
+
+	// IDE is retarded and thinks the method reloadConfig() doesn't exist without this here.
+	// Why? I don't know????
+	public void reloadConfig_(Config mainConfig, CommandSender sender) {
 	}
 }

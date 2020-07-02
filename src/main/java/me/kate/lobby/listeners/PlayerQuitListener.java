@@ -13,13 +13,11 @@ import me.kate.lobby.utils.Utils;
 
 public class PlayerQuitListener implements Listener {
 	
-	private JavaPlugin plugin;
 	private PluginConfig config;
 	private Selection selection;
 	private SelectionVisualizer visualizer;
 	
 	public PlayerQuitListener(JavaPlugin plugin) {
-		this.plugin = plugin;
 		this.config = new PluginConfig();
 		this.selection = new Selection();
 		this.visualizer = new SelectionVisualizer();
@@ -31,7 +29,7 @@ public class PlayerQuitListener implements Listener {
 		
 		selection.getSelections().remove(player.getUniqueId());
 		visualizer.getIntances().remove(player.getUniqueId());
-		event.setQuitMessage(Utils.replacePlayer(config.getLeaveMessage(), player));
 		
+		event.setQuitMessage(Utils.replacePlayer(config.getLeaveMessage(), player));
 	}
 }

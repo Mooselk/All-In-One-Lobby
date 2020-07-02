@@ -8,7 +8,6 @@ import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.data.files.PluginConfig;
-import me.kate.lobby.listeners.SpawnMode;
 
 public class MobSpawnListener implements Listener {
 
@@ -29,9 +28,7 @@ public class MobSpawnListener implements Listener {
 			return;
 		}
 		
-		final SpawnMode mode = config.getSpawnMode();
-		
-		switch (mode) {
+		switch (config.getSpawnMode()) {
 		
 		case NATURAL : {
 			if (event.getSpawnReason() == SpawnReason.NATURAL 

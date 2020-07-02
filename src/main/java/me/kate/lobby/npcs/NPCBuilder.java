@@ -110,7 +110,6 @@ public class NPCBuilder {
 		npcConfig.reload();
 		this.destroy(npcName);
 		this.buildNPC(npcName);
-		servers.loadNPCAssosiation(npcName);
 
 		Bukkit.getScheduler().runTaskLater(plugin, () -> {
 			

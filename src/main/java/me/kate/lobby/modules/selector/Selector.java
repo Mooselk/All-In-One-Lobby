@@ -63,8 +63,6 @@ public class Selector extends GUI {
 
 	public void setupContents() {
 		CONTENTS.values().forEach(menuObject -> {
-		// CONTENTS.entrySet().forEach(mObj -> {
-			// MenuObject menuObject = MenuObject.getBySlot(mObj.getKey());
 			
 			if (menuObject == null) 
 				return;

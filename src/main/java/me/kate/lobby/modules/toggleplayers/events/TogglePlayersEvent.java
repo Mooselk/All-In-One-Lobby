@@ -52,45 +52,57 @@ public class TogglePlayersEvent implements Listener {
 		ConfigurationSection hSection = null;
 		
 		if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			
 			if (player.getItemInHand().getType().equals(Material.getMaterial(hideSection.getString("material")))) {
+				
 				int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 				long now = System.currentTimeMillis();
+				
 				if (timeLeft == 0) {
+					
 					cooldownManager.startCooldown(player, playerToggleConfig.getCooldownLength());
 					playerToggle.hide(player, hSection);
 					player.getInventory().setItem(playerToggleConfig.getSlot(), items.unHide());
+					
 					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 						lastMessage = now;
 						messages.send(playerToggleConfig.getHideMessage(), player);
 					}
+					
 				} else {
+					
 					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 						lastMessage = now;
 						messages.send(playerToggleConfig.getCooldownMessage(timeLeft), player);
 					}
+					
 				}
 				event.setCancelled(true);
 			}
-		}
-
-		if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+			
 			if (player.getItemInHand().getType().equals(Material.getMaterial(unhideSection.getString("material")))) {
+				
 				int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 				if (timeLeft == 0) {
+					
 					cooldownManager.startCooldown(player, playerToggleConfig.getCooldownLength());
 					playerToggle.unhide(player, hSection);
 					player.getInventory().setItem(playerToggleConfig.getSlot(), items.hide());
 					long nowEnable = System.currentTimeMillis();
+					
 					if ((nowEnable - lastEnableMessage) > MESSAGE_ENABLE_THRESHOLD) {
 						lastEnableMessage = nowEnable;
 						messages.send(playerToggleConfig.getUnhideMessage(), player);
 					}
+					
 				} else {
+					
 					long now = System.currentTimeMillis();
 					if ((now - lastMessage) > MESSAGE_THRESHOLD) {
 						lastMessage = now;
 						messages.send(playerToggleConfig.getCooldownMessage(timeLeft), player);
 					}
+					
 				}
 				event.setCancelled(true);
 			}

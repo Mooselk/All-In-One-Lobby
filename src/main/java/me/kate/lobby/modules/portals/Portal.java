@@ -11,6 +11,7 @@ import com.google.common.collect.Maps;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.utils.LocationUtils;
+import me.kate.lobby.utils.Utils;
 
 public class Portal {
 	
@@ -27,9 +28,7 @@ public class Portal {
 	}
 	
 	public void load(boolean reload) {
-		if (!getPortals().isEmpty() && reload) 
-			getPortals().clear();
-		
+		Utils.empty(PORTALS);
 		if (portalConfig.getSection("portals") == null)
 			return;
 		
@@ -42,8 +41,7 @@ public class Portal {
 	}
 	
 	public void reloadAll() {
-		if (!getPortals().isEmpty())
-			getPortals().clear();
+		Utils.empty(PORTALS);
 		for (String key : portalConfig.get("portals")) {
 			ConfigurationSection section = portalConfig.getSection("portals." + key);
 			Location loc1 = LocationUtils.fromString(section.getString("loc-1"));

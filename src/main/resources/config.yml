@@ -1,12 +1,14 @@
 # 
 # Spawn coords storage
 debug: false
+
 spawn:
-  x: -57
-  y: 127
-  z: 10
-  yaw: 224.97203
-  pitch: 0.014939738
+  x: 0
+  y: 256
+  z: 0
+  yaw: 0
+  pitch: 0
+  
 options:
   world: world
   disable-plantGrowth: true
@@ -19,25 +21,29 @@ options:
     # Natural stops all natural spawns
     # All stops ALL mob spawns
     # Off allows all mobs to spawn
-  	mode: natural
+    mode: natural
   
   custom-joinmsg: ' '
   custom-leavemsg: ' '
+  
   build:
     disable-block-break: true
     block-break-msg: '&f[&6Lobby&f] You''re not allowed to do that here!'
-    break-bypass-permission: lobby.breakblocks
+    
     disable-block-place: true
     block-place-msg: '&f[&6Lobby&f] You''re not allowed to do that here!'
-    place-bypass-permission: lobby.placeblocks
+    
   join-effects:
   - speed:max:3
   - jump:max:3
   
 join-motd:
-  - first line
-  - second line
-  - third line
+  enabled: true
+  motd:
+    - first line
+    - second line
+    - third line
+  
 tablist:
   enabled: false
   header:
@@ -59,3 +65,6 @@ servers:
   Heroic:
     ip: localhost
     port: 25567
+  Lobby:
+    ip: localhost
+    port: 25566
