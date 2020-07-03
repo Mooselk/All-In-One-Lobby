@@ -35,7 +35,7 @@ public final class NPCLib {
         Class<?> npcClass = null;
 
         try {
-            npcClass = Class.forName("me.kate.lobby.npcs.nms." + versionName + ".NPC_" + versionName);
+            npcClass = Class.forName("me.kate.lobby.nms." + versionName + ".NPC_" + versionName);
         } catch (ClassNotFoundException exception) {
             // Version not supported, error below.
         }

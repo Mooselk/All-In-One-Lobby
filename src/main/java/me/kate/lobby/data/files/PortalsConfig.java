@@ -82,7 +82,7 @@ public class PortalsConfig extends Config {
 	}
 	
 	public ConfigurationSection getPortal(String key) {
-		return getSection(key);
+		return getSection("portals." + key);
 	}
 	
 	public String getServer(String key) {
@@ -119,7 +119,7 @@ public class PortalsConfig extends Config {
 	public void toConfig(String name, Location pos1, Location pos2) {
 		getConfig().set("portals." + name + ".loc-1", LocationUtils.toString(pos1));
 		getConfig().set("portals." + name + ".loc-2", LocationUtils.toString(pos2));
-		getConfig().set("portals." + name + ".world", pos1.getWorld());
+		getConfig().set("portals." + name + ".world", pos1.getWorld().getName());
 		refresh();
 	}
 	

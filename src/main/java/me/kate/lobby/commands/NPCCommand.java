@@ -67,7 +67,7 @@ public class NPCCommand implements CommandExecutor {
 				break;
 			}
 			
-			builder.create(args[1], args[1], player.getLocation());
+			builder.create(args[2], args[1], player.getLocation());
 			
 			messages.send("&f[&6NPC&f] Created NPC '" + args[1] 
 					+ "' with skinId '" + args[2] + "' at"

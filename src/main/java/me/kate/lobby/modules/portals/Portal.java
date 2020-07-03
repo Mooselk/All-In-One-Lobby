@@ -51,7 +51,7 @@ public class Portal {
 	}
 	
 	public void create(Location pos1, Location pos2, String name, String world, String server, Player player) {		
-		portalConfig.toConfig(name, pos2, pos2);
+		portalConfig.toConfig(name, pos1, pos2);
 		
 		if (server == null)
 			server = "none";
