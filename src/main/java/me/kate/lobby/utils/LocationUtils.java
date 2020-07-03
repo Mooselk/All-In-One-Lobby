@@ -25,7 +25,7 @@ public class LocationUtils {
 		float pitch = Float.parseFloat(splitLoc[4]);
 		float yaw = Float.parseFloat(splitLoc[5]);
 		
-		return new Location(world, x, y, z, pitch, yaw);
+		return new Location(world, x, y, z, yaw, pitch);
 	}
 	
 	/**
