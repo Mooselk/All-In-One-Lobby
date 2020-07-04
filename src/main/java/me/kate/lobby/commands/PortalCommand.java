@@ -60,13 +60,12 @@ public class PortalCommand implements CommandExecutor {
 		
 		case "help" : {
 			
-			if (!Permissions.PORTAL_HELP.has(sender)) {
-				messages.noPermission(sender);
-				break;
+			if (Permissions.PORTAL_HELP.hasPermission(sender)) {
+				messages.portalHelp(sender);
+				return true;
 			}
 			
-			messages.portalHelp(sender);
-			return true;
+			break;
 		}
 		
 		case "wand" : {
@@ -76,15 +75,11 @@ public class PortalCommand implements CommandExecutor {
 				break;
 			}
 			
-			if (!Permissions.PORTAL_HELP.has(sender)) {
-				messages.noPermission(sender);
-				break;
+			if (Permissions.PORTAL_HELP.hasPermission(sender)) {
+				messages.send("&f[&6Portal&f] &5Left click: &dSelect pos #1; &5Right click: &dSelect pos #2", sender);
+				player.getInventory().addItem(PortalWand.WAND);
+				return true;
 			}
-			
-			messages.send("&f[&6Portal&f] &5Left click: &dSelect pos #1; &5Right click: &dSelect pos #2", sender);
-			player.getInventory().addItem(PortalWand.WAND);
-			
-			return true;
 		}
 		
 		case "create" : {
@@ -94,70 +89,68 @@ public class PortalCommand implements CommandExecutor {
 				break;
 			}
 			
-			if (!Permissions.PORTAL_CREATE.has(sender)) {
-				messages.noPermission(sender);
-				break;
-			}
-			
-			if (args.length < 3) {
-				messages.send("&6Usage: &f/portal create <portal_name> [server]", player);
-				break;
-			}
-			
-			if (args.length == 3) {
-				
-				String name = args[1];
-				String server = args[2];
-				String world = player.getWorld().getName();
-
-				if (selection != null 
-						&& selection.getPos1() != null 
-						&& selection.getPos2() != null) {
-
-					Logger.debug("Selection 1: "
-					+ selection.getPos1()
-					+ " Selection 2: "
-					+ selection.getPos2());
-					
-					Logger.debug("Location 1: " 
-					+ selection.getPos1() 
-					+ " Location 2: " 
-					+ selection.getPos2());
-
-					portal.create(selection.getPos1(), selection.getPos2(), name, world, server, player);
-					messages.send("&f[&6Portal&f] Created portal '" + name + "'.", player);
+			if (Permissions.PORTAL_CREATE.hasPermission(sender)) {
+				if (args.length < 3) {
+					messages.send("&6Usage: &f/portal create <portal_name> [server]", player);
 					break;
 				}
 				
-				messages.send("&f[&6Portal&f] Create a selection before creating a portal.", player);
+				if (args.length == 3) {
+					
+					String name = args[1];
+					String server = args[2];
+					String world = player.getWorld().getName();
+
+					if (selection != null 
+							&& selection.getPos1() != null 
+							&& selection.getPos2() != null) {
+
+						Logger.debug("Selection 1: "
+						+ selection.getPos1()
+						+ " Selection 2: "
+						+ selection.getPos2());
+						
+						Logger.debug("Location 1: " 
+						+ selection.getPos1() 
+						+ " Location 2: " 
+						+ selection.getPos2());
+
+						portal.create(selection.getPos1(), selection.getPos2(), name, world, server, player);
+						messages.send("&f[&6Portal&f] Created portal '" + name + "'.", player);
+						break;
+					}
+					
+					messages.send("&f[&6Portal&f] Create a selection before creating a portal.", player);
+				}
+				return true;
 			}
-			return true;
+			
+			break;
 		}
 		
 		case "delete" : {
 			
-			if (!Permissions.PORTAL_DELETE.has(sender)) {
-				messages.noPermission(sender);
-				break;
-			}
-			
-			if (args.length < 2) {
-				messages.send("&6Usage: &f/portal delete <portal_name>", sender);
-				break;
-			}
-			
-			if (args.length == 2) {
-				String name = args[1];
+			if (Permissions.PORTAL_DELETE.hasPermission(sender)) {
 				
-				if (portalConfig.getPortal(name) == null) {
-					messages.send("&f[&6Portal&f] Error deleting portal '" + name + "'. Portal does not exist!", sender);
+				if (args.length < 2) {
+					messages.send("&6Usage: &f/portal delete <portal_name>", sender);
 					break;
 				}
 				
-				portal.delete(name);
-				messages.send("&f[&6Portal&f] Deleted portal '" + name + "'.", sender);
+				if (args.length == 2) {
+					String name = args[1];
+					
+					// test
+					if (!portalConfig.delete(name)) {
+						messages.send("&f[&6Portal&f] Error deleting portal '" + name + "'. Portal does not exist!", sender);
+						break;
+					}
+					portal.getPortals().remove(name);
+					messages.send("&f[&6Portal&f] Deleted portal '" + name + "'.", sender);
+				}
+				return true;
 			}
-			return true;
+			break;
 		}
 		
 		case "show" : {
@@ -167,30 +160,36 @@ public class PortalCommand implements CommandExecutor {
 				break;
 			}
 			
-			if (!Permissions.PORTAL_SHOW.has(sender)) {
-				messages.noPermission(sender);
-				break;
-			}
-			
-			if (selection.getPos1() == null || selection.getPos2() == null) {
-				messages.send("&f[&6Portal&f] Select two points with the portalwand first.", player);
-			}
-			
-			visualizer.setVisualizing();
-			
-			if (visualizer.isVisualizing()) {
+			if (Permissions.PORTAL_SHOW.hasPermission(sender)) {
 				
-				if (args.length == 2) {
-					
-				} else {
-					visualizer.setCornerA(selection.getPos1());
-					visualizer.setCornerB(selection.getPos2());
+				if (selection == null || selection.getPos1() == null || selection.getPos2() == null) {
+					messages.send("&f[&6Portal&f] Select two points with the portalwand first.", player);
+					return true;
 				}
 				
-				visualizer.update();
+				visualizer.setVisualizing();
 				
-			} else visualizer.stop();
-			return true;
+				if (visualizer.isVisualizing()) {
+					
+					messages.send("&f[&6Portal&f] Selection shown.", sender);
+					if (args.length == 2) {
+						// todo
+						// show existing portal selection
+					} else {
+						visualizer.setCornerA(selection.getPos1());
+						visualizer.setCornerB(selection.getPos2());
+					}
+					
+					visualizer.update();
+					
+				} else {
+					visualizer.stop();
+					messages.send("&f[&6Portal&f] Selection hidden.", sender);
+				}
+				
+				return true;
+			}
+			break;
 		}
 		
 		case "clear" : {
@@ -200,31 +199,60 @@ public class PortalCommand implements CommandExecutor {
 				break;
 			}
 			
-			if (!Permissions.PORTAL_CLEAR.has(sender)) {
-				messages.noPermission(sender);
-				break;
+			if (Permissions.PORTAL_CLEAR.hasPermission(sender)) {
+				
+				if (selection == null) {
+					messages.send("&f[&6Portal&f] No selections to clear.", sender);
+					break;
+				}
+				
+				if (visualizer.isVisualizing()) {
+					visualizer.setVisualizing();
+					visualizer.stop();
+				}
+				
+				selection.clear(player.getUniqueId());
+				messages.send("&f[&6Portal&f] Cleared last selection.", sender);
+				return true;
 			}
-			
-			if (selection == null) {
-				messages.send("&f[&6Portal&f] No selections to clear.", sender);
-				break;
-			}
-			
-			selection.clear(player.getUniqueId());
-			messages.send("&f[&6Portal&f] Cleared last selection.", sender);
-			return true;
+			break;
 		}
 		
 		case "reload" : {
 			
-			if (!Permissions.PORTAL_RELOAD.has(sender)) {
-				messages.noPermission(sender);
-				break;
+			if (Permissions.PORTAL_RELOAD.hasPermission(sender)) {
+				portal.reloadAll();
+				messages.send("&f[&6Portals&f] Reloading all portals.", sender);
+				return true;
 			}
 			
-			portal.reloadAll();
-			messages.send("&f[&6Portals&f] Reloading all portals.", sender);
-			return true;
+			break;
+		}
+		
+		case "set" : {
+			
+			if (Permissions.PORTAL_SET.hasPermission(sender)) {
+				
+				switch (args[1]) {
+				
+				case "server" : {
+					
+					if (args.length != 3) {
+						messages.send("&6Usage: &f/portal set server <name> <server>", sender);
+						return false;
+					}
+					
+					portalConfig.setServer(args[2], args[3]);
+					messages.send("&f[&6Portals&f] Successfully set server for portal " + args[2] + " to " + args[3], sender);
+					return true;
+				}
+				
+				}
+				
+				messages.send("&6Usage: ", sender);
+				messages.send(" - &f/portal set server <name> <server>", sender);
+				messages.send(" - &f/portal set something <name> <something>", sender);
+			}
 		}
 		
 		}
