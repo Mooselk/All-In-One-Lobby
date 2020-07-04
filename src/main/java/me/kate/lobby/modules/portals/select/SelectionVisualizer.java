@@ -8,6 +8,7 @@ import java.util.Set;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -17,8 +18,6 @@ import com.google.common.collect.Maps;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.tasks.Task;
-import me.kate.lobby.utils.Logger;
-import me.kate.lobby.utils.particles.ParticleEffect;
 
 public class SelectionVisualizer implements Task {
 	
@@ -163,7 +162,9 @@ public class SelectionVisualizer implements Task {
 		}
 		
 		for (int i = 0; i < points.size(); i++) {
-			ParticleEffect.REDSTONE.display(points.get(i), 0f, 0f, 0f, 0f, 1, null);
+			
+			points.get(i).getWorld().spigot().playEffect(points.get(i), Effect.COLOURED_DUST, 0, 0, 0f, 0f, 0f, 0f, 1, 100);
+			
 		}
 	}
 	
@@ -176,13 +177,11 @@ public class SelectionVisualizer implements Task {
 	public void start() {
 		BukkitTask task = Task.getTasks().get(uuid);
 		if (task == null) {
-			task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+			Task.getTasks().put(uuid, Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 				
 				this.spawnParticles();
 				
-			}, 3, 3);
-			Logger.info("running " + task.getTaskId());
-			Task.getTasks().put(uuid, task);
+			}, 3, 3));
 		} else {
 			stop(); 
 			start();
