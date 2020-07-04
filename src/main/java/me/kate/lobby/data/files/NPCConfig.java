@@ -124,6 +124,14 @@ public class NPCConfig extends Config {
 		return false;
 	}
 	
+	public boolean autoHideNPCs() {
+		return getConfig().getBoolean("auto-hide");
+	}
+	
+	public int getCooldown() {
+		return getConfig().getInt("interact-cooldown");
+	}
+	
 	public void refresh() {
 		this.save();
 		this.reload();
