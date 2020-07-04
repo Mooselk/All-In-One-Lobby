@@ -35,14 +35,10 @@ public class PlayerJoinListener implements Listener {
 	@EventHandler
 	public void onJoin(final PlayerJoinEvent event) {
 		final Player player = (Player) event.getPlayer();
-	
-		event.setJoinMessage(Utils.replacePlayer(config.getJoinMessage(), player));
 		
 		if (config.tablistIsEnabled()) {
 			plugin.getTabList().sendHeaderFooter(player);
 		}
-		
-		this.sendJoinMessage(player);
 		
 		player.teleport(Spawn.getSpawn());
 		
@@ -50,6 +46,9 @@ public class PlayerJoinListener implements Listener {
 		effects.addEffect(player);
 		builder.loadNPCsFor(player);
 		
+		
+		this.sendJoinMessage(player);
+		event.setJoinMessage(Utils.replacePlayer(config.getJoinMessage(), player));	
 	}
 	
 	public void sendJoinMessage(Player player) {
