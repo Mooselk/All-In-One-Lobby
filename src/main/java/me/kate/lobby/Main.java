@@ -6,6 +6,7 @@ import java.util.concurrent.Executors;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.cache.CacheStorage;
+import me.kate.lobby.commands.DebugCommand;
 import me.kate.lobby.commands.LobbyCommand;
 import me.kate.lobby.commands.NPCCommand;
 import me.kate.lobby.commands.PortalCommand;
@@ -150,6 +151,7 @@ public class Main extends JavaPlugin {
 		this.getCommand("lobby").setExecutor(new LobbyCommand(this));
 		this.getCommand("npc").setExecutor(new NPCCommand(this));
 		this.getCommand("portal").setExecutor(new PortalCommand(this));
+		this.getCommand("debug").setExecutor(new DebugCommand());
 	}
 	
 	private void loadConfigs() {
