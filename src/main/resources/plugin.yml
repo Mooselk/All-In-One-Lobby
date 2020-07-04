@@ -10,3 +10,5 @@ commands:
     description: base npc command.
   portal:
     description: base portal command.
+  debug:
+    description: debug command.
