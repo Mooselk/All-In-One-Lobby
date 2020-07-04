@@ -20,7 +20,7 @@ public class Messages {
 		return instance;
 	}
 	
-	private String[] colorCodes = {
+	private final String[] colorCodes = {
 			"&0", "&1", "&2", 
 			"&3", "&4", "&5", 
 			"&6", "&7", "&8", 
