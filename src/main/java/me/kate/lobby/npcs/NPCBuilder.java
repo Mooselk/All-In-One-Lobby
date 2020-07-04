@@ -31,6 +31,7 @@ public class NPCBuilder {
 	private ServerManager servers;
 	private JavaPlugin plugin;
 	private Messages messages;
+	private LobbyNPC lobbyNPC;
 	private List<String> npcList = null;
 
 	public NPCBuilder(JavaPlugin plugin) {
@@ -39,6 +40,7 @@ public class NPCBuilder {
 		this.skinCache = new SkinCache();
 		this.servers = new ServerManager();
 		this.messages = new Messages();
+		this.lobbyNPC = new LobbyNPC();
 	}
 
 	public void create(String skinId, String name, Location location) {
@@ -66,8 +68,7 @@ public class NPCBuilder {
 
 	public void buildNPC() {
 		
-		if (npcConfig.get("npcs").isEmpty())
-			return;
+		if (npcConfig.get("npcs").isEmpty()) return;
 		
 		npcConfig.get("npcs").forEach(name -> {
 			ConfigurationSection section = npcConfig.getSection("npcs." + name);
@@ -168,10 +169,11 @@ public class NPCBuilder {
 	}
 
 	public void destroyAll() {
-		NPCManager.getAllNPCs().forEach(npc -> {
-			LobbyNPC.getById(npc.getId()).remove();
-			npc.destroy();
+		
+		lobbyNPC.getObjects().values().forEach(lobbyNPC -> {
+			lobbyNPC.destroy();
 		});
+		
 	}
 
 	public List<String> listNPCs() {
