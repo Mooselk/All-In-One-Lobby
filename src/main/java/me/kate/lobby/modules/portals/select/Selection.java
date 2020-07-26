@@ -9,6 +9,7 @@ import org.bukkit.World;
 
 import com.google.common.collect.Maps;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
 
 public class Selection {
@@ -22,7 +23,7 @@ public class Selection {
 	
 	public Selection(UUID uuid) {
 		this.uuid = uuid;
-		this.config = new PortalsConfig();
+		this.config = new PortalsConfig(Main.getInstance());
 		SELECTIONS.put(uuid, this);
 	}
 	

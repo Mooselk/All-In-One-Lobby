@@ -15,15 +15,20 @@ import me.kate.lobby.utils.Logger;
 
 public class JumpPadConfig extends Config {
 	
+	private Main plugin;
 	private static File jumpPadFile;
 	private static FileConfiguration jumpPadConf;
-
+	
+	public JumpPadConfig(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public void create() {
-		jumpPadFile = new File(Main.getInstance().getDataFolder(), "pads.yml");
+		jumpPadFile = new File(plugin.getDataFolder(), "pads.yml");
 		if (!jumpPadFile.exists()) {
 			jumpPadFile.getParentFile().mkdirs();
-			Main.getInstance().saveResource("pads.yml", false);
+			plugin.saveResource("pads.yml", false);
 			Logger.info("[Lobby] Creating pads.yml...");
 		}
 		jumpPadConf = new YamlConfiguration();

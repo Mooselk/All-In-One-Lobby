@@ -18,15 +18,20 @@ import me.kate.lobby.utils.LocationUtils;
 
 public class PortalsConfig extends Config {
 	
+	private Main plugin;
 	public static File portalfile;
 	public static FileConfiguration portalconf;
 
+	public PortalsConfig(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public void create() {
-		portalfile = new File(Main.getInstance().getDataFolder(), "portals.yml");
+		portalfile = new File(plugin.getDataFolder(), "portals.yml");
 		if (!portalfile.exists()) {
 			portalfile.getParentFile().mkdirs();
-			Main.getInstance().saveResource("portals.yml", false);
+			plugin.saveResource("portals.yml", false);
 			Bukkit.getLogger().info("[Lobby] Creating portals.yml...");
 		}
 		portalconf = new YamlConfiguration();

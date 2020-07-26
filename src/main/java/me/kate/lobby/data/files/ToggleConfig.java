@@ -16,15 +16,20 @@ import me.kate.lobby.data.Config;
 
 public class ToggleConfig extends Config {
 
+	private Main plugin;
 	private static File hideSettings;
 	private static FileConfiguration hideSettingsConf;
 
+	public ToggleConfig(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public void create() {
-		hideSettings = new File(Main.getInstance().getDataFolder(), "hideplayers.yml");
+		hideSettings = new File(plugin.getDataFolder(), "hideplayers.yml");
 		if (!hideSettings.exists()) {
 			hideSettings.getParentFile().mkdirs();
-			Main.getInstance().saveResource("hideplayers.yml", false);
+			plugin.saveResource("hideplayers.yml", false);
 			try {
 				hideSettings.createNewFile();
 				Bukkit.getLogger().info("[Lobby] Creating hideplayers.yml...");
@@ -56,7 +61,7 @@ public class ToggleConfig extends Config {
 	public boolean reload() {
 		hideSettings = null;
 		hideSettingsConf = null;
-		hideSettings = new File(Main.getInstance().getDataFolder(), "hideplayers.yml");
+		hideSettings = new File(plugin.getDataFolder(), "hideplayers.yml");
 		hideSettingsConf = new YamlConfiguration();
 		try {
 			hideSettingsConf.load(hideSettings);

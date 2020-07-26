@@ -69,8 +69,7 @@ public class MenuObject {
 	public String getMessage() {
 		if (message == null)
 			message = "none";
-		
-		return Utils.color(this.message);
+		return Utils.color(message);
 	}
 	
 	public String getType() {
@@ -99,7 +98,6 @@ public class MenuObject {
 		if (placeholder == null) {
 			return false;
 		}
-		
 		return placeholder.isOnline();
 	}
 	
@@ -110,7 +108,6 @@ public class MenuObject {
 		if (placeholder == null) {
 			return "0";
 		}
-		
 		return placeholder.getPlayerCount();
 	}	
 	

@@ -18,15 +18,20 @@ import me.kate.lobby.utils.Utils;
 
 public class SelectorConfig extends Config {
 
+	private Main plugin;
 	private static File selector;
 	private static FileConfiguration selectorConfiguration;
 	
+	public SelectorConfig(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public void create() {
-		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
+		selector = new File(plugin.getDataFolder(), "selector.yml");
 		if (!selector.exists()) {
 			selector.getParentFile().mkdirs();
-			Main.getInstance().saveResource("selector.yml", false);
+			plugin.saveResource("selector.yml", false);
 			try {
 				selector.createNewFile();
 				Bukkit.getLogger().info("[Lobby] Creating selector.yml...");
@@ -58,7 +63,7 @@ public class SelectorConfig extends Config {
 	public boolean reload() {
 		selector = null;
 		selectorConfiguration = null;
-		selector = new File(Main.getInstance().getDataFolder(), "selector.yml");
+		selector = new File(plugin.getDataFolder(), "selector.yml");
 		selectorConfiguration = new YamlConfiguration();
 		try {
 			selectorConfiguration.load(selector);

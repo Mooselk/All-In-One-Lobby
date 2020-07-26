@@ -5,16 +5,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PluginConfig;
 
 public class MobSpawnListener implements Listener {
 
 	private PluginConfig config;
 	
-	public MobSpawnListener(JavaPlugin plugin) {
-		this.config = new PluginConfig();
+	public MobSpawnListener(Main plugin) {
+		this.config = new PluginConfig(plugin);
 	}
 
 	@EventHandler

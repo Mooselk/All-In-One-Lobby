@@ -16,15 +16,20 @@ import me.kate.lobby.listeners.SpawnMode;
 
 public class PluginConfig extends Config {
 
+	private Main plugin;
 	private static File conf;
 	private static FileConfiguration configuration;
 	
+	public PluginConfig(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public void create() {
-		conf = new File(Main.getInstance().getDataFolder(), "config.yml");
+		conf = new File(plugin.getDataFolder(), "config.yml");
 		if (!conf.exists()) {
 			conf.getParentFile().mkdirs();
-			Main.getInstance().saveResource("config.yml", false);
+			plugin.saveResource("config.yml", false);
 		}
 		configuration = new YamlConfiguration();
 		try {
@@ -36,12 +41,12 @@ public class PluginConfig extends Config {
 
 	@Override
 	public void save() {
-		Main.getInstance().saveConfig();
+		plugin.saveConfig();
 	}
 
 	@Override
 	public boolean reload() {
-		Main.getInstance().reloadConfig();
+		plugin.reloadConfig();
 		return true;
 	}
 

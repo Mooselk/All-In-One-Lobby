@@ -11,7 +11,7 @@ public class HoloTextHandler {
 	
 	public void updateText(LobbyNPC lobbyNpc) {
 		String playerCount = getPlayerCount(lobbyNpc.getServer());
-		lobbyNpc.getNPC().setText(Utils.replaceText(lobbyNpc.getHolotext(), playerCount));
+		lobbyNpc.getNPC().setText(Utils.replace(lobbyNpc.getHolotext(), playerCount));
 	}
 	
 	private String getPlayerCount(String serverName) {

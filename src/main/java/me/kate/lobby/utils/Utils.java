@@ -15,6 +15,12 @@ import me.kate.lobby.Main;
 
 public class Utils {
 	
+	/**
+	 * 
+	 * @param string to replace
+	 * @param player
+	 * @return string with playername in place of %player%
+	 */
 	public static String replacePlayer(String in, Player player) {
 		String out = in.replaceAll("%player%", player.getName());
 		out = color(out);
@@ -51,7 +57,11 @@ public class Utils {
 		return ChatColor.translateAlternateColorCodes('&', color);
 	}
 	
-	
+	/**
+	 * 
+	 * @param List<String> list
+	 * @return list
+	 */
 	public static ArrayList<String> colorParser(List<String> list) {
 		ArrayList<String> newList = null;
 		newList = new ArrayList<String>();
@@ -61,6 +71,11 @@ public class Utils {
 		return newList;
 	}
 	
+	/**
+	 * 
+	 * @param String[] list
+	 * @return list
+	 */
 	public static ArrayList<String> colorParser(String[] list) {
 		ArrayList<String> newList = null;
 		newList = new ArrayList<String>();
@@ -70,7 +85,15 @@ public class Utils {
 		return newList;
 	}
 	
-	public static List<String> replaceText(List<String> list, String players) {
+	/**
+	 * Replace player count placeholder with player count
+	 * 
+	 * @param list
+	 * @param players
+	 * @return list
+	 */
+	
+	public static List<String> replace(List<String> list, String players) {
 		List<String> text = null;
 		text = new ArrayList<String>();
 		for (String in : list) {
@@ -80,6 +103,13 @@ public class Utils {
 	}
 	
 	
+	/**
+	 * Replace player count placeholder with player name
+	 * 
+	 * @param list
+	 * @param players
+	 * @return list
+	 */
 	public static String replaceTab(List<String> lines, Player player) {
 		List<String> text = null;
 		text = new ArrayList<String>();
@@ -88,16 +118,6 @@ public class Utils {
 		}
 		String out = String.join("\n&r", text);	
 		return color(out);
-	}
-	
-	public static String getValue(Map<String, String> map, String value) {
-		for (Map.Entry<String, String> s : map.entrySet()) {
-			if (s.getValue().equalsIgnoreCase(value)) {
-				String key = s.getKey();
-				return key;
-			}
-		}
-		return null;
 	}
 	
 	private static final String ERROR = color("&4&lERROR");
@@ -109,15 +129,15 @@ public class Utils {
 		}
 		return " ";
 	}
-
-	public static List<String> replaceHoloText(List<String> list, String players) {
-		List<String> text = new ArrayList<String>();
-		for (String in : list) {
-			text.add(color(in.replace("%players%", players)));
-		}
-		return text;
-	}
 	
+	
+	/**
+	 * 
+	 * @param player
+	 * @param server
+	 * 
+	 * Sends player to specfied server
+	 */
 	public static void send(Player player, String server) {
 		ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
 		DataOutputStream out = new DataOutputStream(byteStream);
@@ -125,12 +145,16 @@ public class Utils {
 			out.writeUTF("Connect");
 			out.writeUTF(server);
 		} catch (IOException | NullPointerException e) {
-			Bukkit.getLogger().severe("Error sending player to server, are you not running bungeecord?");
+			Bukkit.getLogger().severe("Error sending player to server!");
 			e.printStackTrace();
 		}
 		Bukkit.getPlayer(player.getName()).sendPluginMessage(Main.getInstance(), "BungeeCord", byteStream.toByteArray());
 	}
 	
+	/**
+	 * Empty a map without knowing it's types
+	 * @param map
+	 */
 	public static void empty(Map<?,?> map) {
 		if (!map.isEmpty())
 			map.clear();

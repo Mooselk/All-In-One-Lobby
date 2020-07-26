@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import com.google.common.collect.Maps;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PortalsConfig;
 import me.kate.lobby.modules.portals.utils.Cuboid;
 import me.kate.lobby.utils.LocationUtils;
@@ -19,8 +20,8 @@ public class Portal {
 	
 	private PortalsConfig portalConfig;
 	
-	public Portal() {
-		this.portalConfig = new PortalsConfig();
+	public Portal(Main plugin) {
+		this.portalConfig = new PortalsConfig(plugin);
 	}
 	
 	public Map<String, Cuboid> getPortals() {

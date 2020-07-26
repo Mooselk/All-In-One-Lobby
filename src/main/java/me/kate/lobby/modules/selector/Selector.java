@@ -8,6 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.common.collect.Maps;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.modules.selector.gui.GUI;
 import me.kate.lobby.objects.MenuObject;
@@ -18,7 +19,7 @@ public class Selector extends GUI {
 
 	private static final Map<String, MenuObject> CONTENTS = Maps.newHashMap();
 
-	private static SelectorConfig selectorConfig = new SelectorConfig();
+	private static SelectorConfig selectorConfig = new SelectorConfig(Main.getInstance());
 	private String path;
 
 	public Selector() {

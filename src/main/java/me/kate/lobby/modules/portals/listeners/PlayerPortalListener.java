@@ -24,8 +24,8 @@ public class PlayerPortalListener implements Listener {
 	
 	public PlayerPortalListener(Main plugin) {
 		this.cooldownManager = new CooldownManager(plugin);
-		this.portalConfig = new PortalsConfig();
-		this.portal = new Portal();
+		this.portalConfig = new PortalsConfig(plugin);
+		this.portal = new Portal(plugin);
 	}
 	
 	@EventHandler

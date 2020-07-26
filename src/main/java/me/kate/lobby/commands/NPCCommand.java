@@ -4,8 +4,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.Permissions;
 import me.kate.lobby.data.files.NPCConfig;
@@ -19,9 +19,9 @@ public class NPCCommand implements CommandExecutor {
 	private Messages messages;
 	private NPCBuilder builder;
 	
-	public NPCCommand(JavaPlugin plugin) {
+	public NPCCommand(Main plugin) {
 		this.builder = new NPCBuilder(plugin);
-		this.npcConfig = new NPCConfig();
+		this.npcConfig = new NPCConfig(plugin);
 		this.messages = new Messages();
 	}
 
@@ -133,7 +133,7 @@ public class NPCCommand implements CommandExecutor {
 				break;
 			}
 			
-			builder.setSkin(LobbyNPC.getByName(args[1]), args[2], player);
+			builder.setSkin(LobbyNPC.getLobbyNPC(args[1], LobbyNPC.Get.NAME), args[2], player);
 			return true;
 		}
 		

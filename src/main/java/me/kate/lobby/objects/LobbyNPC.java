@@ -8,6 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.bukkit.Location;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.NPCConfig;
 import me.kate.lobby.npcs.api.NPC;
 
@@ -27,7 +28,7 @@ public class LobbyNPC {
 		this.npc = npc;
 		this.name = name;
 		this.server = server;
-		this.text = new NPCConfig().getText(name);
+		this.text = new NPCConfig(Main.getInstance()).getText(name);
 		
 		LOBBY_NPC_OBJECTS.put(npc.getId(), this);
 	}
@@ -36,41 +37,77 @@ public class LobbyNPC {
 		return LOBBY_NPC_OBJECTS;
 	}
 	
-	public static LobbyNPC getById(String npcId) {
+	
+	public static LobbyNPC getLobbyNPC(String get, Get type) {
 		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();
 		
 		while (iter.hasNext()) {
 			LobbyNPC lobbyNpc = iter.next();
-			if (lobbyNpc.getID().equals(npcId)) {
-				return lobbyNpc;
+			
+			switch(type) {
+			
+				case ID : {
+					if (lobbyNpc.getID().equals(get)) {
+						return lobbyNpc;
+					}
+					break;
+				}
+				
+				case NAME : {
+					if (lobbyNpc.getID().equals(get)) {
+						return lobbyNpc;
+					}
+					break;
+				}
+				
+				case SERVER : {
+					if (lobbyNpc.getID().equals(get)) {
+						return lobbyNpc;
+					}
+					break;
+				}
+				
 			}
 		}
 		return null;
 	}
 	
-	public static LobbyNPC getByName(String npcName) {
-		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();
-		
-		while (iter.hasNext()) {
-			LobbyNPC lobbyNpc = iter.next();
-			if (lobbyNpc.getName().equals(npcName)) {
-				return lobbyNpc;
-			}
-		}
-		return null;
-	}
 	
-	public static LobbyNPC getByServer(String npcServer) {
-		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();
-		
-		while (iter.hasNext()) {
-			LobbyNPC lobbyNpc = iter.next();
-			if (lobbyNpc.getServer().equals(npcServer)) {
-				return lobbyNpc;
-			}
-		}
-		return null;
-	}
+//	public static LobbyNPC getById(String npcId) {
+//		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();
+//		
+//		while (iter.hasNext()) {
+//			LobbyNPC lobbyNpc = iter.next();
+//			if (lobbyNpc.getID().equals(npcId)) {
+//				return lobbyNpc;
+//			}
+//		}
+//		return null;
+//	}
+//	
+//	public static LobbyNPC getByName(String npcName) {
+//		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();
+//		
+//		while (iter.hasNext()) {
+//			LobbyNPC lobbyNpc = iter.next();
+//			if (lobbyNpc.getName().equals(npcName)) {
+//				return lobbyNpc;
+//			}
+//		}
+//		return null;
+//	}
+//	
+//	public static LobbyNPC getByServer(String npcServer) {
+//		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();
+//		
+//		while (iter.hasNext()) {
+//			LobbyNPC lobbyNpc = iter.next();
+//			if (lobbyNpc.getServer().equals(npcServer)) {
+//				return lobbyNpc;
+//			}
+//		}
+//		return null;
+//	}
 	
 	public void remove(String id) {
 		LOBBY_NPC_OBJECTS.remove(id);
@@ -119,5 +156,13 @@ public class LobbyNPC {
 	public void destroy() {
 		npc.destroy();
 		remove(this);
+	}
+	
+	public enum Get {
+		
+		ID,
+		NAME,
+		SERVER;
+		
 	}
 }

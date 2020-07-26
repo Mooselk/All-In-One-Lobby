@@ -26,9 +26,9 @@ public class LobbyCommand implements CommandExecutor {
 
 	public LobbyCommand(Main plugin) {
 		this.plugin = plugin;
-		this.selectorConfig = new SelectorConfig();
-		this.mainConfig = new PluginConfig();
-		this.togglePlayersConfig = new ToggleConfig();
+		this.selectorConfig = new SelectorConfig(plugin);
+		this.mainConfig = new PluginConfig(plugin);
+		this.togglePlayersConfig = new ToggleConfig(plugin);
 		this.selector = plugin.getSelector();
 		this.messages = new Messages();
 	}

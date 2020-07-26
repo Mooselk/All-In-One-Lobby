@@ -9,13 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
-import me.kate.lobby.utils.Logger;
-
 public class CooldownManager {
 	
 	private static final Map<UUID, Integer> COOLDOWNS = new HashMap<>();
-	
-	private static final int DEFAULT_COOLDOWN = 1;
 	
 	private JavaPlugin plugin;
 	private BukkitTask task;
@@ -37,12 +33,12 @@ public class CooldownManager {
 	}
 	
 	public void startCooldown(Player player, int cooldown) {
+		
 		if (cooldown == 0) {
-			setCooldown(player.getUniqueId(), CooldownManager.DEFAULT_COOLDOWN);
-			Logger.warn("[Lobby] Cooldown was 0, using default (1 seconds).");
-		} else {
-			setCooldown(player.getUniqueId(), cooldown);
+			return;
 		}
+		
+		setCooldown(player.getUniqueId(), cooldown);
 		
 		task = Bukkit.getScheduler().runTaskTimer(plugin,  () -> {
 			

@@ -5,6 +5,7 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.SelectorConfig;
 import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.utils.ItemBuilder;
@@ -12,8 +13,8 @@ import me.kate.lobby.utils.Utils;
 
 public class Items {
 	
-	private ToggleConfig playerToggleConfig = new ToggleConfig();
-	private SelectorConfig selectorConfig = new SelectorConfig();
+	private ToggleConfig playerToggleConfig = new ToggleConfig(Main.getInstance());
+	private SelectorConfig selectorConfig = new SelectorConfig(Main.getInstance());
 	
 	private ConfigurationSection togglePlayersHide = playerToggleConfig.getSection("item.hide");
 	private ConfigurationSection togglePlayersUnhide = playerToggleConfig.getSection("item.unhide");

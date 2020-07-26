@@ -5,8 +5,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.Permissions;
 import me.kate.lobby.data.files.PluginConfig;
 
@@ -14,8 +14,8 @@ public class BlockRelatedListener implements Listener {
 	
 	private PluginConfig config;
 	
-	public BlockRelatedListener(JavaPlugin plugin) {
-		this.config = new PluginConfig();
+	public BlockRelatedListener(Main plugin) {
+		this.config = new PluginConfig(plugin);
 	}
 
 	@EventHandler

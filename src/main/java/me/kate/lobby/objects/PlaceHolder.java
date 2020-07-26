@@ -9,15 +9,6 @@ import me.kate.lobby.ping.ServerPinger;
 
 public class PlaceHolder {
 	
-	/**
-	 * TO-DO
-	 * 
-	 * Instead of storing a map inside a static map in main
-	 * Create a placeholder object for each server
-	 * To get playercount, status, etc
-	 * 
-	 */
-	
 	private String server;
 	private boolean isOnline;
 	private int playerCount;

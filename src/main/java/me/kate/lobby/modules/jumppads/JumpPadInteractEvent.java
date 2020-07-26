@@ -10,12 +10,14 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.JumpPadConfig;
 
 public class JumpPadInteractEvent implements Listener {
 	
-	private JumpPadConfig jumpPadConfig = new JumpPadConfig();
-
+	@SuppressWarnings("unused")
+	private Main plugin;	
+	private JumpPadConfig jumpPadConfig;
 	private JumpPad jPad = new JumpPad(
 			jumpPadConfig.getPower(), 
 			jumpPadConfig.getHeight(), 
@@ -25,6 +27,11 @@ public class JumpPadInteractEvent implements Listener {
 			jumpPadConfig.getPitchOne(), 
 			jumpPadConfig.getPitchTwo());
 
+	public JumpPadInteractEvent(Main plugin) {
+		this.plugin = plugin;
+		this.jumpPadConfig = new JumpPadConfig(plugin);
+	}
+	
 	@EventHandler
 	public void onTrigger(final PlayerInteractEvent event) {
 		if (event.getAction().equals(Action.PHYSICAL)) {

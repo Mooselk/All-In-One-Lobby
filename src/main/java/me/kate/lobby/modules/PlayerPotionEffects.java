@@ -6,16 +6,22 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.Config;
 import me.kate.lobby.data.files.PluginConfig;
 
 public class PlayerPotionEffects {
 	
-	private Config mainConfig = new PluginConfig();
-	private List<String> EFFECTS = mainConfig.getConfig().getStringList("options.join-effects");
+	private Config mainConfig;
+	private List<String> effects;
+	
+	public PlayerPotionEffects() {
+		this.mainConfig = new PluginConfig(Main.getInstance());
+		this.effects = mainConfig.getConfig().getStringList("options.join-effects");
+	}
 	
 	public void addEffect(Player player) {
-		for (String effect : EFFECTS) {
+		for (String effect : effects) {
 			String[] splitEffects = effect.split(":");
 			removeEffects(player, splitEffects[0]);
 			player.addPotionEffect(new PotionEffect(

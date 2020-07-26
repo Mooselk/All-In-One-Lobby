@@ -25,8 +25,8 @@ public class PortalCommand implements CommandExecutor {
 
 	public PortalCommand(Main plugin) {
 		this.plugin = plugin;
-		this.portalConfig = new PortalsConfig();
-		this.portal = new Portal();
+		this.portalConfig = new PortalsConfig(plugin);
+		this.portal = new Portal(plugin);
 		this.messages = new Messages();
 		this.selections = new Selection();
 	}

@@ -20,15 +20,20 @@ import me.kate.lobby.utils.LocationUtils;
 
 public class NPCConfig extends Config {
 	
+	private Main plugin;
 	private static File npcFile;
 	private static FileConfiguration npcConfiguration;
 
+	public NPCConfig(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	@Override
 	public void create() {
-		npcFile = new File(Main.getInstance().getDataFolder(), "npcs.yml");
+		npcFile = new File(plugin.getDataFolder(), "npcs.yml");
 		if (!npcFile.exists()) {
 			npcFile.getParentFile().mkdirs();
-			Main.getInstance().saveResource("npcs.yml", false);
+			plugin.saveResource("npcs.yml", false);
 			Bukkit.getLogger().info("[Lobby] Creating npcs.yml...");
 		}
 		npcConfiguration = new YamlConfiguration();

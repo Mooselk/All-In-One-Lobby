@@ -8,8 +8,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
 import me.kate.lobby.data.files.ToggleConfig;
 import me.kate.lobby.managers.CooldownManager;
@@ -34,11 +34,11 @@ public class TogglePlayersEvent implements Listener {
 	private long lastMessage;
 	private long lastEnableMessage;
 
-	public TogglePlayersEvent(JavaPlugin plugin) {
+	public TogglePlayersEvent(Main plugin) {
 		this.playerToggle = new TogglePlayers();
 		this.cooldownManager = new CooldownManager(plugin);
 		this.items = new Items();
-		this.playerToggleConfig = new ToggleConfig();
+		this.playerToggleConfig = new ToggleConfig(plugin);
 		this.messages = new Messages();
 		
 		this.hideConfig = playerToggleConfig.getConfig();

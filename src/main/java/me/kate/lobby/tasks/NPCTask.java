@@ -28,7 +28,7 @@ public class NPCTask implements Task {
 		Task.getTasks().put(taskID, Bukkit.getScheduler().runTaskTimer(plugin, () -> {
 			
 			NPCManager.getAllNPCs().forEach(npc -> {
-				LobbyNPC lobbyNPC = LobbyNPC.getById(npc.getId());
+				LobbyNPC lobbyNPC = LobbyNPC.getLobbyNPC(npc.getId(), LobbyNPC.Get.ID);
 				holotext.updateText(lobbyNPC);
 			});
 			

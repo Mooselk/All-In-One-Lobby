@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.modules.portals.Portal;
 import me.kate.lobby.modules.portals.select.SelectionVisualizer;
 import me.kate.lobby.utils.Logger;
@@ -17,8 +18,8 @@ public class DebugCommand  implements CommandExecutor{
 	private Portal portal;
 	private SelectionVisualizer vis;
 	
-	public DebugCommand() {
-		this.portal = new Portal();
+	public DebugCommand(Main plugin) {
+		this.portal = new Portal(plugin);
 		this.vis = new SelectionVisualizer();
 	}
 	

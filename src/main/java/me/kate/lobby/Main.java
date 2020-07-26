@@ -102,7 +102,7 @@ public class Main extends JavaPlugin {
 		this.setupServers();
 		this.startTasks();
 		
-		portals = new Portal();
+		portals = new Portal(this);
 		portals.load(false);
 		
 		selector = new Selector();
@@ -134,14 +134,14 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new TouchVoidListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new BlockRelatedListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new MobSpawnListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new SelectorInteractListener(), this);
+		this.getServer().getPluginManager().registerEvents(new SelectorInteractListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new TogglePlayersEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new InteractNPCListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerPortalListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new WandInteractListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new WeatherBlockListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(), this);
+		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlantGrowthListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorGUIListener(), this);
@@ -151,17 +151,17 @@ public class Main extends JavaPlugin {
 		this.getCommand("lobby").setExecutor(new LobbyCommand(this));
 		this.getCommand("npc").setExecutor(new NPCCommand(this));
 		this.getCommand("portal").setExecutor(new PortalCommand(this));
-		this.getCommand("debug").setExecutor(new DebugCommand());
+		this.getCommand("debug").setExecutor(new DebugCommand(this));
 	}
 	
 	private void loadConfigs() {
-		new SelectorConfig().create();
-		new PortalsConfig().create();
+		new SelectorConfig(this).create();
+		new PortalsConfig(this).create();
 		new CacheStorage().create();
-		new JumpPadConfig().create();
-		new NPCConfig().create();
-		new PluginConfig().create();
-		new ToggleConfig().create();
+		new JumpPadConfig(this).create();
+		new NPCConfig(this).create();
+		new PluginConfig(this).create();
+		new ToggleConfig(this).create();
 	}
 	
 	private void loadNPCs() {

@@ -9,12 +9,13 @@ import org.bukkit.configuration.ConfigurationSection;
 
 import com.google.common.collect.Maps;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.objects.Server;
 
 public class ServerManager {
 	
-	private PluginConfig config = new PluginConfig();
+	private PluginConfig config = new PluginConfig(Main.getInstance());
 	
 	private static Set<String> servers = new HashSet<>();
 	

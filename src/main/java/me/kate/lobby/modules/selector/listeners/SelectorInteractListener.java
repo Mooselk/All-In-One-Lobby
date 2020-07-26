@@ -12,7 +12,13 @@ import me.kate.lobby.data.files.SelectorConfig;
 
 public class SelectorInteractListener implements Listener {
 	
-	private SelectorConfig selectorConfig = new SelectorConfig();
+	private Main plugin;
+	private SelectorConfig selectorConfig;
+	
+	public SelectorInteractListener(Main plugin) {
+		this.plugin = plugin;
+		this.selectorConfig = new SelectorConfig(plugin);
+	}
 	
 	@EventHandler
 	public void onPlayerInteractEvent(final PlayerInteractEvent event) {
@@ -21,8 +27,8 @@ public class SelectorInteractListener implements Listener {
 		if (player.getItemInHand().getType().equals(selectorConfig.getSelectorMaterial())) {
 			if (event.getAction().equals(Action.RIGHT_CLICK_AIR) || event.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 				event.setCancelled(true);
-				Main.getInstance().getSelector().update();
-				Main.getInstance().getSelector().open(player);
+				plugin.getSelector().update();
+				plugin.getSelector().open(player);
 			}
 		}
 	}

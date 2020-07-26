@@ -4,7 +4,6 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
@@ -17,21 +16,23 @@ import me.kate.lobby.utils.Utils;
 
 public class InteractNPCListener implements Listener {
 
+	private Main plugin;
 	private NPCConfig npcConfig;
 	private Messages messages;
 	
-	public InteractNPCListener(JavaPlugin plugin) {
-		this.npcConfig = new NPCConfig();
+	public InteractNPCListener(Main plugin) {
+		this.plugin = plugin;
+		this.npcConfig = new NPCConfig(plugin);
 		this.messages = new Messages();
 	}
 
-	private CooldownManager cooldownManager = new CooldownManager(Main.getInstance());
+	private CooldownManager cooldownManager = new CooldownManager(plugin);
 
 	@EventHandler
 	public void onNPCInteract(NPCInteractEvent event) {
 
 		Player player = event.getWhoClicked().getPlayer();
-		LobbyNPC lobbyNPC = LobbyNPC.getById(event.getNPC().getId());
+		LobbyNPC lobbyNPC = LobbyNPC.getLobbyNPC(event.getNPC().getId(), LobbyNPC.Get.ID);
 
 		int timeLeft = cooldownManager.getCooldown(player.getUniqueId());
 		

@@ -4,8 +4,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.plugin.java.JavaPlugin;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.data.files.PluginConfig;
 import me.kate.lobby.modules.portals.select.Selection;
 import me.kate.lobby.modules.portals.select.SelectionVisualizer;
@@ -17,8 +17,8 @@ public class PlayerQuitListener implements Listener {
 	private Selection selection;
 	private SelectionVisualizer visualizer;
 	
-	public PlayerQuitListener(JavaPlugin plugin) {
-		this.config = new PluginConfig();
+	public PlayerQuitListener(Main plugin) {
+		this.config = new PluginConfig(plugin);
 		this.selection = new Selection();
 		this.visualizer = new SelectionVisualizer();
 	}

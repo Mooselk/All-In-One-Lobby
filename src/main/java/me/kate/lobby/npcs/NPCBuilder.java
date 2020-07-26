@@ -34,9 +34,9 @@ public class NPCBuilder {
 	private LobbyNPC lobbyNPC;
 	private List<String> npcList = null;
 
-	public NPCBuilder(JavaPlugin plugin) {
+	public NPCBuilder(Main plugin) {
 		this.plugin = plugin;
-		this.npcConfig = new NPCConfig();
+		this.npcConfig = new NPCConfig(plugin);
 		this.skinCache = new SkinCache();
 		this.servers = new ServerManager();
 		this.messages = new Messages();
@@ -53,12 +53,12 @@ public class NPCBuilder {
 		String server = section.getString("server.server-name");
 
 		Bukkit.getScheduler().runTask(plugin, () -> {
-			NPC npc = Main.getNPCLib().createNPC(Utils.replaceText(section.getStringList("holotext"), "0"));
+			NPC npc = Main.getNPCLib().createNPC(Utils.replace(section.getStringList("holotext"), "0"));
 			applyItems(npc, name);
 
 			npc.setSkin(skinCache.getCachedSkin(skinId));
 			npc.setLocation(npcConfig.getLocation(name));
-			npc.setText(Utils.replaceText(section.getStringList("holotext"), "0"));
+			npc.setText(Utils.replace(section.getStringList("holotext"), "Loading.."));
 			npc.create();
 
 			new LobbyNPC(npc, name, server);
@@ -76,7 +76,7 @@ public class NPCBuilder {
 			String server = section.getString("server.server-name");
 
 			Bukkit.getScheduler().runTask(plugin, () -> {
-				NPC npc = Main.getNPCLib().createNPC(Utils.replaceText(section.getStringList("holotext"), "0"));
+				NPC npc = Main.getNPCLib().createNPC(Utils.replace(section.getStringList("holotext"), "0"));
 				applyItems(npc, name);
 
 				npc.setSkin(skinCache.getCachedSkin(skinId));
@@ -161,7 +161,7 @@ public class NPCBuilder {
 	}
 
 	public void destroy(String name) {
-		LobbyNPC lobbyNPC = LobbyNPC.getByName(name);
+		LobbyNPC lobbyNPC = LobbyNPC.getLobbyNPC(name, LobbyNPC.Get.NAME);
 		NPC npc = lobbyNPC.getNPC();
 
 		npc.destroy();
@@ -178,7 +178,7 @@ public class NPCBuilder {
 
 	public List<String> listNPCs() {
 		npcList = new ArrayList<String>();
-		NPCManager.getAllNPCs().forEach(npc -> npcList.add(LobbyNPC.getById(npc.getId()).getName()));
+		NPCManager.getAllNPCs().forEach(npc -> npcList.add(LobbyNPC.getLobbyNPC(npc.getId(), LobbyNPC.Get.ID).getName()));
 		return npcList;
 	}
 
