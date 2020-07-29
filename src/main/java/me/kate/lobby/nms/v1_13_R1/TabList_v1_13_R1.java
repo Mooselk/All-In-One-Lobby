@@ -15,7 +15,12 @@ import net.minecraft.server.v1_13_R1.PacketPlayOutPlayerListHeaderFooter;
 public class TabList_v1_13_R1 implements TabList {
 	
 	private Player player;
+	private Main plugin;
 	
+	public TabList_v1_13_R1(Main plugin) {
+		this.plugin = plugin;
+	}
+
 	@Override
 	public void update() {
 		this.sendHeaderFooter(player);
@@ -25,13 +30,11 @@ public class TabList_v1_13_R1 implements TabList {
 	public void sendHeaderFooter(Player player) {    
 		this.player = player;
 		IChatBaseComponent tabHeader = ChatSerializer.a("{\"text\": \"" + Utils
-				.replaceTab(Main
-				.getInstance()
+				.replaceTab(plugin
 				.getConfig()
 				.getStringList("tablist.header"), player) + "\"}");
         IChatBaseComponent tabFooter = ChatSerializer.a("{\"text\": \"" + Utils
-        		.replaceTab(Main
-        		.getInstance()
+        		.replaceTab(plugin
         		.getConfig()
         		.getStringList("tablist.footer"), player) + "\"}");
         

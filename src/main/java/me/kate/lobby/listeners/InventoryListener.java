@@ -6,11 +6,16 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.modules.Items;
 
 public class InventoryListener implements Listener {
 
-	private Items items = new Items();
+	private Items items;
+	
+	public InventoryListener(Main plugin) {
+		this.items = new Items(plugin);
+	}
 	
 	@EventHandler
 	public void onClick(final InventoryClickEvent event) {

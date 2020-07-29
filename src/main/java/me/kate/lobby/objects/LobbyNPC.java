@@ -23,12 +23,12 @@ public class LobbyNPC {
 	
 	public LobbyNPC() { }
 	
-	public LobbyNPC(NPC npc, String name, String server) {
+	public LobbyNPC(NPC npc, String name, String server, Main plugin) {
 		
 		this.npc = npc;
 		this.name = name;
 		this.server = server;
-		this.text = new NPCConfig(Main.getInstance()).getText(name);
+		this.text = new NPCConfig(plugin).getText(name);
 		
 		LOBBY_NPC_OBJECTS.put(npc.getId(), this);
 	}
@@ -36,7 +36,6 @@ public class LobbyNPC {
 	public Map<String, LobbyNPC> getObjects() {
 		return LOBBY_NPC_OBJECTS;
 	}
-	
 	
 	public static LobbyNPC getLobbyNPC(String get, Get type) {
 		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();

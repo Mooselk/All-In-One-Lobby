@@ -1,12 +1,13 @@
 package me.kate.lobby.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import me.kate.lobby.Main;
 
 public class Logger {
 	
-	private static final Server SERVER = Main.getInstance().getServer();
+	private static final Server SERVER = Bukkit.getServer();
 	
 	public static void debug(String msg) {
 		if (Main.DEBUG) { 

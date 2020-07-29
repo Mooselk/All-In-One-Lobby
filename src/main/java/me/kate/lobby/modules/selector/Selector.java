@@ -19,12 +19,14 @@ public class Selector extends GUI {
 
 	private static final Map<String, MenuObject> CONTENTS = Maps.newHashMap();
 
-	private static SelectorConfig selectorConfig = new SelectorConfig(Main.getInstance());
+	private static Main plugin = Main.getInstance();
+	
+	private static SelectorConfig config = new SelectorConfig(plugin);
 	private String path;
 
 	public Selector() {
-		super(selectorConfig.getRows(), selectorConfig.getInvTitle());
-		this.path = selectorConfig.getItemsPath();
+		super(config.getRows(), config.getInvTitle(), plugin);
+		this.path = config.getItemsPath();
 	}
 
 	public void update() {
@@ -86,9 +88,9 @@ public class Selector extends GUI {
 	}
 
 	public void addContents() {
-		for (String keys : selectorConfig.get(path)) {
+		for (String keys : config.get(path)) {
 
-			ConfigurationSection section = selectorConfig.getSection(path + keys);
+			ConfigurationSection section = config.getSection(path + keys);
 			
 			if (section.getBoolean("decoration")) {
 				createItem(path + keys, keys + ":decoration", section);
@@ -105,7 +107,7 @@ public class Selector extends GUI {
 	}
 
 	private void createItem(String path, String slot, ConfigurationSection extras) {
-		ConfigurationSection section = selectorConfig.getSection(path);
+		ConfigurationSection section = config.getSection(path);
 		
 		ItemStack item = new ItemBuilder(
 				Material.getMaterial(section.getString("material")))

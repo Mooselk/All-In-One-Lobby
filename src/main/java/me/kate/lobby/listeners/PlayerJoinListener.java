@@ -25,10 +25,10 @@ public class PlayerJoinListener implements Listener {
 	
 	public PlayerJoinListener(Main plugin) {
 		this.plugin = plugin;
-		this.items = new Items();
+		this.items = new Items(plugin);
 		this.config = new PluginConfig(plugin);
 		this.builder = new NPCBuilder(plugin);
-		this.effects = new PlayerPotionEffects();
+		this.effects = new PlayerPotionEffects(plugin);
 		this.messages = new Messages();
 	}
 	

@@ -15,13 +15,17 @@ import me.kate.lobby.objects.Server;
 
 public class ServerManager {
 	
-	private PluginConfig config = new PluginConfig(Main.getInstance());
+	private PluginConfig config;
 	
 	private static Set<String> servers = new HashSet<>();
 	
 	private static Map<String, String> addresses = new HashMap<>();
 	
 	public static final Map<String, Server> SERVER = Maps.newHashMap();
+	
+	public ServerManager(Main plugin) {
+		config = new PluginConfig(plugin);
+	}
 	
 	/**
 	 * ServerName, Address (ip:port)

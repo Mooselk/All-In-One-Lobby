@@ -17,18 +17,24 @@ public class CacheStorage extends Config {
 	private static File skinfile;
 	private static FileConfiguration skinstorage;
 	
+	private Main plugin;
+	
+	public CacheStorage(Main plugin) {
+		this.plugin = plugin;
+	}
+	
 	public static FileConfiguration getSkinStorage() {
 		return skinstorage;
 	}
 
 	@Override
 	public void create() {
-		skinfile = new File(Main.getInstance().getDataFolder() + "/skins/", "skincache.yml");
+		skinfile = new File(plugin.getDataFolder() + "/skins/", "skincache.yml");
 		if (!skinfile.exists()) {
 			skinfile.getParentFile().mkdirs();
 			try {
 				skinfile.createNewFile();
-				Main.getInstance().saveResource("skincache.yml", false);
+				plugin.saveResource("skincache.yml", false);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

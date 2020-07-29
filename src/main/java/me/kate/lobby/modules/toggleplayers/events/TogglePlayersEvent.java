@@ -37,7 +37,7 @@ public class TogglePlayersEvent implements Listener {
 	public TogglePlayersEvent(Main plugin) {
 		this.playerToggle = new TogglePlayers();
 		this.cooldownManager = new CooldownManager(plugin);
-		this.items = new Items();
+		this.items = new Items(plugin);
 		this.playerToggleConfig = new ToggleConfig(plugin);
 		this.messages = new Messages();
 		

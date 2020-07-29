@@ -1,12 +1,17 @@
 package me.kate.lobby.cache;
 
+import me.kate.lobby.Main;
 import me.kate.lobby.npcs.api.skin.MineSkinFetcher;
 import me.kate.lobby.npcs.api.skin.Skin;
 import me.kate.lobby.utils.Logger;
 
 public class SkinCache {
 
-	private CacheStorage cache = new CacheStorage();
+	private CacheStorage cache;
+	
+	public SkinCache(Main plugin) {
+		this.cache = new CacheStorage(plugin);
+	}
 
 	public void cache(Skin skin, int skinId) {
 		if (cache.getSection(String.valueOf(skinId)) == null) {

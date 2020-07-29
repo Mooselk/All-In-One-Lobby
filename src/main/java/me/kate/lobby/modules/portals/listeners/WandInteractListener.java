@@ -53,7 +53,7 @@ public class WandInteractListener implements Listener {
 		selection = selection.getSelection(uuid);
 		
 		if (selection == null) {
-			selection = new Selection(uuid);
+			selection = new Selection(uuid, plugin);
 		}
 		
 		visualizer = visualizer.getIntance(uuid);

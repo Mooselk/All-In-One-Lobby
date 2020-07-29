@@ -20,6 +20,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
 import me.kate.lobby.Main;
+import me.kate.lobby.utils.Logger;
 
 
 public class PingResponse {
@@ -56,7 +57,7 @@ public class PingResponse {
 		
 		if (jsonString == null || jsonString.isEmpty()) {
     		this.motd = "Invalid ping response";
-    		Main.getInstance().getLogger().log(Level.WARNING, "Received empty Json response from IP \"" + address.toString() + "\"!");
+    		Logger.warn("Received empty Json response from IP \"" + address.toString() + "\"!");
     		return;
     	}
 		
@@ -64,7 +65,7 @@ public class PingResponse {
 		
     	if (!(jsonObject instanceof JSONObject)) {
     		this.motd = "Invalid ping response";
-    		Main.getInstance().getLogger().log(Level.WARNING, "Received invalid Json response from IP \"" + address.toString() + "\": " + jsonString);
+    		Logger.warn("Received invalid Json response from IP \"" + address.toString() + "\": " + jsonString);
     		return;
     	}
     	
@@ -86,7 +87,7 @@ public class PingResponse {
     		}
     	} else {
     		this.motd = "Invalid ping response (description not found)";
-    		Main.getInstance().getLogger().log(Level.WARNING, "Received invalid Json response from IP \"" + address.toString() + "\": " + jsonString);
+    		Logger.warn("Received invalid Json response from IP \"" + address.toString() + "\": " + jsonString);
     	}
         
         final Object playersObject = json.get("players");

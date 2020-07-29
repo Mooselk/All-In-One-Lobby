@@ -13,11 +13,21 @@ import me.kate.lobby.utils.Utils;
 
 public class Items {
 	
-	private ToggleConfig playerToggleConfig = new ToggleConfig(Main.getInstance());
-	private SelectorConfig selectorConfig = new SelectorConfig(Main.getInstance());
+	private ToggleConfig playerToggleConfig;
+	private SelectorConfig selectorConfig;
 	
-	private ConfigurationSection togglePlayersHide = playerToggleConfig.getSection("item.hide");
-	private ConfigurationSection togglePlayersUnhide = playerToggleConfig.getSection("item.unhide");
+	private ConfigurationSection togglePlayersHide;
+	private ConfigurationSection togglePlayersUnhide;
+	
+	
+	public Items(Main plugin) {
+		this.playerToggleConfig = new ToggleConfig(plugin);
+		this.selectorConfig = new SelectorConfig(plugin);
+		
+		this.togglePlayersHide = playerToggleConfig.getSection("item.hide");
+		this.togglePlayersUnhide = playerToggleConfig.getSection("item.unhide");
+	}
+	
 	
 	public ItemStack hide() {
 		return new ItemBuilder(Material.getMaterial(

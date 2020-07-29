@@ -15,8 +15,8 @@ public class PlayerPotionEffects {
 	private Config mainConfig;
 	private List<String> effects;
 	
-	public PlayerPotionEffects() {
-		this.mainConfig = new PluginConfig(Main.getInstance());
+	public PlayerPotionEffects(Main plugin) {
+		this.mainConfig = new PluginConfig(plugin);
 		this.effects = mainConfig.getConfig().getStringList("options.join-effects");
 	}
 	

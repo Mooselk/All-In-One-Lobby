@@ -21,11 +21,11 @@ public abstract class GUI {
 	private UUID uuid;
 	private Main main;
 	
-	public GUI(int invSize, String invName) {
+	public GUI(int invSize, String invName, Main plugin) {
 		this.uuid = UUID.randomUUID();
 		this.inventory = Bukkit.createInventory(null, invSize * 9, invName);
 		this.actions = new HashMap<>();
-		this.main = Main.getInstance();
+		this.main = plugin;
 		inventoriesByUUID.put(getUuid(), this);
 	}
 	

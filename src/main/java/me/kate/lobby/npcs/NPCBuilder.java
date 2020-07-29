@@ -9,7 +9,6 @@ import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
 
 import me.kate.lobby.Main;
 import me.kate.lobby.Messages;
@@ -29,7 +28,7 @@ public class NPCBuilder {
 	private NPCConfig npcConfig;
 	private SkinCache skinCache;
 	private ServerManager servers;
-	private JavaPlugin plugin;
+	private Main plugin;
 	private Messages messages;
 	private LobbyNPC lobbyNPC;
 	private List<String> npcList = null;
@@ -37,8 +36,8 @@ public class NPCBuilder {
 	public NPCBuilder(Main plugin) {
 		this.plugin = plugin;
 		this.npcConfig = new NPCConfig(plugin);
-		this.skinCache = new SkinCache();
-		this.servers = new ServerManager();
+		this.skinCache = new SkinCache(plugin);
+		this.servers = new ServerManager(plugin);
 		this.messages = new Messages();
 		this.lobbyNPC = new LobbyNPC();
 	}
@@ -61,7 +60,7 @@ public class NPCBuilder {
 			npc.setText(Utils.replace(section.getStringList("holotext"), "Loading.."));
 			npc.create();
 
-			new LobbyNPC(npc, name, server);
+			new LobbyNPC(npc, name, server, plugin);
 		});
 
 	}
@@ -83,7 +82,7 @@ public class NPCBuilder {
 				npc.setLocation(npcConfig.getLocation(name));
 				npc.create();
 
-				new LobbyNPC(npc, name, server);
+				new LobbyNPC(npc, name, server, plugin);
 			});
 			
 		});

@@ -21,9 +21,9 @@ public class Selection {
 	
 	private static final Map<UUID, Selection> SELECTIONS = Maps.newHashMap();
 	
-	public Selection(UUID uuid) {
+	public Selection(UUID uuid, Main plugin) {
 		this.uuid = uuid;
-		this.config = new PortalsConfig(Main.getInstance());
+		this.config = new PortalsConfig(plugin);
 		SELECTIONS.put(uuid, this);
 	}
 	

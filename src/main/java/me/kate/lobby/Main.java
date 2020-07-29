@@ -143,7 +143,7 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new WeatherBlockListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlantGrowthListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new InventoryListener(), this);
+		this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorGUIListener(), this);
 	}
 	
@@ -157,7 +157,7 @@ public class Main extends JavaPlugin {
 	private void loadConfigs() {
 		new SelectorConfig(this).create();
 		new PortalsConfig(this).create();
-		new CacheStorage().create();
+		new CacheStorage(this).create();
 		new JumpPadConfig(this).create();
 		new NPCConfig(this).create();
 		new PluginConfig(this).create();
@@ -170,7 +170,7 @@ public class Main extends JavaPlugin {
 	}
 
 	private void setupServers() {
-		ServerManager servers = new ServerManager();
+		ServerManager servers = new ServerManager(this);
 		servers.loadServers();
 	}
 	
@@ -195,16 +195,16 @@ public class Main extends JavaPlugin {
 	}
 	
 	private boolean setupTablist() {
-		if (getVersion().equals("v1_8_R2")) { tablist = new TabList_v1_8_R2(); }
-		if (getVersion().equals("v1_8_R3")) { tablist = new TabList_v1_8_R3(); }
-		if (getVersion().equals("v1_9_R1")) { tablist = new TabList_v1_9_R1(); }
-		if (getVersion().equals("v1_9_R2")) { tablist = new TabList_v1_9_R2(); }
-		if (getVersion().equals("v1_10_R1")) { tablist = new TabList_v1_10_R1(); }
-		if (getVersion().equals("v1_11_R1")) { tablist = new TabList_v1_11_R1(); }
-		if (getVersion().equals("v1_12_R1")) { tablist = new TabList_v1_12_R1(); }
-		if (getVersion().equals("v1_13_R1")) { tablist = new TabList_v1_13_R1(); }
-		if (getVersion().equals("v1_13_R2")) { tablist = new TabList_v1_13_R2(); }
-		if (getVersion().equals("v1_14_R1")) { tablist = new TabList_v1_14_R1(); }
+		if (getVersion().equals("v1_8_R2")) { tablist = new TabList_v1_8_R2(this); }
+		if (getVersion().equals("v1_8_R3")) { tablist = new TabList_v1_8_R3(this); }
+		if (getVersion().equals("v1_9_R1")) { tablist = new TabList_v1_9_R1(this); }
+		if (getVersion().equals("v1_9_R2")) { tablist = new TabList_v1_9_R2(this); }
+		if (getVersion().equals("v1_10_R1")) { tablist = new TabList_v1_10_R1(this); }
+		if (getVersion().equals("v1_11_R1")) { tablist = new TabList_v1_11_R1(this); }
+		if (getVersion().equals("v1_12_R1")) { tablist = new TabList_v1_12_R1(this); }
+		if (getVersion().equals("v1_13_R1")) { tablist = new TabList_v1_13_R1(this); }
+		if (getVersion().equals("v1_13_R2")) { tablist = new TabList_v1_13_R2(this); }
+		if (getVersion().equals("v1_14_R1")) { tablist = new TabList_v1_14_R1(this); }
 		return tablist != null;
 	}
 }
