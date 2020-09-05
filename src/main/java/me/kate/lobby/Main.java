@@ -25,7 +25,7 @@ import me.kate.lobby.listeners.world.MobSpawnListener;
 import me.kate.lobby.listeners.world.PlantGrowthListener;
 import me.kate.lobby.listeners.world.TouchVoidListener;
 import me.kate.lobby.listeners.world.WeatherBlockListener;
-import me.kate.lobby.modules.jumppads.JumpPadInteractEvent;
+import me.kate.lobby.modules.jumppads.JumpPadInteractListener;
 import me.kate.lobby.modules.portals.Portal;
 import me.kate.lobby.modules.portals.listeners.PlayerPortalListener;
 import me.kate.lobby.modules.portals.listeners.WandInteractListener;
@@ -60,7 +60,7 @@ public class Main extends JavaPlugin {
 	public static final boolean DEBUG = false;
 
 	private static Main instance;
-	private static NPCLib npclib;
+	private NPCLib npclib;
 	private TabList tablist;
 	private Portal portals;
 	private Selector selector;
@@ -72,7 +72,7 @@ public class Main extends JavaPlugin {
 		return instance;
 	}
 	
-	public static NPCLib getNPCLib() {
+	public NPCLib getNPCLib() {
 		return npclib;
 	}
 	
@@ -141,7 +141,7 @@ public class Main extends JavaPlugin {
 		this.getServer().getPluginManager().registerEvents(new PlayerQuitListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new WandInteractListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new WeatherBlockListener(this), this);
-		this.getServer().getPluginManager().registerEvents(new JumpPadInteractEvent(this), this);
+		this.getServer().getPluginManager().registerEvents(new JumpPadInteractListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new PlantGrowthListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
 		this.getServer().getPluginManager().registerEvents(new SelectorGUIListener(), this);

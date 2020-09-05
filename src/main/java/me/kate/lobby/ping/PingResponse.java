@@ -14,12 +14,9 @@
  */
 package me.kate.lobby.ping;
 
-import java.util.logging.Level;
-
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 
-import me.kate.lobby.Main;
 import me.kate.lobby.utils.Logger;
 
 

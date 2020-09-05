@@ -13,28 +13,45 @@ public class SkinCache {
 		this.cache = new CacheStorage(plugin);
 	}
 
-	public void cache(Skin skin, int skinId) {
-		if (cache.getSection(String.valueOf(skinId)) == null) {
-			cache.getConfig().set(String.valueOf(skinId), skin.serialize());
+	public void cache(Skin skin, String skinId) {
+		// If skin isn't present in cache, serialize and add
+		if (cache.getSection(skinId) == null) {
+			cache.getConfig().set(skinId, skin.serialize());
 			this.refresh();
 		}
 	}
 	
+	/*
+	 * If skin is already cached, return skin from cache.
+	 * If not, cache skin from MineSkinFetcher and return skin added to cache.
+	 */
+	
+	/**
+	 * @param skinId
+	 * @return Skin
+	 */
 	public Skin getCachedSkin(int skinId) {
 	    if (isCached(skinId)) { 
 	    	return getSkin(skinId);
 	    } else {
 	    	MineSkinFetcher.fetchSkinFromIdAsync(skinId, skinCallback -> {
-				cache(skinCallback, skinId);
+				cache(skinCallback, String.valueOf(skinId));
 			});
 	    }
 		return getSkin(skinId);
 	}
 	
+	/*
+	 * Check if skin has been cached by checking it's presence in skin.yml
+	 */
 	public boolean isCached(int skinId) {
 		return cache.getConfig().contains(String.valueOf(skinId));
 	}
 
+	
+	/*
+	 * Gets skin from skin.yml
+	 */
 	public Skin getSkin(int skinId) {
 		if (cache.getSection(String.valueOf(skinId)) != null) {
 			return new Skin(
@@ -48,6 +65,7 @@ public class SkinCache {
 		return null;
 	}
 	
+	// Save and reload skins.yml with one method
 	private void refresh() {
 		cache.save();
 		cache.reload();

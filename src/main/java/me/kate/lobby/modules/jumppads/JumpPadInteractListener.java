@@ -13,23 +13,21 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import me.kate.lobby.Main;
 import me.kate.lobby.data.files.JumpPadConfig;
 
-public class JumpPadInteractEvent implements Listener {
-	
-	@SuppressWarnings("unused")
-	private Main plugin;	
+public class JumpPadInteractListener implements Listener {
+		
 	private JumpPadConfig jumpPadConfig;
-	private JumpPad jPad = new JumpPad(
-			jumpPadConfig.getPower(), 
-			jumpPadConfig.getHeight(), 
-			jumpPadConfig.getTopBlock(), 
-			jumpPadConfig.getBottomBlock(), 
-			jumpPadConfig.getSound(), 
-			jumpPadConfig.getPitchOne(), 
-			jumpPadConfig.getPitchTwo());
+	private JumpPad jPad;
 
-	public JumpPadInteractEvent(Main plugin) {
-		this.plugin = plugin;
+	public JumpPadInteractListener(Main plugin) {
 		this.jumpPadConfig = new JumpPadConfig(plugin);
+		this.jPad = new JumpPad(
+				jumpPadConfig.getPower(), 
+				jumpPadConfig.getHeight(), 
+				jumpPadConfig.getTopBlock(), 
+				jumpPadConfig.getBottomBlock(), 
+				jumpPadConfig.getSound(), 
+				jumpPadConfig.getPitchOne(), 
+				jumpPadConfig.getPitchTwo());
 	}
 	
 	@EventHandler

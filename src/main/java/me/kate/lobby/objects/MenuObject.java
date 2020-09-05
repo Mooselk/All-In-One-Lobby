@@ -48,7 +48,7 @@ public class MenuObject {
 	}
 	
 	public ItemMeta getItemMeta() {
-		return this.getItemStack().getItemMeta();
+		return itemStack.getItemMeta();
 	}
 	
 	public String getDisplayName() {
@@ -114,13 +114,13 @@ public class MenuObject {
 	public void setDisplayName(String displayName) {
 		ItemMeta meta = this.getItemMeta();
 		meta.setDisplayName(displayName);
-		this.getItemStack().setItemMeta(meta);
+		itemStack.setItemMeta(meta);
 	}
 	
 	public void setLore(List<String> lore) {
 		ItemMeta meta = this.getItemMeta();
 		meta.setLore(lore);
-		this.getItemStack().setItemMeta(meta);
+		itemStack.setItemMeta(meta);
 	}
 
 }

@@ -13,15 +13,13 @@ public class Spawn {
 	private static FileConfiguration config = Main.getInstance().getConfig();
 	
 	public static Location getSpawn() {
-		double x = config.getDouble("spawn.x");
-		double y = config.getDouble("spawn.y");
-		double z = config.getDouble("spawn.z");
-		int yaw = config.getInt("spawn.yaw");
-		int pitch = config.getInt("spawn.pitch");
-		String world = config.getString("options.world");
-		Location loc = new Location(Bukkit.getWorld(world), x, y, z);
-		loc.setPitch(pitch);
-		loc.setYaw(yaw);
+		Location loc = new Location(
+				Bukkit.getWorld(config.getString("options.world")), 
+				config.getDouble("spawn.x"), 
+				config.getDouble("spawn.y"), 
+				config.getDouble("spawn.z"));
+		loc.setPitch(config.getInt("spawn.pitch"));
+		loc.setYaw(config.getInt("spawn.yaw"));
 		return loc;
 	}
 	

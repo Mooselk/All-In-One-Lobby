@@ -52,7 +52,7 @@ public class NPCBuilder {
 		String server = section.getString("server.server-name");
 
 		Bukkit.getScheduler().runTask(plugin, () -> {
-			NPC npc = Main.getNPCLib().createNPC(Utils.replace(section.getStringList("holotext"), "0"));
+			NPC npc = plugin.getNPCLib().createNPC(Utils.replace(section.getStringList("holotext"), "0"));
 			applyItems(npc, name);
 
 			npc.setSkin(skinCache.getCachedSkin(skinId));
@@ -75,7 +75,7 @@ public class NPCBuilder {
 			String server = section.getString("server.server-name");
 
 			Bukkit.getScheduler().runTask(plugin, () -> {
-				NPC npc = Main.getNPCLib().createNPC(Utils.replace(section.getStringList("holotext"), "0"));
+				NPC npc = plugin.getNPCLib().createNPC(Utils.replace(section.getStringList("holotext"), "0"));
 				applyItems(npc, name);
 
 				npc.setSkin(skinCache.getCachedSkin(skinId));
@@ -99,7 +99,8 @@ public class NPCBuilder {
 			npc.setItem(NPCSlot.getSlot(parts[0].toUpperCase()),
 					new ItemBuilder(Material
 					.getMaterial(parts[1]))
-					.setEnchanted(parts[2].equals("true"))
+					.setEnchanted(parts[2]
+					.equals("true"))
 					.toItemStack());
 			
 		});

@@ -16,15 +16,36 @@ public class InventoryListener implements Listener {
 	public InventoryListener(Main plugin) {
 		this.items = new Items(plugin);
 	}
+	// placeholder for config value
+	boolean canMoveItems = true;
 	
 	@EventHandler
-	public void onClick(final InventoryClickEvent event) {
+	public void onInventoryInteract(final InventoryClickEvent event) {
 		final ItemStack item = event.getCurrentItem();
 		final Player player = (Player) event.getWhoClicked();
-		if (item == null) { return; }
-		if (player.isOp()) { return; }
-		if (item.equals(items.selector())) { event.setCancelled(true); }
-		if (item.equals(items.hide())) { event.setCancelled(true); }
-		if (item.equals(items.unHide())) { event.setCancelled(true); }
+		
+		if (item == null) { 
+			return; 
+		}
+		
+		if (player.isOp()) { 
+			return;
+		}
+		
+		if (canMoveItems) {
+			return;
+		}
+		
+		if (item.equals(items.selector())) { 
+			event.setCancelled(true); 
+		}
+		
+		if (item.equals(items.hide())) {
+			event.setCancelled(true);
+		}
+		
+		if (item.equals(items.unHide())) {
+			event.setCancelled(true); 	
+		}
 	}
 }

@@ -46,12 +46,11 @@ public class PlayerJoinListener implements Listener {
 		effects.addEffect(player);
 		builder.loadNPCsFor(player);
 		
-		
 		this.sendJoinMessage(player);
 		event.setJoinMessage(Utils.replacePlayer(config.getJoinMessage(), player));	
 	}
 	
-	public void sendJoinMessage(Player player) {
+	private void sendJoinMessage(Player player) {
 		if (!config.motdIsEnabled()) return;
 		
 		config.getJoinMOTD().forEach(motd-> {

@@ -37,6 +37,13 @@ public class LobbyNPC {
 		return LOBBY_NPC_OBJECTS;
 	}
 	
+	
+	/**
+	 * 
+	 * @param get (id, name, server)
+	 * @param type enum (id, name, server)
+	 * @return LobbyNPC
+	 */
 	public static LobbyNPC getLobbyNPC(String get, Get type) {
 		Iterator<LobbyNPC> iter = LOBBY_NPC_OBJECTS.values().iterator();
 		
@@ -53,14 +60,14 @@ public class LobbyNPC {
 				}
 				
 				case NAME : {
-					if (lobbyNpc.getID().equals(get)) {
+					if (lobbyNpc.getName().equals(get)) {
 						return lobbyNpc;
 					}
 					break;
 				}
 				
 				case SERVER : {
-					if (lobbyNpc.getID().equals(get)) {
+					if (lobbyNpc.getServer().equals(get)) {
 						return lobbyNpc;
 					}
 					break;
@@ -108,50 +115,116 @@ public class LobbyNPC {
 //		return null;
 //	}
 	
+	/**
+	 * @param id
+	 * 
+	 * @apiNote 
+	 * Remove lobbyNPC by ID
+	 */
 	public void remove(String id) {
 		LOBBY_NPC_OBJECTS.remove(id);
 	}
 	
+	/**
+	 * @param lobbyNPC
+	 *
+	 * @apiNote
+	 * Remove lobbyNPC by ID
+	 */
 	public void remove(LobbyNPC lobbyNPC) {
 		LOBBY_NPC_OBJECTS.remove(lobbyNPC.getID());
 	}
 	
+	/**
+	 * @param lobbyNPC
+	 *
+	 * @apiNote
+	 * Remove lobbyNPC by ID from lobbyNPC instance
+	 */
 	public void remove() {
 		LOBBY_NPC_OBJECTS.remove(this.getID());
 	}
 	
+	/**
+	 * Clear all lobbyNPC objects from map
+	 */
 	public void clear() {
 		LOBBY_NPC_OBJECTS.clear();
 	}
 	
+	/**
+	 * @return NPC
+	 * 
+	 * @apiNote
+	 * Get NPC object attatched to lobbyNPC instance
+	 */
 	public NPC getNPC() {
 		return npc;
 	}
 	
+	/**
+	 * 
+	 * @return npcLocation
+	 * 
+	 * @apiNote
+	 * Gets location of npc attatched to lobbyNPC instance
+	 */
 	public Location getLocation() {
 		return npc.getLocation();
 	}
 	
+	/**
+	 * 
+	 * @return NPCID
+	 */
 	public String getID() {
 		return npc.getId();
 	}
 	
+	/**
+	 * 
+	 * @return NPCUUID
+	 */
 	public UUID getUUID() {
 		return npc.getUniqueId();
 	}
 	
+	/**
+	 * 
+	 * @return Server
+	 * 
+	 * @apiNote 
+	 * Get server assosiated with this npc
+	 */
 	public String getServer() {
 		return server;
 	}
 	
+	/**
+	 * 
+	 * @return NPC name
+	 * 
+	 * @apiNote
+	 * Get the NPCs name defined in config
+	 */
 	public String getName() {
 		return name;
 	}
-	
+
+	/**
+	 * 
+	 * @return Holotext
+	 * 
+	 * @apiNote 
+	 * Get the holotext assosiated with this npc
+	 */
 	public List<String> getHolotext() {
 		return text;
 	}
 	
+	/**
+	 * @apiNote Destroy current NPC, will remove NPCObject from map aswell
+	 */
 	public void destroy() {
 		npc.destroy();
 		remove(this);

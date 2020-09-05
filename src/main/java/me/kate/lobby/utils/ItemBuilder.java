@@ -205,7 +205,10 @@ public class ItemBuilder {
 	 * Makes itemstack unstackable
 	 * 
 	 */
-	public ItemBuilder setUnstackable() {
+	public ItemBuilder setUnstackable(boolean unstackable) {
+		if (!unstackable) {
+			return this;
+		}
 		addLoreLine(getInvisibleString());
 		return this;
 	}
